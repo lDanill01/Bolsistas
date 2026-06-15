@@ -18,8 +18,10 @@
             <thead class="table-light">
                 <tr>
                     <th>Nome</th>
+                    <th>Tipo</th>
                     <th>Descricao</th>
                     <th>Peso</th>
+                    <th>Peso Max</th>
                     <th>Ativo</th>
                     <th class="text-end">Acoes</th>
                 </tr>
@@ -28,8 +30,10 @@
                 {% for c in criterios %}
                 <tr>
                     <td class="fw-medium">{{ c.nome }}</td>
+                    <td><span class="badge bg-info">{{ c.get_tipo_criterio_display }}</span></td>
                     <td class="text-muted small">{{ c.descricao|truncatechars:60 }}</td>
                     <td>{{ c.peso }}</td>
+                    <td>{{ c.peso_maximo|default:'-' }}</td>
                     <td>
                         {% if c.ativo %}
                         <span class="badge bg-success">Sim</span>

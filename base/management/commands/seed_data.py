@@ -93,10 +93,6 @@ class Command(BaseCommand):
             user=user,
             endereco=fake.address(),
             data_nascimento=fake.date_of_birth(minimum_age=18, maximum_age=70),
-            grau_academico=fake.random_element([
-                'fundamental', 'medio', 'superior', 'pos',
-                'mestrado', 'doutorado', 'pos_doutorado',
-            ]),
             tenant=tenant,
         )
         if fake.boolean(chance_of_getting_true=60):
@@ -114,7 +110,7 @@ class Command(BaseCommand):
         if fake.boolean(chance_of_getting_true=40):
             PosGraduacao.objects.create(
                 bolsista=cad,
-                tipo=fake.random_element(['pos_graduacao', 'mba', 'mestrado']),
+                tipo=fake.random_element(['pos_graduacao', 'mba', 'especializacao', 'mestrado']),
                 instituicao=fake.company(),
                 area=fake.random_element([
                     'Gestao de Projetos', 'Data Science', 'Educacao',
@@ -123,22 +119,42 @@ class Command(BaseCommand):
                 ano_conclusao=fake.random_int(min=2010, max=2025),
                 tenant=tenant,
             )
+        # Seed some boolean criteria randomly
+        cad.participacao_projetos_anos = fake.random_int(min=0, max=15) if fake.boolean(chance_of_getting_true=50) else 0
+        cad.participacao_congressos = fake.boolean(chance_of_getting_true=40)
+        cad.resumo_anais = fake.boolean(chance_of_getting_true=30)
+        cad.artigo_completo_anais = fake.boolean(chance_of_getting_true=25)
+        cad.artigo_cientifico_nacional = fake.boolean(chance_of_getting_true=20)
+        cad.artigo_cientifico_internacional = fake.boolean(chance_of_getting_true=10)
+        cad.livro_patente = fake.boolean(chance_of_getting_true=5)
+        cad.participacao_minicurso = fake.boolean(chance_of_getting_true=35)
+        cad.treinamento = fake.boolean(chance_of_getting_true=30)
+        cad.save()
         return cad
 
     def _criar_criterios(self, tenant):
         dados = [
-            ('Formacao Academica', 'Pontuacao por grau de formacao', 3.0),
-            ('Experiencia Profissional', 'Tempo de experiencia na area', 2.5),
-            ('Publicacoes', 'Artigos e publicacoes cientificas', 1.5),
-            ('Cursos Complementares', 'Cursos de atualizacao na area', 1.0),
-            ('Entrevista', 'Desempenho na entrevista tecnica', 2.0),
+            ('Graduação', 'graduacao', 'Pontuacao por possuir graduacao', None, 0),
+            ('Mestrado', 'mestrado', 'Pontuacao por possuir mestrado', None, 0),
+            ('Doutorado', 'doutorado', 'Pontuacao por possuir doutorado', 50, 0),
+            ('Participacao em Projetos de Pesquisa', 'projetos_pesquisa', '10 pontos por ano de trabalho, maximo 100 pontos', 10, 100),
+            ('Participacao em Congressos/Feiras/Eventos', 'congressos', 'Participacao em congressos, feiras, eventos e palestras', 2, 0),
+            ('Resumo em Anais de Eventos', 'resumo_anais', 'Resumo publicado em anais de eventos', 2, 0),
+            ('Artigo Completo em Anais de Eventos', 'artigo_completo_anais', 'Artigo completo publicado em anais de eventos', 4, 0),
+            ('Artigo Cientifico Nacional', 'artigo_nacional', 'Artigo cientifico ou capitulo de livro nacional publicado', 10, 0),
+            ('Artigo Cientifico Internacional', 'artigo_internacional', 'Artigo cientifico ou capitulo de livro internacional publicado', 15, 0),
+            ('Livro/Patente', 'livro_patente', 'Livro publicado na area de interesse ou patente registrada', 20, 0),
+            ('Participacao em Minicurso', 'minicurso', 'Participacao em minicurso (ate 4 horas) na area de interesse', 2, 0),
+            ('Treinamento', 'treinamento', 'Treinamento (acima de 4 horas) na area de interesse', 5, 0),
         ]
         criterios = []
-        for nome, desc, peso in dados:
+        for nome, tipo_criterio, desc, peso, peso_maximo in dados:
             c = CriterioClassificacao.objects.create(
                 nome=nome,
+                tipo_criterio=tipo_criterio,
                 descricao=desc,
-                peso=peso,
+                peso=peso or 0,
+                peso_maximo=peso_maximo,
                 ativo=True,
                 tenant=tenant,
             )

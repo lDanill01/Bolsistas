@@ -63,7 +63,12 @@
                 <ul class="navbar-nav ms-auto align-items-center">
 
                     <li class="nav-item">
-                        <a href="{% url 'notificacao_list' %}" class="nav-link position-relative">
+                        <a href="{% url 'home' %}" class="nav-link" title="Inicio">
+                            <i class="bi bi-house-fill"></i>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{% url 'notificacao_list' %}" class="nav-link position-relative" title="Notificacoes">
                             <i class="bi bi-bell-fill"></i>
                         </a>
                     </li>

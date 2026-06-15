@@ -12,11 +12,13 @@ from editais.models import AplicacaoEdital
 class CriterioForm(forms.ModelForm):
     class Meta:
         model = CriterioClassificacao
-        fields = ['nome', 'descricao', 'peso', 'ativo']
+        fields = ['nome', 'tipo_criterio', 'descricao', 'peso', 'peso_maximo', 'ativo']
         widgets = {
             'nome': forms.TextInput(attrs={'class': 'form-control'}),
+            'tipo_criterio': forms.Select(attrs={'class': 'form-select'}),
             'descricao': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
             'peso': forms.NumberInput(attrs={'class': 'form-control'}),
+            'peso_maximo': forms.NumberInput(attrs={'class': 'form-control'}),
             'ativo': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
         }
 

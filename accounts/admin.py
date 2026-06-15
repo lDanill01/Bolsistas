@@ -10,8 +10,9 @@ class UserAdmin(admin.ModelAdmin):
 
 @admin.register(Perfil)
 class PerfilAdmin(admin.ModelAdmin):
-    list_display = ['user', 'tipo', 'tenant']
-    list_filter = ['tipo']
+    list_display = ['user', 'tipo', 'telefone', 'unidade', 'tenant']
+    list_filter = ['tipo', 'tenant']
+    search_fields = ['user__email', 'user__nome_completo', 'telefone']
 
 
 @admin.register(Tenant)

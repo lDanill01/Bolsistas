@@ -34,8 +34,12 @@
                 </div>
                 {% endif %}
                 <h5 class="fw-bold">{{ cadastro.user.nome_completo }}</h5>
-                <span class="badge bg-primary mb-2">{{ cadastro.get_grau_academico_display }}</span>
                 <p class="text-muted small">{{ cadastro.user.email }}</p>
+                <div class="mt-2">
+                    <span class="badge bg-info fs-6 px-3 py-2">
+                        <i class="bi bi-star-fill me-1"></i> Pontuacao Previa: <strong>{{ cadastro.pontuacao_previa }}</strong> pts
+                    </span>
+                </div>
             </div>
         </div>
 
@@ -47,7 +51,7 @@
                 <div class="row g-3">
                     <div class="col-sm-6">
                         <label class="form-label small text-muted mb-0">Telefone</label>
-                        <p class="fw-medium">{{ cadastro.user.telefone|default:'Nao informado' }}</p>
+                        <p class="fw-medium">{{ cadastro.user.perfil.telefone|default:'Nao informado' }}</p>
                     </div>
                     <div class="col-sm-6">
                         <label class="form-label small text-muted mb-0">Data de Nascimento</label>
@@ -70,12 +74,12 @@
                 </div>
             </div>
 
-            {% if cadastro.cursos.exists %}
+            {% if cadastro.cursos_superiores.exists %}
             <div class="card p-4 mt-3">
                 <h5 class="fw-semibold mb-3">
                     <i class="bi bi-mortarboard me-2 text-primary"></i>Formacao Academica
                 </h5>
-                {% for curso in cadastro.cursos.all %}
+                {% for curso in cadastro.cursos_superiores.all %}
                 <div class="border rounded p-3 mb-2">
                     <strong>{{ curso.curso }}</strong> - {{ curso.instituicao }}
                     {% if curso.ano_conclusao %}<br><small class="text-muted">Ano de Conclusao: {{ curso.ano_conclusao }}</small>{% endif %}
@@ -91,12 +95,56 @@
                 </h5>
                 {% for pos in cadastro.pos_graduacoes.all %}
                 <div class="border rounded p-3 mb-2">
-                    <strong>{{ pos.get_tipo_display }}</strong> - {{ pos.nome }}
+                    <strong>{{ pos.get_tipo_display }}</strong> - {{ pos.area }}
                     <br><small class="text-muted">{{ pos.instituicao }}{% if pos.ano_conclusao %} | {{ pos.ano_conclusao }}{% endif %}</small>
                 </div>
                 {% endfor %}
             </div>
             {% endif %}
+        <div class="col-lg-12 mt-3">
+            <div class="card p-4">
+                <h5 class="fw-semibold mb-3">
+                    <i class="bi bi-bar-chart-line me-2 text-primary"></i>Classificacao
+                </h5>
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <label class="form-label small text-muted mb-0">Projetos/Pesquisa (anos)</label>
+                        <p class="fw-medium">{{ cadastro.participacao_projetos_anos|default:'0' }} anos</p>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label small text-muted mb-0">Participacao em Congressos</label>
+                        <p class="fw-medium">{% if cadastro.participacao_congressos %}<span class="text-success"><i class="bi bi-check-circle-fill"></i> Sim</span>{% else %}<span class="text-muted">Nao</span>{% endif %}</p>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label small text-muted mb-0">Resumo em Anais</label>
+                        <p class="fw-medium">{% if cadastro.resumo_anais %}<span class="text-success"><i class="bi bi-check-circle-fill"></i> Sim</span>{% else %}<span class="text-muted">Nao</span>{% endif %}</p>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label small text-muted mb-0">Artigo Completo em Anais</label>
+                        <p class="fw-medium">{% if cadastro.artigo_completo_anais %}<span class="text-success"><i class="bi bi-check-circle-fill"></i> Sim</span>{% else %}<span class="text-muted">Nao</span>{% endif %}</p>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label small text-muted mb-0">Artigo Cientifico Nacional</label>
+                        <p class="fw-medium">{% if cadastro.artigo_cientifico_nacional %}<span class="text-success"><i class="bi bi-check-circle-fill"></i> Sim</span>{% else %}<span class="text-muted">Nao</span>{% endif %}</p>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label small text-muted mb-0">Artigo Cientifico Internacional</label>
+                        <p class="fw-medium">{% if cadastro.artigo_cientifico_internacional %}<span class="text-success"><i class="bi bi-check-circle-fill"></i> Sim</span>{% else %}<span class="text-muted">Nao</span>{% endif %}</p>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label small text-muted mb-0">Livro/Patente</label>
+                        <p class="fw-medium">{% if cadastro.livro_patente %}<span class="text-success"><i class="bi bi-check-circle-fill"></i> Sim</span>{% else %}<span class="text-muted">Nao</span>{% endif %}</p>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label small text-muted mb-0">Minicurso</label>
+                        <p class="fw-medium">{% if cadastro.participacao_minicurso %}<span class="text-success"><i class="bi bi-check-circle-fill"></i> Sim</span>{% else %}<span class="text-muted">Nao</span>{% endif %}</p>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label small text-muted mb-0">Treinamento</label>
+                        <p class="fw-medium">{% if cadastro.treinamento %}<span class="text-success"><i class="bi bi-check-circle-fill"></i> Sim</span>{% else %}<span class="text-muted">Nao</span>{% endif %}</p>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>

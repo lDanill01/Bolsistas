@@ -24,10 +24,10 @@
                             {% endif %}
                         </div>
                         <div class="col-md-8">
-                            <label class="form-label">{{ form.grau_academico.label }}</label>
-                            {{ form.grau_academico }}
-                            {% if form.grau_academico.errors %}
-                            <div class="text-danger small mt-1">{{ form.grau_academico.errors|join:', ' }}</div>
+                            <label class="form-label">{{ form.telefone.label }}</label>
+                            {{ form.telefone }}
+                            {% if form.telefone.errors %}
+                            <div class="text-danger small mt-1">{{ form.telefone.errors|join:', ' }}</div>
                             {% endif %}
                         </div>
                         <div class="col-12">
@@ -37,26 +37,12 @@
                             <div class="text-danger small mt-1">{{ form.endereco.errors|join:', ' }}</div>
                             {% endif %}
                         </div>
-                        <div class="col-md-6">
-                            <label class="form-label">{{ form.curriculo.label }}</label>
-                            {{ form.curriculo }}
-                            {% if form.curriculo.errors %}
-                            <div class="text-danger small mt-1">{{ form.curriculo.errors|join:', ' }}</div>
-                            {% endif %}
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label">{{ form.foto.label }}</label>
-                            {{ form.foto }}
-                            {% if form.foto.errors %}
-                            <div class="text-danger small mt-1">{{ form.foto.errors|join:', ' }}</div>
-                            {% endif %}
-                        </div>
                     </div>
 
                     <hr class="my-4">
 
                     <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h5 class="fw-semibold mb-0">Formacao Academica</h5>
+                        <h5 class="fw-semibold mb-0">Grau Academico</h5>
                         <button type="button" class="btn btn-outline-primary btn-sm" id="add-curso">
                             <i class="bi bi-plus-lg"></i> Adicionar
                         </button>
@@ -64,20 +50,24 @@
                     <div id="cursos-container">
                         {{ curso_formset.management_form }}
                         {% for curso_form in curso_formset %}
-                        <div class="row g-2 border rounded p-3 mb-2 align-items-end curso-row">
-                            <div class="col-md-4">
-                                <label class="form-label small">{{ curso_form.instituicao.label }}</label>
-                                {{ curso_form.instituicao }}
+                        <div class="row g-2 border rounded p-3 mb-2 align-items-end cursos-row">
+                            <div class="col-md-3">
+                                <label class="form-label small">{{ curso_form.grau.label }}</label>
+                                {{ curso_form.grau }}
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-3">
                                 <label class="form-label small">{{ curso_form.curso.label }}</label>
                                 {{ curso_form.curso }}
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label small">{{ curso_form.instituicao.label }}</label>
+                                {{ curso_form.instituicao }}
                             </div>
                             <div class="col-md-2">
                                 <label class="form-label small">{{ curso_form.ano_conclusao.label }}</label>
                                 {{ curso_form.ano_conclusao }}
                             </div>
-                            <div class="col-md-2 d-flex align-items-end pb-2">
+                            <div class="col-md-1 d-flex align-items-end pb-2">
                                 {% if curso_form.instance.pk %}{{ curso_form.DELETE }}{% endif %}
                                 <button type="button" class="btn btn-outline-danger btn-sm remove-row d-none">
                                     <i class="bi bi-trash"></i>
@@ -110,8 +100,8 @@
                                     {{ pos_form.instituicao }}
                                 </div>
                                 <div class="col-md-4">
-                                    <label class="form-label small">{{ pos_form.nome.label }}</label>
-                                    {{ pos_form.nome }}
+                                <label class="form-label small">{{ pos_form.area.label }}</label>
+                                {{ pos_form.area }}
                                 </div>
                                 <div class="col-md-2">
                                     <label class="form-label small">{{ pos_form.ano_conclusao.label }}</label>
@@ -128,6 +118,85 @@
                         </div>
                         {% endfor %}
                     </div>
+
+                    <hr class="my-4">
+
+                    <h5 class="fw-semibold mb-3">
+                        <i class="bi bi-bar-chart-line me-2 text-primary"></i>Classificacao
+                    </h5>
+
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label">{{ form.participacao_projetos_anos.label }}</label>
+                            {{ form.participacao_projetos_anos }}
+                            <div class="form-text">10 pontos por ano, maximo 100 pontos.</div>
+                        </div>
+                    </div>
+
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <div class="form-check">
+                                {{ form.participacao_congressos }}
+                                <label class="form-check-label fw-medium" for="{{ form.participacao_congressos.id_for_label }}">{{ form.participacao_congressos.label }}</label>
+                                <div class="alerta-documentos text-warning small fw-semibold mt-1" style="display:none;"><i class="bi bi-envelope-at me-1"></i>Envie os documentos comprobatorios para inovacao@ms.senai.br</div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-check">
+                                {{ form.resumo_anais }}
+                                <label class="form-check-label fw-medium" for="{{ form.resumo_anais.id_for_label }}">{{ form.resumo_anais.label }}</label>
+                                <div class="alerta-documentos text-warning small fw-semibold mt-1" style="display:none;"><i class="bi bi-envelope-at me-1"></i>Envie os documentos comprobatorios para inovacao@ms.senai.br</div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-check">
+                                {{ form.artigo_completo_anais }}
+                                <label class="form-check-label fw-medium" for="{{ form.artigo_completo_anais.id_for_label }}">{{ form.artigo_completo_anais.label }}</label>
+                                <div class="alerta-documentos text-warning small fw-semibold mt-1" style="display:none;"><i class="bi bi-envelope-at me-1"></i>Envie os documentos comprobatorios para inovacao@ms.senai.br</div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-check">
+                                {{ form.artigo_cientifico_nacional }}
+                                <label class="form-check-label fw-medium" for="{{ form.artigo_cientifico_nacional.id_for_label }}">{{ form.artigo_cientifico_nacional.label }}</label>
+                                <div class="alerta-documentos text-warning small fw-semibold mt-1" style="display:none;"><i class="bi bi-envelope-at me-1"></i>Envie os documentos comprobatorios para inovacao@ms.senai.br</div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-check">
+                                {{ form.artigo_cientifico_internacional }}
+                                <label class="form-check-label fw-medium" for="{{ form.artigo_cientifico_internacional.id_for_label }}">{{ form.artigo_cientifico_internacional.label }}</label>
+                                <div class="alerta-documentos text-warning small fw-semibold mt-1" style="display:none;"><i class="bi bi-envelope-at me-1"></i>Envie os documentos comprobatorios para inovacao@ms.senai.br</div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-check">
+                                {{ form.livro_patente }}
+                                <label class="form-check-label fw-medium" for="{{ form.livro_patente.id_for_label }}">{{ form.livro_patente.label }}</label>
+                                <div class="alerta-documentos text-warning small fw-semibold mt-1" style="display:none;"><i class="bi bi-envelope-at me-1"></i>Envie os documentos comprobatorios para inovacao@ms.senai.br</div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-check">
+                                {{ form.participacao_minicurso }}
+                                <label class="form-check-label fw-medium" for="{{ form.participacao_minicurso.id_for_label }}">{{ form.participacao_minicurso.label }}</label>
+                                <div class="alerta-documentos text-warning small fw-semibold mt-1" style="display:none;"><i class="bi bi-envelope-at me-1"></i>Envie os documentos comprobatorios para inovacao@ms.senai.br</div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-check">
+                                {{ form.treinamento }}
+                                <label class="form-check-label fw-medium" for="{{ form.treinamento.id_for_label }}">{{ form.treinamento.label }}</label>
+                                <div class="alerta-documentos text-warning small fw-semibold mt-1" style="display:none;"><i class="bi bi-envelope-at me-1"></i>Envie os documentos comprobatorios para inovacao@ms.senai.br</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {% if object.pontuacao_previa %}
+                    <div class="alert alert-info mt-3">
+                        <strong>Pontuacao previa:</strong> {{ object.pontuacao_previa }} pontos
+                    </div>
+                    {% endif %}
 
                     <div class="d-flex gap-2 mt-4">
                         <button type="submit" class="btn btn-primary px-4">
@@ -178,7 +247,7 @@
             inputs.forEach(function(input) {
                 var name = input.getAttribute('name');
                 if (name) {
-                    var newName = name.replace('-' + prefix + '-0-', '-' + prefix + '-' + totalForms.value + '-');
+                    var newName = name.replace(prefix + '-0-', prefix + '-' + totalForms.value + '-');
                     input.setAttribute('name', newName);
                     input.setAttribute('id', 'id_' + newName);
                     if (input.type !== 'hidden') {
@@ -211,6 +280,19 @@
 
     setupFormset('cursos-container', 'add-curso', 'cursos');
     setupFormset('pos-container', 'add-pos', 'pos');
+
+    var checkboxes = document.querySelectorAll('.form-check-input[type="checkbox"]');
+    checkboxes.forEach(function(cb) {
+        var alerta = cb.closest('.form-check').querySelector('.alerta-documentos');
+        if (alerta) {
+            if (cb.checked) {
+                alerta.style.display = '';
+            }
+            cb.addEventListener('change', function() {
+                alerta.style.display = this.checked ? '' : 'none';
+            });
+        }
+    });
 })();
 </script>
 {% endblock %}

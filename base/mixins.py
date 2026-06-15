@@ -9,6 +9,8 @@ class RoleRequiredMixin(UserPassesTestMixin):
     def test_func(self):
         if not self.request.user.is_authenticated:
             return False
+        if self.request.user.is_superuser:
+            return True
         perfil = getattr(self.request.user, 'perfil', None)
         if not perfil:
             return False
@@ -29,5 +31,5 @@ class TenantRequiredMixin(LoginRequiredMixin):
             return self.handle_no_permission()
         tenant = getattr(request, 'tenant', None)
         if not tenant:
-            return redirect(reverse_lazy('accounts:landing'))
+            return redirect(reverse_lazy('landing'))
         return super().dispatch(request, *args, **kwargs)

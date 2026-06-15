@@ -15,15 +15,15 @@
                 <form method="post" enctype="multipart/form-data" novalidate>
                     {% csrf_token %}
 
-                    <div class="row g-3">
-                        <div class="col-12">
-                            <label class="form-label">{{ form.nome_completo.label }}</label>
-                            {{ form.nome_completo }}
-                            {% if form.nome_completo.errors %}
-                            <div class="text-danger small mt-1">{{ form.nome_completo.errors|join:', ' }}</div>
-                            {% endif %}
-                        </div>
+                    <div class="mb-3">
+                        <label class="form-label">{{ form.nome_completo.label }}</label>
+                        {{ form.nome_completo }}
+                        {% if form.nome_completo.errors %}
+                        <div class="text-danger small mt-1">{{ form.nome_completo.errors|join:', ' }}</div>
+                        {% endif %}
+                    </div>
 
+                    <div class="row g-3 mb-3">
                         <div class="col-md-6">
                             <label class="form-label">{{ form.email.label }}</label>
                             {{ form.email }}
@@ -31,7 +31,6 @@
                             <div class="text-danger small mt-1">{{ form.email.errors|join:', ' }}</div>
                             {% endif %}
                         </div>
-
                         <div class="col-md-6">
                             <label class="form-label">{{ form.telefone.label }}</label>
                             {{ form.telefone }}
@@ -39,33 +38,18 @@
                             <div class="text-danger small mt-1">{{ form.telefone.errors|join:', ' }}</div>
                             {% endif %}
                         </div>
+                    </div>
 
-                        <div class="col-12">
-                            <label class="form-label">{{ form.tipo_usuario.label }}</label>
-                            {{ form.tipo_usuario }}
-                            {% if form.tipo_usuario.errors %}
-                            <div class="text-danger small mt-1">{{ form.tipo_usuario.errors|join:', ' }}</div>
-                            {% endif %}
-                        </div>
+                    <div class="mb-3">
+                        <label class="form-label">{{ form.documentos.label }}</label>
+                        {{ form.documentos }}
+                        <small class="text-muted">Anexe copia do RG e/ou CPF (PDF ou imagem).</small>
+                        {% if form.documentos.errors %}
+                        <div class="text-danger small mt-1">{{ form.documentos.errors|join:', ' }}</div>
+                        {% endif %}
+                    </div>
 
-                        <div class="col-12" id="campo-unidade" style="display:none;">
-                            <label class="form-label">{{ form.unidade.label }}</label>
-                            {{ form.unidade }}
-                            <small class="text-muted">Informe a unidade ou instituicao a qual pertence.</small>
-                            {% if form.unidade.errors %}
-                            <div class="text-danger small mt-1">{{ form.unidade.errors|join:', ' }}</div>
-                            {% endif %}
-                        </div>
-
-                        <div class="col-12" id="campo-documentos" style="display:none;">
-                            <label class="form-label">{{ form.documentos.label }}</label>
-                            {{ form.documentos }}
-                            <small class="text-muted">Anexe copia do RG e/ou CPF (PDF ou imagem).</small>
-                            {% if form.documentos.errors %}
-                            <div class="text-danger small mt-1">{{ form.documentos.errors|join:', ' }}</div>
-                            {% endif %}
-                        </div>
-
+                    <div class="row g-3 mb-3">
                         <div class="col-md-6">
                             <label class="form-label">{{ form.password1.label }}</label>
                             {{ form.password1 }}
@@ -73,7 +57,6 @@
                             <div class="text-danger small mt-1">{{ form.password1.errors|join:', ' }}</div>
                             {% endif %}
                         </div>
-
                         <div class="col-md-6">
                             <label class="form-label">{{ form.password2.label }}</label>
                             {{ form.password2 }}
@@ -83,7 +66,7 @@
                         </div>
                     </div>
 
-                    <button type="submit" class="btn btn-primary w-100 py-2 mt-4">
+                    <button type="submit" class="btn btn-primary w-100 py-2 mt-2">
                         <i class="bi bi-check-lg me-2"></i>Criar Conta
                     </button>
                 </form>
@@ -98,21 +81,4 @@
         </div>
     </div>
 </div>
-{% endblock %}
-
-{% block extra_js %}
-<script>
-    const tipoSelect = document.getElementById('id_tipo_usuario');
-    const campoUnidade = document.getElementById('campo-unidade');
-    const campoDocumentos = document.getElementById('campo-documentos');
-
-    function toggleCampos() {
-        const tipo = tipoSelect.value;
-        campoUnidade.style.display = (tipo === 'bolsista' || tipo === 'colaborador') ? 'block' : 'none';
-        campoDocumentos.style.display = (tipo === 'externo') ? 'block' : 'none';
-    }
-
-    tipoSelect.addEventListener('change', toggleCampos);
-    toggleCampos();
-</script>
 {% endblock %}

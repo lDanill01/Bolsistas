@@ -15,27 +15,31 @@ from editais.models import Edital, AplicacaoEdital
 from classificacao.models import Classificacao
 from cadastro.models import SolicitacaoEdicao
 
-TIPO_USUARIO_MAP = {
-    'bolsista': 'COMMON',
-    'colaborador': 'COMMON',
-    'externo': 'COMMON',
-}
-
-
 class RegistroForm(forms.ModelForm):
-    telefone = forms.CharField(max_length=20, required=False, label='Telefone')
-    tipo_usuario = forms.ChoiceField(
-        choices=[('bolsista', 'Bolsista'), ('colaborador', 'Colaborador'), ('externo', 'Externo')],
-        label='Tipo de usuário'
+    telefone = forms.CharField(
+        max_length=20, required=False, label='Telefone',
+        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': '(67) 99999-9999'})
     )
-    unidade = forms.CharField(max_length=255, required=False, label='Unidade')
-    documentos = forms.FileField(required=False, label='RG / CPF')
-    password1 = forms.CharField(widget=forms.PasswordInput, label='Senha')
-    password2 = forms.CharField(widget=forms.PasswordInput, label='Confirmar senha')
+    documentos = forms.FileField(
+        required=False, label='RG / CPF',
+        widget=forms.FileInput(attrs={'class': 'form-control'})
+    )
+    password1 = forms.CharField(
+        label='Senha',
+        widget=forms.PasswordInput(attrs={'class': 'form-control'})
+    )
+    password2 = forms.CharField(
+        label='Confirmar senha',
+        widget=forms.PasswordInput(attrs={'class': 'form-control'})
+    )
 
     class Meta:
         model = User
         fields = ['nome_completo', 'email']
+        widgets = {
+            'nome_completo': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Seu nome completo'}),
+            'email': forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'seu@email.com'}),
+        }
 
     def clean_password2(self):
         p1 = self.cleaned_data.get('password1')
@@ -47,6 +51,11 @@ class RegistroForm(forms.ModelForm):
 
 class LandingPageView(TemplateView):
     template_name = 'accounts/landing.html'
+
+    def get(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            return redirect('home')
+        return super().get(request, *args, **kwargs)
 
 
 class CustomLoginView(LoginView):
@@ -70,11 +79,10 @@ class RegistroView(FormView):
         tenant, _ = Tenant.objects.get_or_create(
             nome='SESI', defaults={'dominio': 'sesi', 'ativo': True}
         )
-        perfil = Perfil.objects.create(
+        Perfil.objects.create(
             user=user,
-            tipo=TIPO_USUARIO_MAP.get(form.cleaned_data['tipo_usuario'], 'COMMON'),
+            tipo='COMMON',
             telefone=form.cleaned_data.get('telefone', ''),
-            unidade=form.cleaned_data.get('unidade', ''),
             tenant=tenant,
         )
         if form.cleaned_data.get('documentos'):
@@ -95,7 +103,10 @@ class HomeView(LoginRequiredMixin, TemplateView):
         context = super().get_context_data(**kwargs)
         user = self.request.user
         perfil = getattr(user, 'perfil', None)
-        tipo = perfil.tipo if perfil else 'COMMON'
+        if user.is_superuser:
+            tipo = 'ADMIN'
+        else:
+            tipo = perfil.tipo if perfil else 'COMMON'
         tenant = perfil.tenant if perfil else None
         context['tipo_usuario'] = tipo
         context['has_cadastro'] = hasattr(user, 'cadastro')

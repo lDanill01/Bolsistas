@@ -104,6 +104,10 @@ class EditalUpdateView(ManagerRequiredMixin, UpdateView):
 
 class AplicarEditalView(TenantRequiredMixin, TemplateView):
     def post(self, request, *args, **kwargs):
+        from decimal import Decimal
+        from cadastro.utils import calcular_pontuacao_previa
+        from classificacao.models import CriterioClassificacao, Classificacao, ClassificacaoCriterio
+
         edital = get_object_or_404(Edital, pk=kwargs['pk'], tenant=request.tenant)
         if not hasattr(request.user, 'cadastro'):
             messages.warning(request, 'Complete seu cadastro antes de se candidatar.')
@@ -112,9 +116,32 @@ class AplicarEditalView(TenantRequiredMixin, TemplateView):
         if AplicacaoEdital.objects.filter(bolsista=bolsista, edital=edital).exists():
             messages.warning(request, 'Você já se candidatou a este edital.')
         else:
-            AplicacaoEdital.objects.create(
+            aplicacao = AplicacaoEdital.objects.create(
                 bolsista=bolsista, edital=edital, tenant=request.tenant
             )
+
+            criterios = CriterioClassificacao.objects.filter(tenant=request.tenant, ativo=True)
+            pontos_por_criterio, pontuacao_total = calcular_pontuacao_previa(bolsista, criterios)
+
+            if pontos_por_criterio:
+                classificacao = Classificacao.objects.create(
+                    aplicacao=aplicacao,
+                    classificador=request.user,
+                    pontuacao_total=Decimal('0'),
+                    observacoes='Classificação automática baseada no perfil do candidato.',
+                    tenant=request.tenant,
+                )
+                for tipo_criterio, dados in pontos_por_criterio.items():
+                    criterio = criterios.filter(tipo_criterio=tipo_criterio).first()
+                    if criterio:
+                        ClassificacaoCriterio.objects.create(
+                            classificacao=classificacao,
+                            criterio=criterio,
+                            nota=dados['nota'],
+                        )
+                classificacao.pontuacao_total = pontuacao_total
+                classificacao.save(update_fields=['pontuacao_total'])
+
             messages.success(request, 'Candidatura realizada com sucesso!')
         return redirect('edital_detail', pk=edital.pk)
 

@@ -4,8 +4,8 @@ from .models import CriterioClassificacao, Classificacao, ClassificacaoCriterio
 
 @admin.register(CriterioClassificacao)
 class CriterioClassificacaoAdmin(admin.ModelAdmin):
-    list_display = ['nome', 'peso', 'ativo', 'tenant']
-    list_filter = ['ativo']
+    list_display = ['nome', 'tipo_criterio', 'peso', 'peso_maximo', 'ativo', 'tenant']
+    list_filter = ['ativo', 'tipo_criterio']
 
 
 @admin.register(Classificacao)

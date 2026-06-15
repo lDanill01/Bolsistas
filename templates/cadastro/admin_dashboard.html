@@ -3,142 +3,268 @@
 
 {% block content %}
 <div class="container py-4">
-    <h2 class="fw-bold text-primary mb-4">
-        <i class="bi bi-speedometer2 me-2"></i>Painel Administrativo
-    </h2>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold text-primary mb-0">
+            <i class="bi bi-speedometer2 me-2"></i>Painel Administrativo
+        </h2>
+    </div>
+
+    <div class="row g-3 mb-4">
+        <div class="col-md-3">
+            <div class="card p-3 text-center border-primary border-opacity-25 h-100">
+                <i class="bi bi-people-fill fs-2 text-primary mb-1"></i>
+                <h3 class="fw-bold mb-0">{{ total_usuarios_ativos }}</h3>
+                <small class="text-muted">Usuarios Ativos</small>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card p-3 text-center border-warning border-opacity-25 h-100">
+                <i class="bi bi-person-lines-fill fs-2 text-warning mb-1"></i>
+                <h3 class="fw-bold mb-0">{{ total_cadastros }}</h3>
+                <small class="text-muted">Cadastros</small>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card p-3 text-center border-success border-opacity-25 h-100">
+                <i class="bi bi-journal-text fs-2 text-success mb-1"></i>
+                <h3 class="fw-bold mb-0">{{ total_editais }}</h3>
+                <small class="text-muted">Editais</small>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card p-3 text-center border-info border-opacity-25 h-100">
+                <i class="bi bi-clipboard-check fs-2 text-info mb-1"></i>
+                <h3 class="fw-bold mb-0">{{ total_aplicacoes }}</h3>
+                <small class="text-muted">Aplicacoes</small>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card p-3 text-center border-danger border-opacity-25 h-100">
+                <i class="bi bi-star-fill fs-2 text-danger mb-1"></i>
+                <h3 class="fw-bold mb-0">{{ total_classificacoes }}</h3>
+                <small class="text-muted">Classificacoes</small>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card p-3 text-center border-secondary border-opacity-25 h-100">
+                <i class="bi bi-list-check fs-2 text-secondary mb-1"></i>
+                <h3 class="fw-bold mb-0">{{ total_criterios }}</h3>
+                <small class="text-muted">Criterios</small>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card p-3 text-center border-warning border-opacity-25 h-100">
+                <i class="bi bi-hourglass-split fs-2 text-warning mb-1"></i>
+                <h3 class="fw-bold mb-0">{{ usuarios_pendentes|length }}</h3>
+                <small class="text-muted">Pendentes</small>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card p-3 text-center border-primary border-opacity-25 h-100">
+                <i class="bi bi-pencil-square fs-2 text-primary mb-1"></i>
+                <h3 class="fw-bold mb-0">{{ solicitacoes_pendentes|length }}</h3>
+                <small class="text-muted">Solic. Edicao</small>
+            </div>
+        </div>
+    </div>
 
     <div class="row g-4 mb-4">
-        <div class="col-md-3">
-            <div class="card p-4 text-center bg-warning bg-opacity-10">
-                <div class="fs-1 text-warning mb-2">
-                    <i class="bi bi-hourglass-split"></i>
+        <div class="col-12">
+            <div class="card p-4">
+                <h5 class="fw-semibold mb-3">
+                    <i class="bi bi-gear-fill me-2 text-primary"></i>Gerenciamento Rapido
+                </h5>
+                <div class="row g-2">
+                    <div class="col-md-3">
+                        <a href="{% url 'admin:index' %}" class="btn btn-outline-primary w-100">
+                            <i class="bi bi-database-gear me-1"></i> Django Admin
+                        </a>
+                    </div>
+                    <div class="col-md-3">
+                        <a href="{% url 'edital_create' %}" class="btn btn-outline-success w-100">
+                            <i class="bi bi-plus-circle me-1"></i> Novo Edital
+                        </a>
+                    </div>
+                    <div class="col-md-3">
+                        <a href="{% url 'criterio_create' %}" class="btn btn-outline-info w-100">
+                            <i class="bi bi-plus-circle me-1"></i> Novo Criterio
+                        </a>
+                    </div>
+                    <div class="col-md-3">
+                        <a href="{% url 'classificacao_create' %}" class="btn btn-outline-warning w-100">
+                            <i class="bi bi-star me-1"></i> Classificar
+                        </a>
+                    </div>
                 </div>
-                <h5 class="fw-semibold">Pendentes de Aprovacao</h5>
-                <p class="display-6 fw-bold text-warning mb-0">{{ usuarios_pendentes|length }}</p>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="card p-4 text-center bg-success bg-opacity-10">
-                <div class="fs-1 text-success mb-2">
-                    <i class="bi bi-people-fill"></i>
-                </div>
-                <h5 class="fw-semibold">Cadastros Realizados</h5>
-                <p class="display-6 fw-bold text-success mb-0">{{ cadastros|length }}</p>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="card p-4 text-center bg-primary bg-opacity-10">
-                <div class="fs-1 text-primary mb-2">
-                    <i class="bi bi-list-check"></i>
-                </div>
-                <h5 class="fw-semibold">Solicitacoes de Edicao</h5>
-                <a href="{% url 'solicitacao_list' %}" class="btn btn-outline-primary btn-sm mt-2">Ver Solicitacoes</a>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="card p-4 text-center bg-info bg-opacity-10">
-                <div class="fs-1 text-info mb-2">
-                    <i class="bi bi-upload"></i>
-                </div>
-                <h5 class="fw-semibold">Importar Dados</h5>
-                <p class="text-muted small mb-2">Usuarios e Editais via CSV</p>
-                <a href="{% url 'csv_import' %}" class="btn btn-outline-info btn-sm">Acessar</a>
             </div>
         </div>
     </div>
 
-    <span id="spinner-admin" class="htmx-indicator text-primary">
-        <i class="bi bi-arrow-repeat spin me-1"></i>Atualizando...
-    </span>
+    <div class="row g-4">
+        <div class="col-lg-6">
+            <div class="card p-4 mb-4">
+                <h5 class="fw-semibold mb-3">
+                    <i class="bi bi-hourglass-split me-2 text-warning"></i>Usuarios Pendentes
+                </h5>
+                {% if usuarios_pendentes %}
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Nome</th>
+                                <th>Email</th>
+                                <th>Telefone</th>
+                                <th class="text-end">Acoes</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for u in usuarios_pendentes %}
+                            <tr>
+                                <td>{{ u.nome_completo }}</td>
+                                <td><small>{{ u.email }}</small></td>
+                                <td><small>{{ u.perfil.telefone|default:'-' }}</small></td>
+                                <td class="text-end">
+                                    <form method="post" action="{% url 'aprovar_usuario' u.pk %}" class="d-inline">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-success btn-sm">
+                                            <i class="bi bi-check-lg"></i> Aprovar
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <p class="text-muted text-center py-3 mb-0">Nenhum usuario pendente de aprovacao.</p>
+                {% endif %}
+            </div>
 
-    {% if usuarios_pendentes %}
-    <div class="card p-4 mb-4">
-        <h5 class="fw-semibold mb-3">
-            <i class="bi bi-hourglass-split me-2 text-warning"></i>Usuarios Pendentes de Aprovacao
-        </h5>
-        <div class="table-responsive">
-            <table class="table table-hover align-middle">
-                <thead class="table-light">
-                    <tr>
-                        <th>Nome</th>
-                        <th>E-mail</th>
-                        <th>Telefone</th>
-                        <th>Cadastrado em</th>
-                        <th class="text-end">Acoes</th>
-                    </tr>
-                </thead>
-                <tbody id="usuarios-pendentes-tbody">
-                    {% for u in usuarios_pendentes %}
-                    <tr>
-                        <td>{{ u.nome_completo }}</td>
-                        <td>{{ u.email }}</td>
-                        <td>{{ u.perfil.telefone|default:'-' }}</td>
-                        <td class="text-muted small">{{ u.date_joined|date:'d/m/Y H:i' }}</td>
-                        <td class="text-end">
-                            <form method="post" action="{% url 'aprovar_usuario' u.pk %}" class="d-inline"
-                                  hx-post="{% url 'aprovar_usuario' u.pk %}" hx-target="closest tr" hx-swap="outerHTML"
-                                  hx-indicator="#spinner-admin">
-                                {% csrf_token %}
-                                <button type="submit" class="btn btn-success btn-sm">
-                                    <i class="bi bi-check-lg"></i> Aprovar
-                                </button>
-                            </form>
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+            <div class="card p-4">
+                <h5 class="fw-semibold mb-3">
+                    <i class="bi bi-pencil-square me-2 text-primary"></i>Solicitacoes de Edicao
+                </h5>
+                {% if solicitacoes_pendentes %}
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Bolsista</th>
+                                <th>Campo</th>
+                                <th class="text-end">Acao</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for s in solicitacoes_pendentes %}
+                            <tr>
+                                <td><small>{{ s.bolsista.user.nome_completo }}</small></td>
+                                <td><span class="badge bg-info">{{ s.campo }}</span></td>
+                                <td class="text-end">
+                                    <a href="{% url 'solicitacao_list' %}" class="btn btn-outline-primary btn-sm">
+                                        <i class="bi bi-eye"></i> Revisar
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <p class="text-muted text-center py-3 mb-0">Nenhuma solicitacao pendente.</p>
+                {% endif %}
+            </div>
         </div>
-    </div>
-    {% endif %}
 
-    <div class="card p-4">
-        <h5 class="fw-semibold mb-3">
-            <i class="bi bi-person-lines-fill me-2 text-primary"></i>Cadastros de Bolsistas
-        </h5>
-        {% if cadastros %}
-        <div class="table-responsive">
-            <table class="table table-hover align-middle">
-                <thead class="table-light">
-                    <tr>
-                        <th>Bolsista</th>
-                        <th>E-mail</th>
-                        <th>Grau Academico</th>
-                        <th>Status</th>
-                        <th>Cadastrado em</th>
-                        <th class="text-end">Acoes</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for c in cadastros %}
-                    <tr>
-                        <td>{{ c.user.nome_completo }}</td>
-                        <td>{{ c.user.email }}</td>
-                        <td>{{ c.get_grau_academico_display }}</td>
-                        <td>
-                            {% if c.user.is_active %}
-                            <span class="badge bg-success">Ativo</span>
-                            {% else %}
-                            <span class="badge bg-warning text-dark">Pendente</span>
-                            {% endif %}
-                        </td>
-                        <td class="text-muted small">{{ c.created_at|date:'d/m/Y' }}</td>
-                        <td class="text-end">
-                            <a href="{% url 'cadastro_detail_pk' c.pk %}" class="btn btn-outline-primary btn-sm me-1">
-                                <i class="bi bi-eye"></i>
-                            </a>
-                            <a href="{% url 'cadastro_update_pk' c.pk %}" class="btn btn-outline-warning btn-sm">
-                                <i class="bi bi-pencil-square"></i> Editar
-                            </a>
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+        <div class="col-lg-6">
+            <div class="card p-4 mb-4">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="fw-semibold mb-0">
+                        <i class="bi bi-person-lines-fill me-2 text-primary"></i>Cadastros Recentes
+                    </h5>
+                    <a href="{% url 'cadastro_list' %}" class="btn btn-outline-primary btn-sm">Ver Todos</a>
+                </div>
+                {% if ultimos_cadastros %}
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Bolsista</th>
+                                <th>Email</th>
+                                <th class="text-end">Acoes</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for c in ultimos_cadastros %}
+                            <tr>
+                                <td>{{ c.user.nome_completo }}</td>
+                                <td><small>{{ c.user.email }}</small></td>
+                                <td class="text-end">
+                                    <a href="{% url 'cadastro_detail_pk' c.pk %}" class="btn btn-outline-primary btn-sm">
+                                        <i class="bi bi-eye"></i>
+                                    </a>
+                                    <a href="{% url 'cadastro_update_pk' c.pk %}" class="btn btn-outline-warning btn-sm">
+                                        <i class="bi bi-pencil"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <p class="text-muted text-center py-3 mb-0">Nenhum cadastro realizado.</p>
+                {% endif %}
+            </div>
+
+            <div class="card p-4">
+                <h5 class="fw-semibold mb-3">
+                    <i class="bi bi-link-45deg me-2 text-primary"></i>Acesso Rapido
+                </h5>
+                <div class="row g-2">
+                    <div class="col-6">
+                        <a href="{% url 'cadastro_list' %}" class="btn btn-outline-primary w-100 text-start">
+                            <i class="bi bi-person-lines-fill me-2"></i>Cadastros
+                        </a>
+                    </div>
+                    <div class="col-6">
+                        <a href="{% url 'edital_list' %}" class="btn btn-outline-success w-100 text-start">
+                            <i class="bi bi-journal-text me-2"></i>Editais
+                        </a>
+                    </div>
+                    <div class="col-6">
+                        <a href="{% url 'aplicacao_list' %}" class="btn btn-outline-info w-100 text-start">
+                            <i class="bi bi-clipboard-check me-2"></i>Aplicacoes
+                        </a>
+                    </div>
+                    <div class="col-6">
+                        <a href="{% url 'classificacao_list' %}" class="btn btn-outline-warning w-100 text-start">
+                            <i class="bi bi-star me-2"></i>Classificacoes
+                        </a>
+                    </div>
+                    <div class="col-6">
+                        <a href="{% url 'criterio_list' %}" class="btn btn-outline-secondary w-100 text-start">
+                            <i class="bi bi-list-ol me-2"></i>Criterios
+                        </a>
+                    </div>
+                    <div class="col-6">
+                        <a href="{% url 'solicitacao_list' %}" class="btn btn-outline-danger w-100 text-start">
+                            <i class="bi bi-list-check me-2"></i>Solicitacoes
+                        </a>
+                    </div>
+                    <div class="col-6">
+                        <a href="{% url 'csv_import' %}" class="btn btn-outline-dark w-100 text-start">
+                            <i class="bi bi-upload me-2"></i>Importar CSV
+                        </a>
+                    </div>
+                    <div class="col-6">
+                        <a href="{% url 'admin:index' %}" class="btn btn-outline-primary w-100 text-start">
+                            <i class="bi bi-database-gear me-2"></i>Django Admin
+                        </a>
+                    </div>
+                </div>
+            </div>
         </div>
-        {% else %}
-        <p class="text-muted text-center py-4">Nenhum cadastro de bolsista encontrado.</p>
-        {% endif %}
     </div>
 </div>
 {% endblock %}

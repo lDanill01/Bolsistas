@@ -15,22 +15,24 @@ def validar_maioridade(data_nascimento):
 
 
 class CadastroBolsista(DataModel):
-    GRAU_CHOICES = [
-        ('fundamental', 'Ensino Fundamental'),
-        ('medio', 'Ensino Médio'),
-        ('superior', 'Ensino Superior'),
-        ('pos', 'Pós-Graduação'),
-        ('mestrado', 'Mestrado'),
-        ('doutorado', 'Doutorado'),
-        ('pos_doutorado', 'Pós-Doutorado'),
-    ]
 
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='cadastro')
     endereco = models.TextField('Endereço')
     data_nascimento = models.DateField('Data de nascimento', validators=[validar_maioridade])
-    grau_academico = models.CharField('Grau acadêmico', max_length=20, choices=GRAU_CHOICES)
     curriculo = models.FileField('Currículo', upload_to='curriculos/', blank=True)
     foto = models.ImageField('Foto', upload_to='fotos/', blank=True)
+
+    participacao_projetos_anos = models.PositiveIntegerField('Anos de experiência em projetos/pesquisa', default=0)
+    participacao_congressos = models.BooleanField('Participação em congressos, feiras, eventos e palestras', default=False)
+    resumo_anais = models.BooleanField('Resumo publicado em anais de eventos', default=False)
+    artigo_completo_anais = models.BooleanField('Artigo completo publicado em anais de eventos', default=False)
+    artigo_cientifico_nacional = models.BooleanField('Artigo científico ou capítulo de livro nacional publicado', default=False)
+    artigo_cientifico_internacional = models.BooleanField('Artigo científico ou capítulo de livro internacional publicado', default=False)
+    livro_patente = models.BooleanField('Livro publicado na área de interesse ou patente registrada', default=False)
+    participacao_minicurso = models.BooleanField('Participação em minicurso (até 4 horas) na área de interesse', default=False)
+    treinamento = models.BooleanField('Treinamento (acima de 4 horas) na área de interesse', default=False)
+    pontuacao_previa = models.DecimalField('Pontuação prévia', max_digits=8, decimal_places=2, default=0)
+
     tenant = models.ForeignKey(Tenant, on_delete=models.CASCADE, related_name='cadastros')
 
     objects = TenantManager()
@@ -71,6 +73,7 @@ class PosGraduacao(DataModel):
     TIPO_CHOICES = [
         ('pos_graduacao', 'Pós-Graduação'),
         ('mba', 'MBA'),
+        ('especializacao', 'Especialização'),
         ('mestrado', 'Mestrado'),
         ('doutorado', 'Doutorado'),
         ('pos_doutorado', 'Pós-Doutorado'),

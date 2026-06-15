@@ -18,6 +18,11 @@
                         {% if form.nome.errors %}<div class="text-danger small mt-1">{{ form.nome.errors|join:', ' }}</div>{% endif %}
                     </div>
                     <div class="mb-3">
+                        <label class="form-label">{{ form.tipo_criterio.label }}</label>
+                        {{ form.tipo_criterio }}
+                        {% if form.tipo_criterio.errors %}<div class="text-danger small mt-1">{{ form.tipo_criterio.errors|join:', ' }}</div>{% endif %}
+                    </div>
+                    <div class="mb-3">
                         <label class="form-label">{{ form.descricao.label }}</label>
                         {{ form.descricao }}
                         {% if form.descricao.errors %}<div class="text-danger small mt-1">{{ form.descricao.errors|join:', ' }}</div>{% endif %}
@@ -26,6 +31,12 @@
                         <label class="form-label">{{ form.peso.label }}</label>
                         {{ form.peso }}
                         {% if form.peso.errors %}<div class="text-danger small mt-1">{{ form.peso.errors|join:', ' }}</div>{% endif %}
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">{{ form.peso_maximo.label }}</label>
+                        {{ form.peso_maximo }}
+                        <div class="form-text">Usado para criterios com teto de pontuacao (ex: Projetos/Pesquisa). Deixe 0 se nao houver teto.</div>
+                        {% if form.peso_maximo.errors %}<div class="text-danger small mt-1">{{ form.peso_maximo.errors|join:', ' }}</div>{% endif %}
                     </div>
                     <div class="mb-4 form-check">
                         {{ form.ativo }}
