@@ -1,0 +1,211 @@
+{% extends 'base.html' %}
+{% block title %}Inicio - Bolsas SENAI - MS{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <h2 class="fw-bold text-primary mb-1">
+        <i class="bi bi-grid-fill me-2"></i>Painel
+    </h2>
+    <p class="text-muted mb-4">
+        {% if tipo_usuario == 'ADMIN' %}
+        Visao geral da plataforma
+        {% elif tipo_usuario == 'MANAGER' %}
+        Gerencie editais e acompanhe aplicacoes
+        {% else %}
+        Bem-vindo, {{ user.nome_completo }}
+        {% endif %}
+    </p>
+
+    {% if tipo_usuario == 'ADMIN' %}
+    <div class="row g-3 mb-4">
+        <div class="col-md-2">
+            <div class="card p-3 text-center border-primary border-opacity-25 h-100">
+                <i class="bi bi-people-fill fs-3 text-primary mb-1"></i>
+                <h3 class="fw-bold mb-0">{{ total_usuarios }}</h3>
+                <small class="text-muted">Usuarios</small>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="card p-3 text-center border-warning border-opacity-25 h-100">
+                <i class="bi bi-hourglass-split fs-3 text-warning mb-1"></i>
+                <h3 class="fw-bold mb-0">{{ total_pendentes }}</h3>
+                <small class="text-muted">Pendentes</small>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="card p-3 text-center border-info border-opacity-25 h-100">
+                <i class="bi bi-journal-text fs-3 text-info mb-1"></i>
+                <h3 class="fw-bold mb-0">{{ total_editais }}</h3>
+                <small class="text-muted">Editais</small>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="card p-3 text-center border-success border-opacity-25 h-100">
+                <i class="bi bi-clipboard-check fs-3 text-success mb-1"></i>
+                <h3 class="fw-bold mb-0">{{ total_aplicacoes }}</h3>
+                <small class="text-muted">Aplicacoes</small>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="card p-3 text-center border-danger border-opacity-25 h-100">
+                <i class="bi bi-star-fill fs-3 text-danger mb-1"></i>
+                <h3 class="fw-bold mb-0">{{ total_classificacoes }}</h3>
+                <small class="text-muted">Classificacoes</small>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="card p-3 text-center border-secondary border-opacity-25 h-100">
+                <i class="bi bi-list-check fs-3 text-secondary mb-1"></i>
+                <h3 class="fw-bold mb-0">{{ total_pendentes_solicitacao }}</h3>
+                <small class="text-muted">Solic. Edicao</small>
+            </div>
+        </div>
+    </div>
+
+    {% elif tipo_usuario == 'MANAGER' %}
+    <div class="row g-3 mb-4">
+        <div class="col-md-3">
+            <div class="card p-3 text-center border-success border-opacity-25 h-100">
+                <i class="bi bi-journal-text fs-3 text-success mb-1"></i>
+                <h3 class="fw-bold mb-0">{{ total_editais_abertos }}</h3>
+                <small class="text-muted">Editais Abertos</small>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card p-3 text-center border-warning border-opacity-25 h-100">
+                <i class="bi bi-hourglass-split fs-3 text-warning mb-1"></i>
+                <h3 class="fw-bold mb-0">{{ total_pendentes_avaliacao }}</h3>
+                <small class="text-muted">Aguardando Avaliacao</small>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card p-3 text-center border-primary border-opacity-25 h-100">
+                <i class="bi bi-clipboard-check fs-3 text-primary mb-1"></i>
+                <h3 class="fw-bold mb-0">{{ total_aplicacoes }}</h3>
+                <small class="text-muted">Total Aplicacoes</small>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card p-3 text-center border-secondary border-opacity-25 h-100">
+                <i class="bi bi-list-check fs-3 text-secondary mb-1"></i>
+                <h3 class="fw-bold mb-0">{{ total_pendentes_solicitacao }}</h3>
+                <small class="text-muted">Solic. Edicao</small>
+            </div>
+        </div>
+    </div>
+
+    {% else %}
+    <div class="row g-3 mb-4">
+        <div class="col-md-3">
+            <div class="card p-3 text-center border-primary border-opacity-25 h-100">
+                <i class="bi bi-person-lines-fill fs-3 text-primary mb-1"></i>
+                <h3 class="fw-bold mb-0">{% if has_cadastro %}1{% else %}0{% endif %}</h3>
+                <small class="text-muted">Cadastro</small>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card p-3 text-center border-success border-opacity-25 h-100">
+                <i class="bi bi-journal-text fs-3 text-success mb-1"></i>
+                <h3 class="fw-bold mb-0">{{ total_editais_abertos }}</h3>
+                <small class="text-muted">Editais Abertos</small>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card p-3 text-center border-info border-opacity-25 h-100">
+                <i class="bi bi-clipboard-check fs-3 text-info mb-1"></i>
+                <h3 class="fw-bold mb-0">{{ total_aplicacoes }}</h3>
+                <small class="text-muted">Aplicacoes</small>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card p-3 text-center border-warning border-opacity-25 h-100">
+                <i class="bi bi-star-fill fs-3 text-warning mb-1"></i>
+                <h3 class="fw-bold mb-0">{{ total_classificacoes }}</h3>
+                <small class="text-muted">Classificacoes</small>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <div class="row g-4">
+        {% if user.is_superuser or tipo_usuario == 'ADMIN' %}
+        <div class="col-md-6 col-lg-3">
+            <div class="card p-4 text-center h-100">
+                <div class="fs-1 text-warning mb-2"><i class="bi bi-speedometer2"></i></div>
+                <h5 class="fw-semibold">Painel Admin</h5>
+                <p class="text-muted small mb-3">Gerencie usuarios e cadastros.</p>
+                <a href="{% url 'admin_dashboard' %}" class="btn btn-warning btn-sm mt-auto">Acessar</a>
+            </div>
+        </div>
+        {% endif %}
+
+        <div class="col-md-6 col-lg-3">
+            <div class="card p-4 text-center h-100">
+                <div class="fs-1 text-primary mb-2"><i class="bi bi-person-lines-fill"></i></div>
+                <h5 class="fw-semibold">Meu Cadastro</h5>
+                <p class="text-muted small mb-3">Gerencie seus dados pessoais e curriculo.</p>
+                <a href="{% if has_cadastro %}{% url 'cadastro_detail' %}{% else %}{% url 'cadastro_create' %}{% endif %}" class="btn btn-outline-primary btn-sm mt-auto">Acessar</a>
+            </div>
+        </div>
+
+        {% if tipo_usuario == 'ADMIN' or tipo_usuario == 'MANAGER' %}
+        <div class="col-md-6 col-lg-3">
+            <div class="card p-4 text-center h-100">
+                <div class="fs-1 text-success mb-2"><i class="bi bi-list-check"></i></div>
+                <h5 class="fw-semibold">Solicitacoes</h5>
+                <p class="text-muted small mb-3">Revise solicitacoes de edicao pendentes.</p>
+                <a href="{% url 'solicitacao_list' %}" class="btn btn-outline-success btn-sm mt-auto">Acessar</a>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-3">
+            <div class="card p-4 text-center h-100">
+                <div class="fs-1 text-danger mb-2"><i class="bi bi-star-fill"></i></div>
+                <h5 class="fw-semibold">Classificacao</h5>
+                <p class="text-muted small mb-3">{% if tipo_usuario == 'MANAGER' %}Classifique candidatos.{% else %}Gerencie classificacoes.{% endif %}</p>
+                <a href="{% url 'classificacao_list' %}" class="btn btn-outline-danger btn-sm mt-auto">Acessar</a>
+            </div>
+        </div>
+        {% endif %}
+
+        <div class="col-md-6 col-lg-3">
+            <div class="card p-4 text-center h-100">
+                <div class="fs-1 text-primary mb-2"><i class="bi bi-journal-text"></i></div>
+                <h5 class="fw-semibold">Editais</h5>
+                <p class="text-muted small mb-3">Consulte editais e candidate-se.</p>
+                <a href="{% url 'edital_list' %}" class="btn btn-outline-primary btn-sm mt-auto">Acessar</a>
+            </div>
+        </div>
+
+        <div class="col-md-6 col-lg-3">
+            <div class="card p-4 text-center h-100">
+                <div class="fs-1 text-info mb-2"><i class="bi bi-clipboard-check"></i></div>
+                <h5 class="fw-semibold">Minhas Aplicacoes</h5>
+                <p class="text-muted small mb-3">Acompanhe suas candidaturas.</p>
+                <a href="{% url 'aplicacao_list' %}" class="btn btn-outline-info btn-sm mt-auto">Acessar</a>
+            </div>
+        </div>
+
+        {% if tipo_usuario == 'ADMIN' or tipo_usuario == 'MANAGER' %}
+        <div class="col-md-6 col-lg-3">
+            <div class="card p-4 text-center h-100">
+                <div class="fs-1 text-secondary mb-2"><i class="bi bi-list-ol"></i></div>
+                <h5 class="fw-semibold">Criterios</h5>
+                <p class="text-muted small mb-3">Gerencie criterios de classificacao.</p>
+                <a href="{% url 'criterio_list' %}" class="btn btn-outline-secondary btn-sm mt-auto">Acessar</a>
+            </div>
+        </div>
+        {% endif %}
+
+        {% if tipo_usuario == 'ADMIN' %}
+        <div class="col-md-6 col-lg-3">
+            <div class="card p-4 text-center h-100">
+                <div class="fs-1 text-info mb-2"><i class="bi bi-upload"></i></div>
+                <h5 class="fw-semibold">Importar Dados</h5>
+                <p class="text-muted small mb-3">Importe usuarios e editais via CSV.</p>
+                <a href="{% url 'csv_import' %}" class="btn btn-outline-info btn-sm mt-auto">Acessar</a>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

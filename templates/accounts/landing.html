@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Bem-vindo ao Bolsas SENAI - MS{% endblock %}
+
+{% block content %}
+<div class="bg-primary bg-gradient text-white">
+    <div class="container py-5">
+        <div class="row align-items-center">
+            <div class="col-lg-6 mb-4 mb-lg-0">
+                <h1 class="display-4 fw-bold mb-3">
+                    <i class="bi bi-lightbulb-fill me-2"></i>Bolsas SENAI - MS
+                </h1>
+                <p class="fs-5 text-white-50 mb-4">
+                    Plataforma inteligente para gestao de bolsistas, editais e classificacao de candidatos.
+                    Simplifique o processo seletivo com uma ferramenta moderna e intuitiva.
+                </p>
+                <div class="d-flex flex-wrap gap-3">
+                    <a href="{% url 'login' %}" class="btn btn-light btn-lg px-4 text-primary fw-semibold">
+                        <i class="bi bi-box-arrow-in-right me-2"></i>Entrar
+                    </a>
+                    <a href="{% url 'registro' %}" class="btn btn-outline-light btn-lg px-4">
+                        <i class="bi bi-person-plus me-2"></i>Criar Conta
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="row g-3">
+                    <div class="col-6">
+                        <div class="bg-white bg-opacity-10 rounded-3 p-3 text-center">
+                            <i class="bi bi-person-check fs-1 mb-2 d-block"></i>
+                            <span class="fw-semibold small">Cadastro de Bolsistas</span>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="bg-white bg-opacity-10 rounded-3 p-3 text-center">
+                            <i class="bi bi-journal-text fs-1 mb-2 d-block"></i>
+                            <span class="fw-semibold small">Editais Abertos</span>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="bg-white bg-opacity-10 rounded-3 p-3 text-center">
+                            <i class="bi bi-star-fill fs-1 mb-2 d-block"></i>
+                            <span class="fw-semibold small">Classificacao</span>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="bg-white bg-opacity-10 rounded-3 p-3 text-center">
+                            <i class="bi bi-bell-fill fs-1 mb-2 d-block"></i>
+                            <span class="fw-semibold small">Notificacoes</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container py-5">
+    <div class="text-center mb-5">
+        <h2 class="fw-bold text-primary">Como funciona</h2>
+        <p class="text-muted">Tres passos simples para participar dos editais</p>
+    </div>
+    <div class="row g-4">
+        <div class="col-md-4">
+            <div class="card p-4 text-center h-100">
+                <div class="rounded-circle bg-primary bg-opacity-10 d-inline-flex align-items-center justify-content-center mb-3" style="width:80px;height:80px;">
+                    <i class="bi bi-person-plus fs-2 text-primary"></i>
+                </div>
+                <h5 class="fw-semibold">1. Cadastre-se</h5>
+                <p class="text-muted small">Crie sua conta e complete seu perfil com dados pessoais, curriculo e foto.</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card p-4 text-center h-100">
+                <div class="rounded-circle bg-primary bg-opacity-10 d-inline-flex align-items-center justify-content-center mb-3" style="width:80px;height:80px;">
+                    <i class="bi bi-send-check fs-2 text-primary"></i>
+                </div>
+                <h5 class="fw-semibold">2. Candidate-se</h5>
+                <p class="text-muted small">Encontre o edital ideal e envie sua candidatura com apenas um clique.</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card p-4 text-center h-100">
+                <div class="rounded-circle bg-primary bg-opacity-10 d-inline-flex align-items-center justify-content-center mb-3" style="width:80px;height:80px;">
+                    <i class="bi bi-star-fill fs-2 text-primary"></i>
+                </div>
+                <h5 class="fw-semibold">3. Acompanhe</h5>
+                <p class="text-muted small">Receba notificacoes e acompanhe sua classificacao em tempo real.</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

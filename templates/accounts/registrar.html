@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% block title %}Cadastrar{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6 col-lg-4">
+        <div class="card shadow-sm">
+            <div class="card-body p-4">
+                <h2 class="text-center mb-4">Cadastrar</h2>
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="id_nome_completo" class="form-label">Nome completo</label>
+                        <input type="text" name="nome_completo" id="id_nome_completo" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="id_email" class="form-label">Email</label>
+                        <input type="email" name="email" id="id_email" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="id_password" class="form-label">Senha</label>
+                        <input type="password" name="password" id="id_password" class="form-control" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">Cadastrar</button>
+                </form>
+                <div class="text-center mt-3">
+                    <a href="{% url 'accounts:login' %}">Já tem conta? Entre</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
