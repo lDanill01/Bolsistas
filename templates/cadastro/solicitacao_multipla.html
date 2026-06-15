@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+{% block title %}Solicitar Edicao - Bolsas SENAI - MS{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card p-4">
+                <h3 class="fw-bold text-primary mb-4">
+                    <i class="bi bi-pencil-square me-2"></i>Solicitar Edicao de Cadastro
+                </h3>
+                <p class="text-muted mb-4">
+                    Altere os campos desejados. As alteracoes serao enviadas para aprovacao dos gestores.
+                </p>
+
+                <form method="post" enctype="multipart/form-data" novalidate>
+                    {% csrf_token %}
+
+                    <h5 class="fw-semibold mb-3">Dados Pessoais</h5>
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <label class="form-label">{{ form.data_nascimento.label }}</label>
+                            {{ form.data_nascimento }}
+                            {% if form.data_nascimento.errors %}
+                            <div class="text-danger small mt-1">{{ form.data_nascimento.errors|join:', ' }}</div>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-8">
+                            <label class="form-label">{{ form.grau_academico.label }}</label>
+                            {{ form.grau_academico }}
+                            {% if form.grau_academico.errors %}
+                            <div class="text-danger small mt-1">{{ form.grau_academico.errors|join:', ' }}</div>
+                            {% endif %}
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label">{{ form.endereco.label }}</label>
+                            {{ form.endereco }}
+                            {% if form.endereco.errors %}
+                            <div class="text-danger small mt-1">{{ form.endereco.errors|join:', ' }}</div>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">{{ form.curriculo.label }}</label>
+                            {{ form.curriculo }}
+                            {% if form.curriculo.errors %}
+                            <div class="text-danger small mt-1">{{ form.curriculo.errors|join:', ' }}</div>
+                            {% endif %}
+                            {% if object.curriculo %}
+                            <small class="text-muted">Arquivo atual: {{ object.curriculo.name }}</small>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">{{ form.foto.label }}</label>
+                            {{ form.foto }}
+                            {% if form.foto.errors %}
+                            <div class="text-danger small mt-1">{{ form.foto.errors|join:', ' }}</div>
+                            {% endif %}
+                            {% if object.foto %}
+                            <small class="text-muted">Foto atual definida</small>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="d-flex gap-2 mt-4">
+                        <button type="submit" class="btn btn-primary px-4">
+                            <i class="bi bi-check-lg me-1"></i>Salvar
+                        </button>
+                        <a href="{% url 'cadastro_detail' %}" class="btn btn-outline-secondary">
+                            Cancelar
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

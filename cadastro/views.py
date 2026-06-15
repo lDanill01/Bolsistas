@@ -235,6 +235,64 @@ class SolicitacaoListView(ManagerRequiredMixin, ListView):
         ).select_related('bolsista', 'bolsista__user')
 
 
+class SolicitacaoMultiplaView(TenantRequiredMixin, FormView):
+    template_name = 'cadastro/solicitacao_multipla.html'
+    form_class = CadastroForm
+    success_url = reverse_lazy('cadastro_detail')
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        cadastro = get_object_or_404(
+            CadastroBolsista, user=self.request.user, tenant=self.request.tenant
+        )
+        kwargs['instance'] = cadastro
+        return kwargs
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['object'] = get_object_or_404(
+            CadastroBolsista, user=self.request.user, tenant=self.request.tenant
+        )
+        return context
+
+    def form_valid(self, form):
+        cadastro = get_object_or_404(
+            CadastroBolsista, user=self.request.user, tenant=self.request.tenant
+        )
+        alteracoes = 0
+        campos_texto = ['data_nascimento', 'grau_academico', 'endereco']
+        for campo in campos_texto:
+            valor_antigo = str(getattr(cadastro, campo, '') or '')
+            valor_novo = str(form.cleaned_data.get(campo, '') or '')
+            if valor_antigo != valor_novo:
+                SolicitacaoEdicao.objects.create(
+                    bolsista=cadastro,
+                    campo=campo,
+                    valor_original=valor_antigo,
+                    valor_novo=valor_novo,
+                    status='pendente',
+                    tenant=self.request.tenant,
+                )
+                alteracoes += 1
+
+        for campo in ['curriculo', 'foto']:
+            arquivo = form.cleaned_data.get(campo)
+            if arquivo:
+                setattr(cadastro, campo, arquivo)
+                cadastro.save(update_fields=[campo])
+                alteracoes += 1
+
+        if alteracoes:
+            messages.success(
+                self.request,
+                f'Solicitação enviada para aprovação. {alteracoes} campo(s) aguardando revisão dos gestores.',
+            )
+        else:
+            messages.info(self.request, 'Nenhuma alteração detectada.')
+
+        return redirect(self.success_url)
+
+
 class SolicitacaoRevisarView(ManagerRequiredMixin, TemplateView):
     def post(self, request, *args, **kwargs):
         solicitacao = get_object_or_404(

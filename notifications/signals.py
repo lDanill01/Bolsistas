@@ -2,6 +2,7 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 
 from cadastro.models import CadastroBolsista, SolicitacaoEdicao
+from accounts.models import User
 from classificacao.models import Classificacao
 from .models import Notificacao
 
@@ -34,8 +35,23 @@ def notificar_classificacao(sender, instance, **kwargs):
 
 
 @receiver(post_save, sender=SolicitacaoEdicao)
-def notificar_solicitacao(sender, instance, **kwargs):
-    if instance.status == 'aprovado':
+def notificar_solicitacao(sender, instance, created, **kwargs):
+    if created and instance.status == 'pendente':
+        gestores = User.objects.filter(
+            perfil__tenant=instance.tenant,
+            perfil__tipo__in=['ADMIN', 'MANAGER'],
+            is_active=True,
+        )
+        for gestor in gestores:
+            Notificacao.objects.create(
+                destinatario=gestor,
+                titulo='Nova solicitação de edição',
+                mensagem=f'{instance.bolsista.user.nome_completo} solicitou edição do campo "{instance.campo}".',
+                tipo='solicitacao',
+                tenant=instance.tenant,
+            )
+
+    elif instance.status == 'aprovado':
         Notificacao.objects.create(
             destinatario=instance.bolsista.user,
             titulo='Solicitação aprovada',
