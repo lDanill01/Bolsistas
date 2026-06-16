@@ -1,0 +1,322 @@
+{% extends 'base.html' %}
+{% block title %}{% if object %}Editar{% else %}Novo{% endif %} Edital Provisório - Bolsas SENAI - MS{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white py-3">
+                    <h4 class="fw-bold mb-0">
+                        <i class="bi bi-journal-plus me-2"></i>
+                        {% if object %}Editar Edital Provisório{% else %}Novo Edital Provisório{% endif %}
+                    </h4>
+                </div>
+                <div class="card-body p-4">
+                    <form method="post" novalidate>
+                        {% csrf_token %}
+
+                        <h5 class="fw-semibold mb-3">
+                            <i class="bi bi-building me-2 text-primary"></i>Dados do Instituto
+                        </h5>
+                        <div class="row g-3 mb-4">
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">{{ form.nome_instituto.label }}</label>
+                                {{ form.nome_instituto }}
+                                {% if form.nome_instituto.errors %}
+                                <div class="text-danger small mt-1">{{ form.nome_instituto.errors|join:', ' }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label fw-semibold">{{ form.email_solicitante.label }}</label>
+                                {{ form.email_solicitante }}
+                                {% if form.email_solicitante.errors %}
+                                <div class="text-danger small mt-1">{{ form.email_solicitante.errors|join:', ' }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label fw-semibold">{{ form.telefone.label }}</label>
+                                {{ form.telefone }}
+                                {% if form.telefone.errors %}
+                                <div class="text-danger small mt-1">{{ form.telefone.errors|join:', ' }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label fw-semibold">{{ form.endereco.label }}</label>
+                                {{ form.endereco }}
+                                {% if form.endereco.errors %}
+                                <div class="text-danger small mt-1">{{ form.endereco.errors|join:', ' }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <hr class="my-4">
+
+                        <h5 class="fw-semibold mb-3">
+                            <i class="bi bi-cash-stack me-2 text-primary"></i>Bolsas
+                        </h5>
+                        <div class="row g-3 mb-4">
+                            <div class="col-md-3">
+                                <label class="form-label fw-semibold">{{ form.numero_vagas.label }}</label>
+                                {{ form.numero_vagas }}
+                                {% if form.numero_vagas.errors %}
+                                <div class="text-danger small mt-1">{{ form.numero_vagas.errors|join:', ' }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label fw-semibold">{{ form.modalidade_bolsa.label }}</label>
+                                {{ form.modalidade_bolsa }}
+                                {% if form.modalidade_bolsa.errors %}
+                                <div class="text-danger small mt-1">{{ form.modalidade_bolsa.errors|join:', ' }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">{{ form.plataforma_tecnologica.label }}</label>
+                                {{ form.plataforma_tecnologica }}
+                                {% if form.plataforma_tecnologica.errors %}
+                                <div class="text-danger small mt-1">{{ form.plataforma_tecnologica.errors|join:', ' }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">{{ form.vigencia.label }}</label>
+                                {{ form.vigencia }}
+                                {% if form.vigencia.errors %}
+                                <div class="text-danger small mt-1">{{ form.vigencia.errors|join:', ' }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">{{ form.endereco_atuacao.label }}</label>
+                                {{ form.endereco_atuacao }}
+                                {% if form.endereco_atuacao.errors %}
+                                <div class="text-danger small mt-1">{{ form.endereco_atuacao.errors|join:', ' }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <hr class="my-4">
+
+                        <h5 class="fw-semibold mb-3">
+                            <i class="bi bi-list-check me-2 text-primary"></i>Requisitos para Bolsas
+                        </h5>
+                        <div class="row g-3 mb-4">
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">{{ form.qualificacao_minima.label }}</label>
+                                {{ form.qualificacao_minima }}
+                                {% if form.qualificacao_minima.errors %}
+                                <div class="text-danger small mt-1">{{ form.qualificacao_minima.errors|join:', ' }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">{{ form.experiencia_minima.label }}</label>
+                                {{ form.experiencia_minima }}
+                                {% if form.experiencia_minima.errors %}
+                                <div class="text-danger small mt-1">{{ form.experiencia_minima.errors|join:', ' }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">{{ form.conhecimento_desejavel.label }}</label>
+                                {{ form.conhecimento_desejavel }}
+                                {% if form.conhecimento_desejavel.errors %}
+                                <div class="text-danger small mt-1">{{ form.conhecimento_desejavel.errors|join:', ' }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">{{ form.conteudo_prova_teorica.label }}</label>
+                                {{ form.conteudo_prova_teorica }}
+                                {% if form.conteudo_prova_teorica.errors %}
+                                <div class="text-danger small mt-1">{{ form.conteudo_prova_teorica.errors|join:', ' }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">{{ form.entrevista.label }}</label>
+                                {{ form.entrevista }}
+                                {% if form.entrevista.errors %}
+                                <div class="text-danger small mt-1">{{ form.entrevista.errors|join:', ' }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">{{ form.criterios_desempate.label }}</label>
+                                {{ form.criterios_desempate }}
+                                {% if form.criterios_desempate.errors %}
+                                <div class="text-danger small mt-1">{{ form.criterios_desempate.errors|join:', ' }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        {% if user.perfil.tipo == 'ADMIN' or user.perfil.tipo == 'MANAGER' %}
+                        <hr class="my-4">
+
+                        <div class="row g-3 mb-4">
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">{{ form.status.label }}</label>
+                                {{ form.status }}
+                                {% if form.status.errors %}
+                                <div class="text-danger small mt-1">{{ form.status.errors|join:', ' }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% endif %}
+
+                        <hr class="my-4">
+
+                        <h5 class="fw-semibold mb-3">
+                            <i class="bi bi-calendar-event me-2 text-primary"></i>Cronograma
+                        </h5>
+                        <p class="text-muted small mb-3">Adicione os eventos do cronograma com suas respectivas datas de referência.</p>
+
+                        {{ cronograma_formset.management_form }}
+
+                        <div class="table-responsive mb-3">
+                            <table class="table table-bordered" id="cronograma-table">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th style="width:35%">Evento</th>
+                                        <th style="width:35%">Data de Referência</th>
+                                        <th style="width:20%">Observação</th>
+                                        <th style="width:5%">Ordem</th>
+                                        <th style="width:5%"></th>
+                                    </tr>
+                                </thead>
+                                <tbody id="cronograma-rows">
+                                    {% for form in cronograma_formset %}
+                                    <tr class="cronograma-row">
+                                        <td>
+                                            {{ form.evento }}
+                                            {% if form.evento.errors %}
+                                            <div class="text-danger small">{{ form.evento.errors|join:', ' }}</div>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            {{ form.data_referencia }}
+                                            {% if form.data_referencia.errors %}
+                                            <div class="text-danger small">{{ form.data_referencia.errors|join:', ' }}</div>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            {{ form.observacao }}
+                                            {% if form.observacao.errors %}
+                                            <div class="text-danger small">{{ form.observacao.errors|join:', ' }}</div>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            {{ form.ordem }}
+                                            {% if form.ordem.errors %}
+                                            <div class="text-danger small">{{ form.ordem.errors|join:', ' }}</div>
+                                            {% endif %}
+                                        </td>
+                                        <td class="text-center align-middle">
+                                            {{ form.id }}
+                                            <button type="button" class="btn btn-outline-danger btn-sm remove-row" title="Remover">
+                                                <i class="bi bi-x-lg"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <button type="button" class="btn btn-outline-primary btn-sm mb-4" id="add-cronograma-row">
+                            <i class="bi bi-plus-lg me-1"></i>Adicionar Evento
+                        </button>
+
+                        <hr class="my-4">
+
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn btn-primary px-4">
+                                <i class="bi bi-check-lg me-1"></i>{% if object %}Atualizar{% else %}Salvar{% endif %}
+                            </button>
+                            <a href="{% url 'edital_provisorio:list' %}" class="btn btn-outline-secondary">
+                                <i class="bi bi-arrow-left me-1"></i>Voltar
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+(function() {
+    var container = document.getElementById('cronograma-rows');
+    var addBtn = document.getElementById('add-cronograma-row');
+    var totalForms = document.getElementById('id_cronograma-TOTAL_FORMS');
+
+    function updateRemoveButtons() {
+        container.querySelectorAll('.cronograma-row').forEach(function(row) {
+            var btn = row.querySelector('.remove-row');
+            if (btn) {
+                btn.onclick = function() {
+                    var deleteInput = row.querySelector('input[name$="-DELETE"]');
+                    if (deleteInput) {
+                        deleteInput.checked = true;
+                        row.style.display = 'none';
+                    } else {
+                        row.remove();
+                        totalForms.value = parseInt(totalForms.value) - 1;
+                    }
+                    reindexRows();
+                };
+            }
+        });
+    }
+
+    function reindexRows() {
+        var rows = container.querySelectorAll('.cronograma-row');
+        rows.forEach(function(row, index) {
+            if (row.style.display === 'none') return;
+            var inputs = row.querySelectorAll('input, select, textarea');
+            inputs.forEach(function(input) {
+                var name = input.getAttribute('name');
+                if (name && name.indexOf('cronograma-') === 0) {
+                    var newName = name.replace(/cronograma-\d+-/, 'cronograma-' + index + '-');
+                    input.setAttribute('name', newName);
+                    input.setAttribute('id', 'id_' + newName);
+                }
+            });
+        });
+    }
+
+    addBtn.addEventListener('click', function() {
+        var lastRow = container.querySelector('.cronograma-row:last-child');
+        if (!lastRow) return;
+        var clone = lastRow.cloneNode(true);
+
+        var inputs = clone.querySelectorAll('input, select, textarea');
+        inputs.forEach(function(input) {
+            var name = input.getAttribute('name');
+            if (name) {
+                var newName = name.replace(/cronograma-\d+-/, 'cronograma-' + totalForms.value + '-');
+                input.setAttribute('name', newName);
+                input.setAttribute('id', 'id_' + newName);
+                if (input.type !== 'hidden') {
+                    if (input.tagName === 'SELECT') {
+                        input.selectedIndex = 0;
+                    } else if (input.type === 'checkbox') {
+                        input.checked = false;
+                    } else {
+                        input.value = '';
+                    }
+                }
+            }
+        });
+
+        var idInput = clone.querySelector('input[name$="-id"]');
+        if (idInput) idInput.value = '';
+
+        var deleteInput = clone.querySelector('input[name$="-DELETE"]');
+        if (deleteInput) deleteInput.checked = false;
+
+        clone.style.display = '';
+        container.appendChild(clone);
+        totalForms.value = parseInt(totalForms.value) + 1;
+        updateRemoveButtons();
+    });
+
+    updateRemoveButtons();
+})();
+</script>
+{% endblock %}

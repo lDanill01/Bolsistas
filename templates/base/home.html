@@ -194,6 +194,14 @@
                 <a href="{% url 'criterio_list' %}" class="btn btn-outline-secondary btn-sm mt-auto">Acessar</a>
             </div>
         </div>
+        <div class="col-md-6 col-lg-3">
+            <div class="card p-4 text-center h-100">
+                <div class="fs-1 text-primary mb-2"><i class="bi bi-journal-plus"></i></div>
+                <h5 class="fw-semibold">Edital Provisório</h5>
+                <p class="text-muted small mb-3">Crie e gerencie editais provisórios.</p>
+                <a href="{% url 'edital_provisorio:list' %}" class="btn btn-outline-primary btn-sm mt-auto">Acessar</a>
+            </div>
+        </div>
         {% endif %}
 
         {% if tipo_usuario == 'ADMIN' %}

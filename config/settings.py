@@ -22,6 +22,7 @@ INSTALLED_APPS = [
     'editais',
     'classificacao',
     'notifications',
+    'edital_provisorio',
 ]
 
 MIDDLEWARE = [
