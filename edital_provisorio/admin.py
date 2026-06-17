@@ -34,6 +34,8 @@ class EditalProvisorioAdmin(admin.ModelAdmin):
     def save_model(self, request, obj, form, change):
         if not change:
             obj.criado_por = request.user
+        if not change and not obj.tenant_id and getattr(request, 'tenant', None):
+            obj.tenant = request.tenant
         super().save_model(request, obj, form, change)
 
     def criado_em(self, obj):

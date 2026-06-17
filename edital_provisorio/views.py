@@ -38,25 +38,6 @@ class EditalProvisorioListView(TenantRequiredMixin, ContextMixin, ListView):
         return context
 
 
-def _handle_formset(request, form, prefix='cronograma'):
-    kwargs = {
-        'request.POST': request.POST,
-        'instance': form.instance if hasattr(form, 'instance') and form.instance.pk else None,
-    }
-    if form.instance and form.instance.pk:
-        formset = CronogramaEventoFormSet(
-            request.POST,
-            instance=form.instance,
-            prefix=prefix,
-        )
-    else:
-        formset = CronogramaEventoFormSet(
-            request.POST,
-            prefix=prefix,
-        )
-    return formset
-
-
 class EditalProvisorioCreateView(ManagerRequiredMixin, ContextMixin, CreateView):
     model = EditalProvisorio
     template_name = 'edital_provisorio/edital_form.html'
