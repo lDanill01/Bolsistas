@@ -303,3 +303,21 @@ class AlterarStatusAplicacaoView(ManagerRequiredMixin, TemplateView):
             )
             return HttpResponse(html)
         return redirect('aplicacao_list')
+
+
+class EditalResumoView(TenantRequiredMixin, TemplateView):
+    def get(self, request, *args, **kwargs):
+        edital = get_object_or_404(EditalProvisorio, pk=kwargs['pk'], tenant=request.tenant)
+
+        from .ai_service import summarize_edital
+        result = summarize_edital(edital)
+
+        if result["error"]:
+            html = f'<div class="alert alert-danger py-2 small"><i class="bi bi-exclamation-triangle me-1"></i>{result["error"]}</div>'
+        else:
+            html = render_to_string('editais/partials/edital_resumo.html', {
+                'resumo': result['summary'],
+                'edital': edital,
+            }, request=request)
+
+        return HttpResponse(html)

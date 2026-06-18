@@ -7,4 +7,8 @@ redis
 django-celery-beat
 django-storages
 faker
+langchain
+langchain-openai
+langgraph
+openai
 psycopg2-binary

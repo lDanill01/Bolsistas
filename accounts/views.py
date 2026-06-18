@@ -11,7 +11,7 @@ from django import forms
 from base.mixins import ManagerRequiredMixin
 
 from .models import User, Perfil, Tenant, DocumentoExterno
-from editais.models import EditalProvisorioProvisorio, AplicacaoEditalProvisorio
+from editais.models import EditalProvisorio, AplicacaoEdital
 from classificacao.models import Classificacao
 from cadastro.models import SolicitacaoEdicao
 
@@ -124,7 +124,7 @@ class HomeView(LoginRequiredMixin, TemplateView):
                 perfil__tenant=tenant, is_active=False
             ).count()
             context['total_editais'] = EditalProvisorio.objects.filter(tenant=tenant).count()
-            context['total_aplicacoes'] = AplicacaoEditalProvisorio.objects.filter(tenant=tenant).count()
+            context['total_aplicacoes'] = AplicacaoEdital.objects.filter(tenant=tenant).count()
             context['total_classificacoes'] = Classificacao.objects.filter(tenant=tenant).count()
             context['total_pendentes_solicitacao'] = SolicitacaoEdicao.objects.filter(
                 tenant=tenant, status='pendente'
@@ -134,10 +134,10 @@ class HomeView(LoginRequiredMixin, TemplateView):
             context['total_editais_abertos'] = EditalProvisorio.objects.filter(
                 tenant=tenant, status='aberto'
             ).count()
-            context['total_pendentes_avaliacao'] = AplicacaoEditalProvisorio.objects.filter(
+            context['total_pendentes_avaliacao'] = AplicacaoEdital.objects.filter(
                 tenant=tenant, status__in=['pendente', 'em_analise']
             ).count()
-            context['total_aplicacoes'] = AplicacaoEditalProvisorio.objects.filter(tenant=tenant).count()
+            context['total_aplicacoes'] = AplicacaoEdital.objects.filter(tenant=tenant).count()
             context['total_pendentes_solicitacao'] = SolicitacaoEdicao.objects.filter(
                 tenant=tenant, status='pendente'
             ).count()
@@ -147,7 +147,7 @@ class HomeView(LoginRequiredMixin, TemplateView):
                 tenant=tenant, status='aberto'
             ).count()
             if hasattr(user, 'cadastro'):
-                context['total_aplicacoes'] = AplicacaoEditalProvisorio.objects.filter(
+                context['total_aplicacoes'] = AplicacaoEdital.objects.filter(
                     bolsista=user.cadastro
                 ).count()
                 context['total_classificacoes'] = Classificacao.objects.filter(

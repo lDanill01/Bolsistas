@@ -1,0 +1,1218 @@
+{
+  "communities": {
+    "0": [
+      "abstractuser",
+      "accounts_models_user",
+      "accounts_models_user_str",
+      "cadastro_admin",
+      "cadastro_admin_cadastrobolsistaadmin",
+      "cadastro_admin_cursosuperioradmin",
+      "cadastro_admin_posgraduacaoadmin",
+      "cadastro_admin_solicitacaoedicaoadmin",
+      "cadastro_models_cadastrobolsista",
+      "cadastro_models_cadastrobolsista_str",
+      "cadastro_models_cursosuperior",
+      "cadastro_models_cursosuperior_str",
+      "cadastro_models_posgraduacao",
+      "cadastro_models_posgraduacao_str",
+      "cadastro_models_solicitacaoedicao",
+      "cadastro_models_solicitacaoedicao_str",
+      "cadastro_utils",
+      "cadastro_utils_calcular_pontuacao_previa",
+      "cadastro_views",
+      "cadastro_views_admindashboardview",
+      "cadastro_views_admindashboardview_get_context_data",
+      "cadastro_views_cadastrocreateview",
+      "cadastro_views_cadastrocreateview_form_valid",
+      "cadastro_views_cadastrocreateview_get",
+      "cadastro_views_cadastrocreateview_get_context_data",
+      "cadastro_views_cadastrodetailview",
+      "cadastro_views_cadastrodetailview_get",
+      "cadastro_views_cadastrodetailview_get_context_data",
+      "cadastro_views_cadastrodetailview_get_object",
+      "cadastro_views_cadastroform",
+      "cadastro_views_cadastrolistview",
+      "cadastro_views_cadastrolistview_get_queryset",
+      "cadastro_views_cadastroupdateview",
+      "cadastro_views_cadastroupdateview_get_context_data",
+      "cadastro_views_cadastroupdateview_get_form",
+      "cadastro_views_cadastroupdateview_get_form_class",
+      "cadastro_views_cadastroupdateview_get_object",
+      "cadastro_views_cadastroupdateview_get_success_url",
+      "cadastro_views_cadastroupdateview_post",
+      "cadastro_views_check_cadastro_permission",
+      "cadastro_views_csvimportview",
+      "cadastro_views_curso_add",
+      "cadastro_views_curso_remove",
+      "cadastro_views_cursosuperiorform",
+      "cadastro_views_meta",
+      "cadastro_views_pos_add",
+      "cadastro_views_pos_remove",
+      "cadastro_views_posgraduacaoform",
+      "cadastro_views_recalcular_pontuacao",
+      "cadastro_views_solicitacaocreateview",
+      "cadastro_views_solicitacaocreateview_form_valid",
+      "cadastro_views_solicitacaocreateview_get_initial",
+      "cadastro_views_solicitacaoform",
+      "cadastro_views_solicitacaolistview",
+      "cadastro_views_solicitacaolistview_get_queryset",
+      "cadastro_views_solicitacaomultiplaview",
+      "cadastro_views_solicitacaomultiplaview_form_invalid",
+      "cadastro_views_solicitacaomultiplaview_form_valid",
+      "cadastro_views_solicitacaomultiplaview_get",
+      "cadastro_views_solicitacaomultiplaview_get_cadastro",
+      "cadastro_views_solicitacaomultiplaview_get_context_data",
+      "cadastro_views_solicitacaomultiplaview_get_form_kwargs",
+      "cadastro_views_solicitacaomultiplaview_make_curso_formset",
+      "cadastro_views_solicitacaomultiplaview_make_pos_formset",
+      "cadastro_views_solicitacaomultiplaview_post",
+      "cadastro_views_solicitacaorevisarview",
+      "cadastro_views_solicitacaorevisarview_post",
+      "editais_views_aplicareditalview_post",
+      "formview"
+    ],
+    "1": [
+      "base_mixins",
+      "base_mixins_adminrequiredmixin",
+      "base_mixins_managerrequiredmixin",
+      "base_mixins_rolerequiredmixin",
+      "base_mixins_rolerequiredmixin_test_func",
+      "base_mixins_tenantrequiredmixin",
+      "base_mixins_tenantrequiredmixin_dispatch",
+      "createview",
+      "deleteview",
+      "detailview",
+      "editais_admin",
+      "editais_admin_aplicacaoeditaladmin",
+      "editais_admin_editaladmin",
+      "editais_models_aplicacaoedital",
+      "editais_models_aplicacaoedital_str",
+      "editais_models_edital",
+      "editais_models_edital_str",
+      "editais_views",
+      "editais_views_alterarstatusaplicacaoview",
+      "editais_views_alterarstatusaplicacaoview_post",
+      "editais_views_aplicacaolistview",
+      "editais_views_aplicacaolistview_get_context_data",
+      "editais_views_aplicacaolistview_get_queryset",
+      "editais_views_aplicareditalview",
+      "editais_views_cancelaraplicacaoview",
+      "editais_views_cancelaraplicacaoview_post",
+      "editais_views_editalcreateview",
+      "editais_views_editalcreateview_form_valid",
+      "editais_views_editaldetailview",
+      "editais_views_editaldetailview_get_context_data",
+      "editais_views_editaldetailview_get_queryset",
+      "editais_views_editalform",
+      "editais_views_editallistview",
+      "editais_views_editallistview_get_context_data",
+      "editais_views_editallistview_get_queryset",
+      "editais_views_editalupdateview",
+      "editais_views_editalupdateview_form_valid",
+      "editais_views_editalupdateview_get_queryset",
+      "editais_views_editalupdateview_get_success_url",
+      "editais_views_meta",
+      "edital_provisorio_forms_editalprovisorioform",
+      "edital_provisorio_views",
+      "edital_provisorio_views_contextmixin",
+      "edital_provisorio_views_contextmixin_get_context_data",
+      "edital_provisorio_views_editalprovisoriocreateview",
+      "edital_provisorio_views_editalprovisoriocreateview_form_valid",
+      "edital_provisorio_views_editalprovisoriocreateview_get_context_data",
+      "edital_provisorio_views_editalprovisoriodeleteview",
+      "edital_provisorio_views_editalprovisoriodeleteview_form_valid",
+      "edital_provisorio_views_editalprovisoriodeleteview_get_queryset",
+      "edital_provisorio_views_editalprovisoriodetailview",
+      "edital_provisorio_views_editalprovisoriodetailview_get_context_data",
+      "edital_provisorio_views_editalprovisoriodetailview_get_queryset",
+      "edital_provisorio_views_editalprovisoriolistview",
+      "edital_provisorio_views_editalprovisoriolistview_get_context_data",
+      "edital_provisorio_views_editalprovisoriolistview_get_queryset",
+      "edital_provisorio_views_editalprovisorioupdateview",
+      "edital_provisorio_views_editalprovisorioupdateview_form_valid",
+      "edital_provisorio_views_editalprovisorioupdateview_get_context_data",
+      "edital_provisorio_views_editalprovisorioupdateview_get_queryset",
+      "edital_provisorio_views_editalprovisorioupdateview_get_success_url",
+      "edital_provisorio_views_handle_formset",
+      "listview",
+      "updateview",
+      "userpassestestmixin"
+    ],
+    "2": [
+      "accounts_models",
+      "accounts_models_meta",
+      "accounts_models_usermanager",
+      "accounts_models_usermanager_create_superuser",
+      "accounts_models_usermanager_create_user",
+      "base_managers",
+      "base_managers_tenantmanager",
+      "base_managers_tenantmanager_all_for_tenant",
+      "base_managers_tenantmanager_get_queryset",
+      "base_models",
+      "base_models_datamodel",
+      "base_models_meta",
+      "base_tenant_get_current_tenant",
+      "baseusermanager",
+      "cadastro_migrations_0001_initial_py_migrations_0001_initial",
+      "cadastro_migrations_0001_initial_py_migrations_0001_initial_migration",
+      "cadastro_models",
+      "cadastro_models_meta",
+      "cadastro_models_validar_maioridade",
+      "editais_models",
+      "editais_models_meta",
+      "edital_provisorio_admin",
+      "edital_provisorio_admin_cronogramaeventoinline",
+      "edital_provisorio_admin_editalprovisorioadmin",
+      "edital_provisorio_admin_editalprovisorioadmin_atualizado_em",
+      "edital_provisorio_admin_editalprovisorioadmin_criado_em",
+      "edital_provisorio_admin_editalprovisorioadmin_save_model",
+      "edital_provisorio_forms",
+      "edital_provisorio_forms_cronogramaeventoform",
+      "edital_provisorio_forms_meta",
+      "edital_provisorio_models",
+      "edital_provisorio_models_cronogramaevento",
+      "edital_provisorio_models_cronogramaevento_str",
+      "edital_provisorio_models_editalprovisorio",
+      "edital_provisorio_models_editalprovisorio_str",
+      "edital_provisorio_models_editalprovisorio_total_eventos",
+      "edital_provisorio_models_meta",
+      "notifications_admin",
+      "notifications_admin_notificacaoadmin",
+      "notifications_models",
+      "notifications_models_meta",
+      "notifications_models_notificacao",
+      "notifications_models_notificacao_str",
+      "notifications_signals",
+      "notifications_signals_notificar_cadastro",
+      "notifications_signals_notificar_classificacao",
+      "notifications_signals_notificar_solicitacao",
+      "notifications_views",
+      "notifications_views_marcarlidaview",
+      "notifications_views_marcarlidaview_post",
+      "notifications_views_marcartodaslidasview",
+      "notifications_views_marcartodaslidasview_post",
+      "notifications_views_notificacaolistview",
+      "notifications_views_notificacaolistview_get_queryset",
+      "view"
+    ],
+    "3": [
+      "classificacao_admin",
+      "classificacao_admin_classificacaoadmin",
+      "classificacao_admin_classificacaocriterioadmin",
+      "classificacao_admin_criterioclassificacaoadmin",
+      "classificacao_models",
+      "classificacao_models_classificacao",
+      "classificacao_models_classificacao_str",
+      "classificacao_models_classificacaocriterio",
+      "classificacao_models_classificacaocriterio_str",
+      "classificacao_models_criterioclassificacao",
+      "classificacao_models_criterioclassificacao_str",
+      "classificacao_models_meta",
+      "classificacao_views",
+      "classificacao_views_classificacaocreateview",
+      "classificacao_views_classificacaocreateview_form_invalid",
+      "classificacao_views_classificacaocreateview_form_valid",
+      "classificacao_views_classificacaocreateview_get_context_data",
+      "classificacao_views_classificacaocreateview_get_form_kwargs",
+      "classificacao_views_classificacaocreateview_make_formset",
+      "classificacao_views_classificacaocreateview_post",
+      "classificacao_views_classificacaocriterioform",
+      "classificacao_views_classificacaodetailview",
+      "classificacao_views_classificacaodetailview_get_context_data",
+      "classificacao_views_classificacaodetailview_get_queryset",
+      "classificacao_views_classificacaoform",
+      "classificacao_views_classificacaoform_clean",
+      "classificacao_views_classificacaoform_init",
+      "classificacao_views_classificacaolistview",
+      "classificacao_views_classificacaolistview_get_context_data",
+      "classificacao_views_classificacaolistview_get_queryset",
+      "classificacao_views_criteriocreateview",
+      "classificacao_views_criteriocreateview_form_valid",
+      "classificacao_views_criterioform",
+      "classificacao_views_criteriolistview",
+      "classificacao_views_criteriolistview_get_queryset",
+      "classificacao_views_criterioupdateview",
+      "classificacao_views_criterioupdateview_form_valid",
+      "classificacao_views_criterioupdateview_get_queryset",
+      "classificacao_views_csvimportform",
+      "classificacao_views_csvimportview",
+      "classificacao_views_csvimportview_form_valid",
+      "classificacao_views_meta",
+      "commands_seed_data"
+    ],
+    "4": [
+      "app_accounts",
+      "app_base",
+      "app_cadastro",
+      "app_classificacao",
+      "app_config",
+      "app_dashboard",
+      "app_editais",
+      "app_notifications",
+      "concept_bolsista",
+      "concept_classificador",
+      "concept_portal_inovacao",
+      "document_plano_desenvolvimento_md",
+      "document_prd_md",
+      "form_field_aplicacao",
+      "form_field_observacoes",
+      "model_aplicacao",
+      "model_aplicacaoedital",
+      "model_cadastrobolsista",
+      "model_classificacao",
+      "model_classificacaocriterio",
+      "model_criterio",
+      "model_criterioclassificacao",
+      "model_cronograma",
+      "model_cursosuperior",
+      "model_datamodel",
+      "model_documentoexterno",
+      "model_edital",
+      "model_edital_provisorio",
+      "model_notificacao",
+      "model_perfil",
+      "model_posgraduacao",
+      "model_solicitacaoedicao",
+      "model_tenant",
+      "model_user",
+      "role_admin",
+      "role_common",
+      "role_manager",
+      "stack_python_django_postgresql"
+    ],
+    "5": [
+      "template_aplicacao_list",
+      "template_classificacao_detail",
+      "template_classificacao_list",
+      "template_criterio_list",
+      "template_edital_cards",
+      "template_edital_detail",
+      "template_edital_form",
+      "template_edital_list",
+      "template_edital_provisorio_confirm_delete",
+      "template_edital_provisorio_detail",
+      "template_edital_provisorio_list",
+      "template_empty_state",
+      "template_notificacao_list",
+      "template_pagination",
+      "url_aplicar_edital",
+      "url_cadastro_create",
+      "url_classificacao_create",
+      "url_classificacao_detail",
+      "url_criterio_create",
+      "url_criterio_list",
+      "url_criterio_update",
+      "url_edital_create",
+      "url_edital_detail",
+      "url_edital_list",
+      "url_edital_provisorio_create",
+      "url_edital_provisorio_delete",
+      "url_edital_provisorio_detail",
+      "url_edital_provisorio_list",
+      "url_edital_provisorio_update",
+      "url_edital_update",
+      "url_marcar_lida",
+      "url_marcar_todas_lidas"
+    ],
+    "6": [
+      "accounts_admin",
+      "accounts_admin_documentoexternoadmin",
+      "accounts_admin_perfiladmin",
+      "accounts_admin_tenantadmin",
+      "accounts_admin_useradmin",
+      "accounts_models_documentoexterno",
+      "accounts_models_documentoexterno_str",
+      "accounts_models_perfil",
+      "accounts_models_perfil_str",
+      "accounts_models_tenant",
+      "accounts_models_tenant_str",
+      "accounts_views",
+      "accounts_views_aprovarusuarioview",
+      "accounts_views_aprovarusuarioview_post",
+      "accounts_views_customloginview",
+      "accounts_views_customloginview_get_success_url",
+      "accounts_views_homeview",
+      "accounts_views_homeview_get_context_data",
+      "accounts_views_landingpageview",
+      "accounts_views_landingpageview_get",
+      "accounts_views_meta",
+      "accounts_views_registroform",
+      "accounts_views_registroform_clean_password2",
+      "accounts_views_registroview",
+      "accounts_views_registroview_form_valid",
+      "base_views",
+      "base_views_media_protegida",
+      "config_urls",
+      "loginrequiredmixin",
+      "loginview",
+      "templateview"
+    ],
+    "7": [
+      "button_aprovar_solicitacao",
+      "button_rejeitar_solicitacao",
+      "field_ano_conclusao_curso",
+      "field_area",
+      "field_curso",
+      "field_grau",
+      "field_instituicao",
+      "field_tipo_pos",
+      "file_requirements_txt",
+      "form_curso_add",
+      "form_pos_add",
+      "form_solicitacao_revisar",
+      "package_celery",
+      "package_django",
+      "package_django_celery_beat",
+      "package_django_htmx",
+      "package_django_storages",
+      "package_faker",
+      "package_pillow",
+      "package_psycopg2_binary",
+      "package_python_decouple",
+      "package_redis",
+      "section_formacao_academica",
+      "template_cadastro_detail_html",
+      "template_curso_section_html",
+      "template_pos_section_html",
+      "template_solicitacao_list_html"
+    ],
+    "8": [
+      "accounts_apps",
+      "accounts_apps_accountsconfig",
+      "appconfig",
+      "base_apps",
+      "base_apps_baseconfig",
+      "cadastro_apps",
+      "cadastro_apps_cadastroconfig",
+      "classificacao_apps",
+      "classificacao_apps_classificacaoconfig",
+      "editais_apps",
+      "editais_apps_editaisconfig",
+      "edital_provisorio_apps",
+      "edital_provisorio_apps_editalprovisorioconfig",
+      "notifications_apps",
+      "notifications_apps_notificationsconfig",
+      "notifications_apps_notificationsconfig_ready"
+    ],
+    "9": [
+      "admin_metric_aplicacoes",
+      "admin_metric_cadastros",
+      "admin_metric_classificacoes",
+      "admin_metric_criterios",
+      "admin_metric_editais",
+      "admin_metric_solicitacoes_pendentes",
+      "admin_metric_usuarios_ativos",
+      "admin_metric_usuarios_pendentes",
+      "quick_action_classificar",
+      "quick_action_django_admin",
+      "quick_action_novo_criterio",
+      "quick_action_novo_edital",
+      "template_admin_dashboard_html"
+    ],
+    "10": [
+      "card_classificacao",
+      "card_editais",
+      "card_meu_cadastro",
+      "card_minhas_aplicacoes",
+      "card_painel_admin",
+      "card_solicitacoes",
+      "dashboard_admin_cards",
+      "dashboard_common_cards",
+      "dashboard_manager_cards",
+      "template_base_home_html"
+    ],
+    "11": [
+      "basecommand",
+      "commands_seed_data_command",
+      "commands_seed_data_command_criar_cadastro",
+      "commands_seed_data_command_criar_classificacao",
+      "commands_seed_data_command_criar_criterios",
+      "commands_seed_data_command_criar_editais",
+      "commands_seed_data_command_criar_usuario",
+      "commands_seed_data_command_handle",
+      "commands_seed_data_command_seed_tenant"
+    ],
+    "12": [
+      "field_data_nascimento",
+      "field_documentos",
+      "field_email_registro",
+      "field_nome_completo",
+      "field_password1",
+      "field_password2",
+      "field_telefone",
+      "form_registro"
+    ],
+    "13": [
+      "button_criar_conta",
+      "button_entrar",
+      "template_base_html",
+      "template_cadastro_list_html",
+      "template_landing_html",
+      "template_registro_html",
+      "template_solicitacao_form_html"
+    ],
+    "14": [
+      "base_tenant",
+      "base_tenant_middleware",
+      "base_tenant_middleware_tenantmiddleware",
+      "base_tenant_middleware_tenantmiddleware_call",
+      "base_tenant_middleware_tenantmiddleware_init",
+      "base_tenant_set_current_tenant"
+    ],
+    "15": [
+      "button_login_submit",
+      "field_email_login",
+      "field_password_login",
+      "form_login",
+      "template_login_html"
+    ],
+    "16": [
+      "checkbox_participacao_congressos",
+      "field_endereco",
+      "field_participacao_projetos_anos",
+      "form_cadastro",
+      "template_cadastro_form_html"
+    ],
+    "17": [
+      "command_graphify_explain",
+      "command_graphify_path",
+      "command_graphify_query",
+      "graphify_concept_graphify",
+      "graphify_skill_skill_tool"
+    ],
+    "18": [
+      "base_middleware",
+      "base_middleware_loginrequiredmiddleware",
+      "base_middleware_loginrequiredmiddleware_call",
+      "base_middleware_loginrequiredmiddleware_init"
+    ],
+    "19": [
+      "form_solicitacao_multipla",
+      "formset_cursos",
+      "formset_pos",
+      "template_solicitacao_multipla_html"
+    ],
+    "20": [
+      "manage",
+      "manage_main",
+      "manage_rationale_9"
+    ],
+    "21": [
+      "opencode_opencode",
+      "opencode_opencode_plugin",
+      "opencode_opencode_schema"
+    ],
+    "22": [
+      "accounts_init",
+      "accounts_urls"
+    ],
+    "23": [
+      "accounts_migrations_0001_initial_py_migrations_0001_initial",
+      "accounts_migrations_0001_initial_py_migrations_0001_initial_migration"
+    ],
+    "24": [
+      "cadastro_init",
+      "cadastro_urls"
+    ],
+    "25": [
+      "classificacao_init",
+      "classificacao_urls"
+    ],
+    "26": [
+      "classificacao_migrations_0001_initial_py_migrations_0001_initial",
+      "classificacao_migrations_0001_initial_py_migrations_0001_initial_migration"
+    ],
+    "27": [
+      "concept_gestor",
+      "concept_perfil_tipo"
+    ],
+    "28": [
+      "concept_knowledge_graph",
+      "document_agents_md"
+    ],
+    "29": [
+      "config_asgi",
+      "config_asgi_rationale_1"
+    ],
+    "30": [
+      "config_wsgi",
+      "config_wsgi_rationale_1"
+    ],
+    "31": [
+      "editais_init",
+      "editais_urls"
+    ],
+    "32": [
+      "editais_migrations_0001_initial_py_migrations_0001_initial",
+      "editais_migrations_0001_initial_py_migrations_0001_initial_migration"
+    ],
+    "33": [
+      "edital_provisorio_init",
+      "edital_provisorio_urls"
+    ],
+    "34": [
+      "edital_provisorio_migrations_0001_initial_py_migrations_0001_initial",
+      "edital_provisorio_migrations_0001_initial_py_migrations_0001_initial_migration"
+    ],
+    "35": [
+      "migrations_0002_perfil_data_nascimento",
+      "migrations_0002_perfil_data_nascimento_migration"
+    ],
+    "36": [
+      "notifications_init",
+      "notifications_urls"
+    ],
+    "37": [
+      "notifications_migrations_0001_initial_py_migrations_0001_initial",
+      "notifications_migrations_0001_initial_py_migrations_0001_initial_migration"
+    ],
+    "38": [
+      "plugins_graphify",
+      "plugins_graphify_graphifyplugin"
+    ],
+    "39": [
+      "template_classificacao_form",
+      "url_classificacao_list"
+    ],
+    "40": [
+      "accounts_migrations_init_py_migrations_init"
+    ],
+    "41": [
+      "accounts_tests"
+    ],
+    "42": [
+      "badge_aprovado"
+    ],
+    "43": [
+      "base_admin"
+    ],
+    "44": [
+      "base_init"
+    ],
+    "45": [
+      "base_migrations_init_py_migrations_init"
+    ],
+    "46": [
+      "base_tests"
+    ],
+    "47": [
+      "button_add_curso"
+    ],
+    "48": [
+      "button_add_pos"
+    ],
+    "49": [
+      "button_adicionar_curso"
+    ],
+    "50": [
+      "button_adicionar_pos"
+    ],
+    "51": [
+      "button_aprovar_usuario"
+    ],
+    "52": [
+      "button_criar_conta_submit"
+    ],
+    "53": [
+      "button_curso_cancel"
+    ],
+    "54": [
+      "button_curso_save"
+    ],
+    "55": [
+      "button_editar_cadastro"
+    ],
+    "56": [
+      "button_enviar_solicitacao"
+    ],
+    "57": [
+      "button_fazer_login"
+    ],
+    "58": [
+      "button_sair"
+    ],
+    "59": [
+      "button_salvar_classificacao"
+    ],
+    "60": [
+      "button_salvar_curso"
+    ],
+    "61": [
+      "button_salvar_pos"
+    ],
+    "62": [
+      "button_visualizar"
+    ],
+    "63": [
+      "cadastro_migrations_init_py_migrations_init"
+    ],
+    "64": [
+      "cadastro_tests"
+    ],
+    "65": [
+      "card_criterios"
+    ],
+    "66": [
+      "card_edital_provisorio"
+    ],
+    "67": [
+      "card_importar_dados"
+    ],
+    "68": [
+      "checkbox_artigo_cientifico_internacional"
+    ],
+    "69": [
+      "checkbox_artigo_cientifico_nacional"
+    ],
+    "70": [
+      "checkbox_artigo_completo_anais"
+    ],
+    "71": [
+      "checkbox_livro_patente"
+    ],
+    "72": [
+      "checkbox_participacao_minicurso"
+    ],
+    "73": [
+      "checkbox_resumo_anais"
+    ],
+    "74": [
+      "checkbox_treinamento"
+    ],
+    "75": [
+      "classificacao_migrations_init_py_migrations_init"
+    ],
+    "76": [
+      "classificacao_tests"
+    ],
+    "77": [
+      "concept_evento_cronograma"
+    ],
+    "78": [
+      "concept_modalidade_bolsa"
+    ],
+    "79": [
+      "concept_peso"
+    ],
+    "80": [
+      "concept_peso_maximo"
+    ],
+    "81": [
+      "concept_status_aplicacao"
+    ],
+    "82": [
+      "concept_status_edital"
+    ],
+    "83": [
+      "concept_status_edital_provisorio"
+    ],
+    "84": [
+      "concept_tipo_criterio"
+    ],
+    "85": [
+      "concept_tipo_notificacao"
+    ],
+    "86": [
+      "config_init"
+    ],
+    "87": [
+      "config_settings"
+    ],
+    "88": [
+      "csv_format_editais"
+    ],
+    "89": [
+      "csv_format_usuarios"
+    ],
+    "90": [
+      "editais_migrations_init_py_migrations_init"
+    ],
+    "91": [
+      "editais_tests"
+    ],
+    "92": [
+      "edital_provisorio_migrations_init_py_migrations_init"
+    ],
+    "93": [
+      "edital_provisorio_tests"
+    ],
+    "94": [
+      "feature_cadastro_bolsistas"
+    ],
+    "95": [
+      "feature_classificacao"
+    ],
+    "96": [
+      "feature_editais_abertos"
+    ],
+    "97": [
+      "feature_notificacoes"
+    ],
+    "98": [
+      "field_email_table"
+    ],
+    "99": [
+      "field_new_password1"
+    ],
+    "100": [
+      "field_new_password2"
+    ],
+    "101": [
+      "field_nome_completo_table"
+    ],
+    "102": [
+      "field_telefone_table"
+    ],
+    "103": [
+      "field_valor_novo"
+    ],
+    "104": [
+      "form_field_conhecimento_desejavel"
+    ],
+    "105": [
+      "form_field_conteudo_prova_teorica"
+    ],
+    "106": [
+      "form_field_criterios_desempate"
+    ],
+    "107": [
+      "form_field_email_solicitante"
+    ],
+    "108": [
+      "form_field_endereco"
+    ],
+    "109": [
+      "form_field_endereco_atuacao"
+    ],
+    "110": [
+      "form_field_entrevista"
+    ],
+    "111": [
+      "form_field_experiencia_minima"
+    ],
+    "112": [
+      "form_field_modalidade_bolsa"
+    ],
+    "113": [
+      "form_field_nome_instituto"
+    ],
+    "114": [
+      "form_field_numero_vagas"
+    ],
+    "115": [
+      "form_field_plataforma_tecnologica"
+    ],
+    "116": [
+      "form_field_qualificacao_minima"
+    ],
+    "117": [
+      "form_field_status"
+    ],
+    "118": [
+      "form_field_telefone"
+    ],
+    "119": [
+      "form_field_vigencia"
+    ],
+    "120": [
+      "form_password_reset_confirm"
+    ],
+    "121": [
+      "form_solicitacao"
+    ],
+    "122": [
+      "link_criar_conta"
+    ],
+    "123": [
+      "link_entrar_registro"
+    ],
+    "124": [
+      "link_solicitar_novo_link"
+    ],
+    "125": [
+      "model_nota"
+    ],
+    "126": [
+      "nav_admin_button"
+    ],
+    "127": [
+      "nav_b Bolsas SENAI - MS"
+    ],
+    "128": [
+      "nav_edital_provisorio"
+    ],
+    "129": [
+      "nav_home"
+    ],
+    "130": [
+      "nav_notificacoes"
+    ],
+    "131": [
+      "nav_user_display"
+    ],
+    "132": [
+      "notifications_migrations_init_py_migrations_init"
+    ],
+    "133": [
+      "notifications_tests"
+    ],
+    "134": [
+      "section_classificacao_detalhe"
+    ],
+    "135": [
+      "section_dados_pessoais"
+    ],
+    "136": [
+      "section_pos_graduacoes"
+    ],
+    "137": [
+      "table_cadastros"
+    ],
+    "138": [
+      "table_solicitacoes"
+    ],
+    "139": [
+      "template_aplicacao_row"
+    ],
+    "140": [
+      "template_criterio_form"
+    ],
+    "141": [
+      "template_csv_import"
+    ],
+    "142": [
+      "template_edital_provisorio_form"
+    ],
+    "143": [
+      "template_notificacao_item"
+    ],
+    "144": [
+      "template_password_reset_complete_html"
+    ],
+    "145": [
+      "template_password_reset_confirm_html"
+    ],
+    "146": [
+      "template_password_reset_done_html"
+    ],
+    "147": [
+      "template_password_reset_email_html"
+    ],
+    "148": [
+      "template_password_reset_subject_txt"
+    ],
+    "149": [
+      "template_solicitacao_row_html"
+    ],
+    "150": [
+      "template_usuario_row_html"
+    ],
+    "151": [
+      "url_alterar_status_aplicacao"
+    ],
+    "152": [
+      "url_cancelar_aplicacao"
+    ]
+  },
+  "cohesion": {
+    "0": 0.09207161125319693,
+    "1": 0.07403846153846154,
+    "2": 0.07407407407407407,
+    "3": 0.11738648947951273,
+    "4": 0.06116642958748222,
+    "5": 0.06653225806451613,
+    "6": 0.15268817204301074,
+    "7": 0.07977207977207977,
+    "8": 0.125,
+    "9": 0.15384615384615385,
+    "10": 0.2,
+    "11": 0.3888888888888889,
+    "12": 0.25,
+    "13": 0.2857142857142857,
+    "14": 0.4666666666666667,
+    "15": 0.4,
+    "16": 0.4,
+    "17": 0.4,
+    "18": 0.5,
+    "19": 0.5,
+    "20": 0.6666666666666666,
+    "21": 0.6666666666666666,
+    "22": 1.0,
+    "23": 1.0,
+    "24": 1.0,
+    "25": 1.0,
+    "26": 1.0,
+    "27": 1.0,
+    "28": 1.0,
+    "29": 1.0,
+    "30": 1.0,
+    "31": 1.0,
+    "32": 1.0,
+    "33": 1.0,
+    "34": 1.0,
+    "35": 1.0,
+    "36": 1.0,
+    "37": 1.0,
+    "38": 1.0,
+    "39": 1.0,
+    "40": 1.0,
+    "41": 1.0,
+    "42": 1.0,
+    "43": 1.0,
+    "44": 1.0,
+    "45": 1.0,
+    "46": 1.0,
+    "47": 1.0,
+    "48": 1.0,
+    "49": 1.0,
+    "50": 1.0,
+    "51": 1.0,
+    "52": 1.0,
+    "53": 1.0,
+    "54": 1.0,
+    "55": 1.0,
+    "56": 1.0,
+    "57": 1.0,
+    "58": 1.0,
+    "59": 1.0,
+    "60": 1.0,
+    "61": 1.0,
+    "62": 1.0,
+    "63": 1.0,
+    "64": 1.0,
+    "65": 1.0,
+    "66": 1.0,
+    "67": 1.0,
+    "68": 1.0,
+    "69": 1.0,
+    "70": 1.0,
+    "71": 1.0,
+    "72": 1.0,
+    "73": 1.0,
+    "74": 1.0,
+    "75": 1.0,
+    "76": 1.0,
+    "77": 1.0,
+    "78": 1.0,
+    "79": 1.0,
+    "80": 1.0,
+    "81": 1.0,
+    "82": 1.0,
+    "83": 1.0,
+    "84": 1.0,
+    "85": 1.0,
+    "86": 1.0,
+    "87": 1.0,
+    "88": 1.0,
+    "89": 1.0,
+    "90": 1.0,
+    "91": 1.0,
+    "92": 1.0,
+    "93": 1.0,
+    "94": 1.0,
+    "95": 1.0,
+    "96": 1.0,
+    "97": 1.0,
+    "98": 1.0,
+    "99": 1.0,
+    "100": 1.0,
+    "101": 1.0,
+    "102": 1.0,
+    "103": 1.0,
+    "104": 1.0,
+    "105": 1.0,
+    "106": 1.0,
+    "107": 1.0,
+    "108": 1.0,
+    "109": 1.0,
+    "110": 1.0,
+    "111": 1.0,
+    "112": 1.0,
+    "113": 1.0,
+    "114": 1.0,
+    "115": 1.0,
+    "116": 1.0,
+    "117": 1.0,
+    "118": 1.0,
+    "119": 1.0,
+    "120": 1.0,
+    "121": 1.0,
+    "122": 1.0,
+    "123": 1.0,
+    "124": 1.0,
+    "125": 1.0,
+    "126": 1.0,
+    "127": 1.0,
+    "128": 1.0,
+    "129": 1.0,
+    "130": 1.0,
+    "131": 1.0,
+    "132": 1.0,
+    "133": 1.0,
+    "134": 1.0,
+    "135": 1.0,
+    "136": 1.0,
+    "137": 1.0,
+    "138": 1.0,
+    "139": 1.0,
+    "140": 1.0,
+    "141": 1.0,
+    "142": 1.0,
+    "143": 1.0,
+    "144": 1.0,
+    "145": 1.0,
+    "146": 1.0,
+    "147": 1.0,
+    "148": 1.0,
+    "149": 1.0,
+    "150": 1.0,
+    "151": 1.0,
+    "152": 1.0
+  },
+  "gods": [
+    {
+      "id": "accounts_models_user",
+      "label": "User",
+      "degree": 58
+    },
+    {
+      "id": "base_mixins_managerrequiredmixin",
+      "label": "ManagerRequiredMixin",
+      "degree": 57
+    },
+    {
+      "id": "base_mixins_tenantrequiredmixin",
+      "label": "TenantRequiredMixin",
+      "degree": 54
+    },
+    {
+      "id": "accounts_models_tenant",
+      "label": "Tenant",
+      "degree": 41
+    },
+    {
+      "id": "accounts_models_perfil",
+      "label": "Perfil",
+      "degree": 35
+    },
+    {
+      "id": "base_managers_tenantmanager",
+      "label": "TenantManager",
+      "degree": 32
+    },
+    {
+      "id": "cadastro_models_cadastrobolsista",
+      "label": "CadastroBolsista",
+      "degree": 31
+    },
+    {
+      "id": "cadastro_models_solicitacaoedicao",
+      "label": "SolicitacaoEdicao",
+      "degree": 29
+    },
+    {
+      "id": "classificacao_models_classificacao",
+      "label": "Classificacao",
+      "degree": 29
+    },
+    {
+      "id": "cadastro_models_cursosuperior",
+      "label": "CursoSuperior",
+      "degree": 28
+    }
+  ],
+  "surprises": [
+    {
+      "source": "User",
+      "target": "TenantManager",
+      "source_files": [
+        "accounts/models.py",
+        "base/managers.py"
+      ],
+      "confidence": "INFERRED",
+      "relation": "uses",
+      "why": "inferred connection - not explicitly stated in source; connects across different repos/directories; bridges separate communities"
+    },
+    {
+      "source": "Meta",
+      "target": "User",
+      "source_files": [
+        "cadastro/models.py",
+        "accounts/models.py"
+      ],
+      "confidence": "INFERRED",
+      "relation": "uses",
+      "why": "inferred connection - not explicitly stated in source; connects across different repos/directories; bridges separate communities"
+    },
+    {
+      "source": "Classificacao",
+      "target": "User",
+      "source_files": [
+        "classificacao/models.py",
+        "accounts/models.py"
+      ],
+      "confidence": "INFERRED",
+      "relation": "uses",
+      "why": "inferred connection - not explicitly stated in source; connects across different repos/directories; bridges separate communities"
+    },
+    {
+      "source": "ClassificacaoCriterio",
+      "target": "User",
+      "source_files": [
+        "classificacao/models.py",
+        "accounts/models.py"
+      ],
+      "confidence": "INFERRED",
+      "relation": "uses",
+      "why": "inferred connection - not explicitly stated in source; connects across different repos/directories; bridges separate communities"
+    },
+    {
+      "source": "CriterioClassificacao",
+      "target": "User",
+      "source_files": [
+        "classificacao/models.py",
+        "accounts/models.py"
+      ],
+      "confidence": "INFERRED",
+      "relation": "uses",
+      "why": "inferred connection - not explicitly stated in source; connects across different repos/directories; bridges separate communities"
+    }
+  ],
+  "questions": [
+    {
+      "type": "bridge_node",
+      "question": "Why does `User` connect `Community 0` to `Community 1`, `Community 2`, `Community 3`, `Community 6`, `Community 11`?",
+      "why": "High betweenness centrality (0.035) - this node is a cross-community bridge."
+    },
+    {
+      "type": "bridge_node",
+      "question": "Why does `ManagerRequiredMixin` connect `Community 1` to `Community 0`, `Community 3`, `Community 6`?",
+      "why": "High betweenness centrality (0.034) - this node is a cross-community bridge."
+    },
+    {
+      "type": "bridge_node",
+      "question": "Why does `TenantRequiredMixin` connect `Community 1` to `Community 0`, `Community 2`, `Community 3`, `Community 6`?",
+      "why": "High betweenness centrality (0.031) - this node is a cross-community bridge."
+    },
+    {
+      "type": "verify_inferred",
+      "question": "Are the 45 inferred relationships involving `User` (e.g. with `DocumentoExternoAdmin` and `PerfilAdmin`) actually correct?",
+      "why": "`User` has 45 INFERRED edges - model-reasoned connections that need verification."
+    },
+    {
+      "type": "verify_inferred",
+      "question": "Are the 50 inferred relationships involving `ManagerRequiredMixin` (e.g. with `AprovarUsuarioView` and `CustomLoginView`) actually correct?",
+      "why": "`ManagerRequiredMixin` has 50 INFERRED edges - model-reasoned connections that need verification."
+    },
+    {
+      "type": "verify_inferred",
+      "question": "Are the 46 inferred relationships involving `TenantRequiredMixin` (e.g. with `AdminDashboardView` and `CadastroCreateView`) actually correct?",
+      "why": "`TenantRequiredMixin` has 46 INFERRED edges - model-reasoned connections that need verification."
+    },
+    {
+      "type": "verify_inferred",
+      "question": "Are the 30 inferred relationships involving `Tenant` (e.g. with `DocumentoExternoAdmin` and `PerfilAdmin`) actually correct?",
+      "why": "`Tenant` has 30 INFERRED edges - model-reasoned connections that need verification."
+    }
+  ]
+}
