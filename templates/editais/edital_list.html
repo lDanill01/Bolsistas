@@ -64,7 +64,7 @@
                                         title="Resumir com IA"
                                         data-bs-toggle="collapse"
                                         data-bs-target="#resumo-ia-{{ edital.pk }}"
-                                        hx-get="{% url 'edital_resumir' edital.pk %}"
+                                        hx-post="{% url 'edital_resumir' edital.pk %}"
                                         hx-target="#resumo-ia-{{ edital.pk }}"
                                         hx-indicator="#resumo-ia-spinner-{{ edital.pk }}"
                                         hx-swap="innerHTML">

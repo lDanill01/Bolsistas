@@ -22,7 +22,7 @@
                         <i class="bi bi-stars me-2 text-primary"></i>Análise por IA
                     </h5>
                     <button class="btn btn-primary btn-sm"
-                            hx-get="{% url 'painel_analisar_bolsista' bolsista.pk %}"
+                            hx-post="{% url 'painel_analisar_bolsista' bolsista.pk %}"
                             hx-target="#analise-ia-resultado"
                             hx-indicator="#analise-ia-spinner"
                             hx-swap="innerHTML">

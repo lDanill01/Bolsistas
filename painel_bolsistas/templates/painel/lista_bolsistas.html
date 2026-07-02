@@ -62,7 +62,7 @@
                                 title="Resumir com IA"
                                 data-bs-toggle="collapse"
                                 data-bs-target="#resumo-ia-{{ b.pk }}"
-                                hx-get="{% url 'painel_resumir_bolsista' b.pk %}"
+                                hx-post="{% url 'painel_resumir_bolsista' b.pk %}"
                                 hx-target="#resumo-ia-{{ b.pk }}"
                                 hx-indicator="#resumo-ia-spinner-{{ b.pk }}"
                                 hx-swap="innerHTML">

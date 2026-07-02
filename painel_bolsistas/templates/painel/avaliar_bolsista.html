@@ -64,7 +64,7 @@
 
             <div class="mb-3">
                 <button type="button" class="btn btn-outline-primary btn-sm"
-                        hx-get="{% url 'painel_sugerir_avaliacao' bolsista.pk %}"
+                        hx-post="{% url 'painel_sugerir_avaliacao' bolsista.pk %}"
                         hx-target="#sugestao-ia-container"
                         hx-swap="innerHTML"
                         hx-indicator="#ia-indicator">

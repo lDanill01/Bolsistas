@@ -5,6 +5,9 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.http import HttpResponse
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.template.loader import render_to_string
+from django.views.decorators.http import require_POST
+from django.core.cache import cache
+from celery.result import AsyncResult
 import json
 
 from base.mixins import (
@@ -14,7 +17,7 @@ from base.mixins import (
 from cadastro.models import CadastroBolsista
 from .models import EditalProvisorio, AplicacaoEdital, NIVEL_BOLSA_CONFIG
 from .forms import EditalProvisorioForm, CronogramaEventoFormSet, DistribuicaoBolsaFormSet
-from . import ai_service
+from . import tasks as ia_tasks
 
 
 class ContextMixin:
@@ -293,37 +296,66 @@ class AlterarStatusAplicacaoView(ManagerOrExecuteRequiredMixin, TemplateView):
         return redirect('aplicacao_list')
 
 
+def _task_running_partial(request, task_id):
+    return render_to_string('editais/partials/task_running.html', {
+        'task_id': task_id,
+    })
+
+
+@require_POST
 def resumir_edital(request, pk):
     if not request.user.is_authenticated:
         return HttpResponse('Não autorizado', status=401)
 
-    edital = get_object_or_404(
-        EditalProvisorio.objects.prefetch_related('distribuicoes', 'cronograma'),
-        pk=pk,
-    )
-    resultado = ai_service.resumir_edital(edital)
-    html = render_to_string('editais/partials/resumo_edital.html', {
-        'resumo': resultado['resumo'],
-    })
-    return HttpResponse(html, content_type='text/html; charset=utf-8')
+    get_object_or_404(EditalProvisorio, pk=pk)
+    task = ia_tasks.resumir_edital_task.delay(edital_id=pk, user_id=request.user.id)
+    cache.set(f'task_owner:{task.id}', request.user.id, timeout=3600)
+    cache.set(f'task_context:{task.id}', {'edital_id': pk}, timeout=3600)
+    return _task_running_partial(request, task.id)
 
 
+@require_POST
 def analisar_edital(request, pk):
     if not request.user.is_authenticated:
         return HttpResponse('Não autorizado', status=401)
 
-    edital = get_object_or_404(
-        EditalProvisorio.objects.prefetch_related('distribuicoes', 'cronograma'),
-        pk=pk,
-    )
-    bolsistas = list(CadastroBolsista.objects.select_related('user').prefetch_related('formacoes'))
-    resultado = ai_service.analisar_edital(edital, bolsistas)
+    get_object_or_404(EditalProvisorio, pk=pk)
+    task = ia_tasks.analisar_edital_task.delay(edital_id=pk, user_id=request.user.id)
+    cache.set(f'task_owner:{task.id}', request.user.id, timeout=3600)
+    cache.set(f'task_context:{task.id}', {'edital_id': pk}, timeout=3600)
+    return _task_running_partial(request, task.id)
 
-    html = render_to_string('editais/partials/analise_edital.html', {
-        'resumo': resultado['resumo'],
-        'analise': resultado['analise'],
-        'radar': resultado['radar'],
-        'radar_labels': json.dumps([item['bolsista'] for item in resultado['radar']]),
-        'radar_scores': json.dumps([item['score'] for item in resultado['radar']]),
-    })
+
+def edital_task_status(request, task_id):
+    if not request.user.is_authenticated:
+        return HttpResponse('Não autorizado', status=401)
+    if cache.get(f'task_owner:{task_id}') != request.user.id:
+        return HttpResponse('Não autorizado', status=403)
+
+    result = AsyncResult(task_id)
+    if result.status in ('PENDING', 'STARTED', 'RETRY'):
+        return _task_running_partial(request, task_id)
+
+    if result.failed():
+        return HttpResponse(
+            '<p class="text-danger">Ocorreu um erro ao processar a análise. Tente novamente.</p>',
+            content_type='text/html; charset=utf-8',
+        )
+
+    dados = cache.get(f'task_result:{task_id}') or result.result or {}
+
+    if 'radar' in dados:
+        radar = dados.get('radar', [])
+        html = render_to_string('editais/partials/analise_edital.html', {
+            'resumo': dados.get('resumo', ''),
+            'analise': dados.get('analise', ''),
+            'radar': radar,
+            'radar_labels': json.dumps([item.get('bolsista', '') for item in radar]),
+            'radar_scores': json.dumps([item.get('score', 0) for item in radar]),
+        })
+    else:
+        html = render_to_string('editais/partials/resumo_edital.html', {
+            'resumo': dados.get('resumo', ''),
+        })
+
     return HttpResponse(html, content_type='text/html; charset=utf-8')

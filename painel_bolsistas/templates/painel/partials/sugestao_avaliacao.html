@@ -44,15 +44,14 @@
             <button type="button" class="btn btn-sm btn-primary" onclick="preencherSugestaoIA()">
                 <i class="bi bi-magic me-1"></i>Aplicar Sugestão aos Campos
             </button>
-            <span id="btn-reconsultar">
-                <button type="button" class="btn btn-sm btn-outline-secondary"
-                        hx-get="{{ request.path }}"
-                        hx-target="#btn-reconsultar"
-                        hx-swap="none">
-                    <span class="htmx-indicator spinner-border spinner-border-sm me-1"></span>
-                    <i class="bi bi-arrow-repeat me-1"></i>Reconsultar
-                </button>
-            </span>
+            <button type="button" class="btn btn-sm btn-outline-secondary"
+                    hx-post="{% url 'painel_sugerir_avaliacao' bolsista.pk %}"
+                    hx-target="#sugestao-ia-container"
+                    hx-swap="innerHTML"
+                    hx-indicator="#ia-indicator-reconsultar">
+                <span id="ia-indicator-reconsultar" class="htmx-indicator spinner-border spinner-border-sm me-1"></span>
+                <i class="bi bi-arrow-repeat me-1"></i>Reconsultar
+            </button>
         </div>
     </div>
 </div>

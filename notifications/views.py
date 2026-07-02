@@ -1,5 +1,6 @@
 from django.views.generic import ListView, TemplateView, View
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, redirect
 from django.http import HttpResponse
 from django.template.loader import render_to_string
@@ -42,3 +43,16 @@ class MarcarTodasLidasView(LoginRequiredMixin, View):
             destinatario=request.user, lido=False
         ).update(lido=True)
         return redirect('notificacao_list')
+
+
+@login_required
+def notificacao_unread_count(request):
+    count = Notificacao.objects.filter(
+        destinatario=request.user, lido=False
+    ).count()
+    html = render_to_string(
+        'notifications/partials/bell.html',
+        {'unread_count': count},
+        request=request,
+    )
+    return HttpResponse(html, content_type='text/html; charset=utf-8')

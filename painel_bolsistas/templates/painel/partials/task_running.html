@@ -1,0 +1,11 @@
+<div class="ia-task-running text-center py-3"
+     hx-get="{% url 'painel_task_status' task_id %}"
+     hx-trigger="every 3s"
+     hx-swap="innerHTML">
+    <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Analisando...</span>
+    </div>
+    <p class="text-muted small mt-2 mb-0">
+        A IA está analisando... Você será notificado quando a análise estiver pronta.
+    </p>
+</div>
