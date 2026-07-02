@@ -1,0 +1,144 @@
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: ${DB_NAME:-bolsas}
+      POSTGRES_USER: ${DB_USER:-bolsas}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-bolsas}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-bolsas} -d ${DB_NAME:-bolsas}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_DEFAULT_USER:-guest}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_DEFAULT_PASS:-guest}
+    ports:
+      - "15672:15672"
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  web:
+    build: .
+    command: ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+    env_file: .env
+    environment:
+      DB_ENGINE: django.db.backends.postgresql
+      DB_NAME: ${DB_NAME:-bolsas}
+      DB_USER: ${DB_USER:-bolsas}
+      DB_PASSWORD: ${DB_PASSWORD:-bolsas}
+      DB_HOST: db
+      DB_PORT: 5432
+      CACHE_URL: redis://redis:6379/1
+      CELERY_BROKER_URL: amqp://${RABBITMQ_DEFAULT_USER:-guest}:${RABBITMQ_DEFAULT_PASS:-guest}@rabbitmq:5672//
+      CELERY_RESULT_BACKEND: redis://redis:6379/0
+    volumes:
+      - .:/app
+      - staticfiles_data:/app/staticfiles
+      - media_data:/app/media
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.bolsas.rule=Host(`bolsas.localhost`)
+      - traefik.http.routers.bolsas.entrypoints=web
+      - traefik.http.services.bolsas.loadbalancer.server.port=8000
+
+  celery:
+    build: .
+    command: ["celery", "-A", "config", "worker", "-l", "info"]
+    env_file: .env
+    environment:
+      DB_ENGINE: django.db.backends.postgresql
+      DB_NAME: ${DB_NAME:-bolsas}
+      DB_USER: ${DB_USER:-bolsas}
+      DB_PASSWORD: ${DB_PASSWORD:-bolsas}
+      DB_HOST: db
+      DB_PORT: 5432
+      CACHE_URL: redis://redis:6379/1
+      CELERY_BROKER_URL: amqp://${RABBITMQ_DEFAULT_USER:-guest}:${RABBITMQ_DEFAULT_PASS:-guest}@rabbitmq:5672//
+      CELERY_RESULT_BACKEND: redis://redis:6379/0
+    volumes:
+      - .:/app
+      - staticfiles_data:/app/staticfiles
+      - media_data:/app/media
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+
+  celery-beat:
+    build: .
+    command: ["celery", "-A", "config", "beat", "-l", "info"]
+    env_file: .env
+    environment:
+      DB_ENGINE: django.db.backends.postgresql
+      DB_NAME: ${DB_NAME:-bolsas}
+      DB_USER: ${DB_USER:-bolsas}
+      DB_PASSWORD: ${DB_PASSWORD:-bolsas}
+      DB_HOST: db
+      DB_PORT: 5432
+      CACHE_URL: redis://redis:6379/1
+      CELERY_BROKER_URL: amqp://${RABBITMQ_DEFAULT_USER:-guest}:${RABBITMQ_DEFAULT_PASS:-guest}@rabbitmq:5672//
+      CELERY_RESULT_BACKEND: redis://redis:6379/0
+    volumes:
+      - .:/app
+      - staticfiles_data:/app/staticfiles
+      - media_data:/app/media
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+
+  traefik:
+    image: traefik:v3.2
+    command:
+      - --api.insecure=true
+      - --providers.docker=true
+      - --providers.docker.exposedbydefault=false
+      - --entrypoints.web.address=:80
+    ports:
+      - "80:80"
+      - "8080:8080"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    depends_on:
+      - web
+
+volumes:
+  pgdata:
+  redis_data:
+  rabbitmq_data:
+  staticfiles_data:
+  media_data:
