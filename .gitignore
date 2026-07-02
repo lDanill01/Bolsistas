@@ -7,6 +7,9 @@ db.sqlite3
 media/
 staticfiles/
 
+# Arquivos gerados
+Tree.md
+
 # Docker / deploy
 .secrets/
 letsencrypt/
