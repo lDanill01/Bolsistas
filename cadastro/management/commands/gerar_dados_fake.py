@@ -446,10 +446,8 @@ class Command(BaseCommand):
 
     def _criar_cronograma(self, edital, base_data=None):
         eventos = list(EditalProvisorio.EVENTO_CHOICES)
-        random.shuffle(eventos)
-        selecionados = eventos[:random.randint(5, len(eventos))]
+        selecionados = sorted(eventos, key=lambda x: x[0])[:random.randint(5, len(eventos))]
         base = base_data if base_data else date.today()
-        # Alguns editais com cronograma no passado, outros no futuro
         if random.random() > 0.5:
             base = base - timedelta(days=random.randint(60, 365))
         else:
@@ -457,10 +455,12 @@ class Command(BaseCommand):
         for idx, (codigo, nome) in enumerate(selecionados):
             dias_offset = idx * random.randint(10, 30)
             data_ref = (base + timedelta(days=dias_offset)).strftime('%d/%m/%Y')
+            data_evento = base + timedelta(days=dias_offset)
             CronogramaEvento.objects.create(
                 edital=edital,
                 evento=codigo,
                 data_referencia=data_ref,
+                data_evento=data_evento,
                 observacao=fake.sentence(nb_words=6) if random.random() > 0.5 else '',
                 ordem=idx,
             )

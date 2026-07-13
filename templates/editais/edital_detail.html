@@ -11,7 +11,7 @@
             <a href="{% url 'edital_pdf' edital.pk %}" class="btn btn-success">
                 <i class="bi bi-file-earmark-pdf me-1"></i>Download PDF
             </a>
-            {% if is_manager or is_execute_user %}
+            {% if is_superuser or is_manager or is_execute_user %}
             <a href="{% url 'edital_candidatos' edital.pk %}" class="btn btn-outline-info">
                 <i class="bi bi-people me-1"></i>Ver Candidatos
                 {% if edital.total_inscritos %}

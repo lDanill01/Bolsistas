@@ -247,6 +247,7 @@ class AplicacaoEdital(DataModel):
     numero_inscricao = models.CharField('Número de Inscrição', max_length=10, unique=True, blank=True)
     status = models.CharField('Status', max_length=20, choices=STATUS_CHOICES, default='pendente')
     nota = models.DecimalField('Nota do avaliador', max_digits=5, decimal_places=2, blank=True, null=True)
+    data_entrevista = models.DateField('Data da Entrevista', null=True, blank=True)
     data_aplicacao = models.DateTimeField('Data de aplicação', auto_now_add=True)
 
     class Meta:

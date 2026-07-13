@@ -48,7 +48,9 @@
                     <tr>
                         <th>Nº Inscrição</th>
                         <th>Candidato</th>
-                        <th>Status</th>
+                        <th>Avaliação</th>
+                        <th>Nota</th>
+                        <th>Entrevista</th>
                         <th>Data da Candidatura</th>
                         {% if is_manager %}
                         <th class="text-end">Ações</th>
@@ -61,13 +63,32 @@
                         <td><span class="badge bg-dark">{{ a.numero_inscricao|default:'—' }}</span></td>
                         <td class="fw-medium">{{ a.bolsista.user.nome_completo }}</td>
                         <td>
-                            <span class="badge {% if a.status == 'aprovado' %}bg-success{% elif a.status == 'rejeitado' %}bg-danger{% elif a.status == 'em_analise' %}bg-warning text-dark{% else %}bg-secondary{% endif %}">
-                                {{ a.get_status_display }}
-                            </span>
+                            {% if a.nota is not None %}
+                                {% if a.nota > 6 %}
+                                <span class="badge bg-success">Apto</span>
+                                {% else %}
+                                <span class="badge bg-danger">Inapto</span>
+                                {% endif %}
+                            {% else %}
+                                <span class="badge {% if a.status == 'em_analise' %}bg-warning text-dark{% else %}bg-secondary{% endif %}">
+                                    {{ a.get_status_display }}
+                                </span>
+                            {% endif %}
                         </td>
+                        <td class="fw-semibold">{{ a.nota|default:'—' }}</td>
+                        <td class="small">{{ a.data_entrevista|date:'d/m/Y'|default:'—' }}</td>
                         <td class="small text-muted">{{ a.data_aplicacao|date:'d/m/Y H:i' }}</td>
                         {% if is_manager %}
                         <td class="text-end">
+                            {% if a.nota is not None %}
+                            <a href="{% url 'avaliar_candidato' a.pk %}" class="btn btn-outline-success btn-sm me-1" title="Editar avaliação">
+                                <i class="bi bi-pencil"></i>
+                            </a>
+                            {% else %}
+                            <a href="{% url 'avaliar_candidato' a.pk %}" class="btn btn-outline-warning btn-sm me-1" title="Avaliar">
+                                <i class="bi bi-star"></i>
+                            </a>
+                            {% endif %}
                             <a href="{% url 'cadastro_detail_pk' a.bolsista.pk %}" class="btn btn-outline-primary btn-sm" title="Ver cadastro">
                                 <i class="bi bi-person-lines-fill"></i>
                             </a>

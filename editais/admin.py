@@ -62,6 +62,6 @@ class EditalProvisorioAdmin(admin.ModelAdmin):
 
 @admin.register(AplicacaoEdital)
 class AplicacaoEditalAdmin(admin.ModelAdmin):
-    list_display = ['numero_inscricao', 'bolsista', 'edital', 'status', 'nota', 'data_aplicacao']
+    list_display = ['numero_inscricao', 'bolsista', 'edital', 'status', 'nota', 'data_entrevista', 'data_aplicacao']
     list_filter = ['status', 'edital']
     search_fields = ['numero_inscricao', 'bolsista__user__nome_completo', 'edital__nome_edital']

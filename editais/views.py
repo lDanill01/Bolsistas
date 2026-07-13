@@ -10,6 +10,8 @@ from django.core.cache import cache
 from django.db.models import Count, Q
 from celery.result import AsyncResult
 import json
+from datetime import date, datetime
+from decimal import Decimal, InvalidOperation
 
 from django.conf import settings
 
@@ -345,6 +347,59 @@ class AlterarStatusAplicacaoView(ManagerOrExecuteRequiredMixin, TemplateView):
             )
             return HttpResponse(html)
         return redirect('aplicacao_list')
+
+
+class AvaliarCandidatoView(ManagerOrExecuteRequiredMixin, TemplateView):
+    template_name = 'editais/avaliar_candidato.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['aplicacao'] = get_object_or_404(
+            AplicacaoEdital.objects.select_related('bolsista__user', 'edital'),
+            pk=kwargs['pk'],
+        )
+        context['feriados_json'] = json.dumps(getattr(settings, 'FERIADOS_NACIONAIS', []))
+        return context
+
+    def post(self, request, *args, **kwargs):
+        aplicacao = get_object_or_404(
+            AplicacaoEdital.objects.select_related('edital'),
+            pk=kwargs['pk'],
+        )
+        nota_str = (request.POST.get('nota', '') or '').strip().replace(',', '.')
+
+        try:
+            nota = Decimal(nota_str) if nota_str else Decimal('0')
+        except (ValueError, InvalidOperation):
+            messages.error(request, 'Nota inválida. Use um número entre 0 e 10.')
+            return redirect('avaliar_candidato', pk=aplicacao.pk)
+
+        if nota < 0 or nota > 10:
+            messages.error(request, 'Nota deve estar entre 0 e 10.')
+            return redirect('avaliar_candidato', pk=aplicacao.pk)
+
+        novo_status = 'aprovado' if nota > 6 else 'rejeitado'
+
+        data_entrevista_str = (request.POST.get('data_entrevista', '') or '').strip()
+        data_entrevista = None
+        if data_entrevista_str:
+            try:
+                data_entrevista = datetime.strptime(data_entrevista_str, '%Y-%m-%d').date()
+            except (ValueError, TypeError):
+                messages.error(request, 'Data da entrevista inválida.')
+                return redirect('avaliar_candidato', pk=aplicacao.pk)
+
+        aplicacao.nota = nota
+        aplicacao.status = novo_status
+        aplicacao.data_entrevista = data_entrevista
+        aplicacao.save(update_fields=['nota', 'status', 'data_entrevista'])
+
+        status_display = 'Apto' if novo_status == 'aprovado' else 'Inapto'
+        messages.success(
+            request,
+            f'{aplicacao.bolsista.user.nome_completo}: nota {nota} — {status_display}.',
+        )
+        return redirect('edital_candidatos', edital_pk=aplicacao.edital.pk)
 
 
 def _task_running_partial(request, task_id):

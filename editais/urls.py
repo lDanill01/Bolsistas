@@ -16,4 +16,5 @@ urlpatterns = [
     path('aplicacoes/', views.AplicacaoListView.as_view(), name='aplicacao_list'),
     path('aplicacoes/<int:pk>/cancelar/', views.CancelarAplicacaoView.as_view(), name='cancelar_aplicacao'),
     path('aplicacoes/<int:pk>/status/', views.AlterarStatusAplicacaoView.as_view(), name='alterar_status_aplicacao'),
+    path('aplicacoes/<int:pk>/avaliar/', views.AvaliarCandidatoView.as_view(), name='avaliar_candidato'),
 ]
