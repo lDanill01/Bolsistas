@@ -1,4 +1,5 @@
 from decimal import Decimal
+import json
 from django.views.generic import CreateView, DetailView, UpdateView, ListView, TemplateView, FormView
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy
@@ -21,6 +22,7 @@ from .models import (
 )
 
 from .utils import calcular_pontuacao_previa
+from .cursos import get_areas, get_todos_cursos, get_cursos_por_area, get_instituicoes
 from classificacao.models import CriterioClassificacao
 from accounts.models import User, Perfil
 
@@ -45,24 +47,34 @@ def _is_manager_or_executor(user):
 
 
 class FormacaoAcademicaForm(forms.ModelForm):
+    area = forms.CharField(
+        required=False,
+        widget=forms.HiddenInput(),
+    )
+    curso = forms.CharField(
+        required=False,
+        widget=forms.HiddenInput(),
+    )
+    instituicao = forms.CharField(
+        required=False,
+        widget=forms.HiddenInput(),
+    )
+
     class Meta:
         model = FormacaoAcademica
         fields = ['tipo', 'status', 'instituicao', 'area', 'curso', 'ano_conclusao']
         widgets = {
-            'tipo': forms.Select(attrs={'class': 'form-select'}),
-            'status': forms.Select(attrs={'class': 'form-select'}),
-            'instituicao': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Nome da instituição (opcional)'}),
-            'curso': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Nome do curso (opcional)'}),
-            'area': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Área de concentração (opcional)'}),
-            'ano_conclusao': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Ex: 2024'}),
+            'tipo': forms.Select(attrs={'class': 'form-select form-select-sm'}),
+            'status': forms.Select(attrs={'class': 'form-select form-select-sm'}),
+            'ano_conclusao': forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'placeholder': 'Ex: 2024'}),
         }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['status'].required = False
         self.fields['instituicao'].required = False
-        self.fields['curso'].required = False
         self.fields['area'].required = False
+        self.fields['curso'].required = False
         self.fields['ano_conclusao'].required = False
 
 
@@ -88,6 +100,7 @@ class CadastroForm(forms.ModelForm):
         fields = [
             'telefone', 'data_nascimento',
             'rua', 'numero', 'bairro', 'cidade', 'estado',
+            'curriculo',
             'participacao_congressos', 'resumo_anais', 'artigo_completo_anais',
             'artigo_cientifico_nacional', 'artigo_cientifico_internacional',
             'livro_patente', 'participacao_minicurso', 'treinamento',
@@ -100,6 +113,7 @@ class CadastroForm(forms.ModelForm):
             'bairro': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Bairro'}),
             'cidade': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Cidade'}),
             'estado': forms.Select(attrs={'class': 'form-select'}),
+            'curriculo': forms.FileInput(attrs={'class': 'form-control', 'accept': '.pdf'}),
             'participacao_congressos': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
             'resumo_anais': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
             'artigo_completo_anais': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
@@ -128,6 +142,9 @@ class CadastroCreateView(ViewUserRequiredMixin, FormView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['object'] = None
+        context['cursos_por_area'] = json.dumps(get_cursos_por_area(), ensure_ascii=False)
+        context['areas'] = json.dumps([a[0] for a in get_areas()], ensure_ascii=False)
+        context['instituicoes'] = json.dumps(get_instituicoes(), ensure_ascii=False)
         if 'formacao_formset' not in kwargs:
             context['formacao_formset'] = forms.modelformset_factory(
                 FormacaoAcademica, form=FormacaoAcademicaForm, extra=1, can_delete=True
@@ -278,6 +295,9 @@ class CadastroUpdateView(ManagerRequiredMixin, FormView):
         cadastro = self.get_object()
         context['object'] = cadastro
         context['user'] = self.request.user
+        context['cursos_por_area'] = json.dumps(get_cursos_por_area(), ensure_ascii=False)
+        context['areas'] = json.dumps([a[0] for a in get_areas()], ensure_ascii=False)
+        context['instituicoes'] = json.dumps(get_instituicoes(), ensure_ascii=False)
         if 'formacao_formset' not in kwargs:
             context['formacao_formset'] = forms.modelformset_factory(
                 FormacaoAcademica, form=FormacaoAcademicaForm, extra=1, can_delete=True
@@ -720,6 +740,15 @@ def formacao_add(request, pk):
     if error:
         return error
 
+    ctx_base = {
+        'formacoes': cadastro.formacoes.all(),
+        'cadastro': cadastro,
+        'can_edit': True,
+        'areas': json.dumps([a[0] for a in get_areas()], ensure_ascii=False),
+        'cursos_por_area': json.dumps(get_cursos_por_area(), ensure_ascii=False),
+        'instituicoes': json.dumps(get_instituicoes(), ensure_ascii=False),
+    }
+
     if request.method == 'POST':
         form = FormacaoAcademicaForm(request.POST)
         if form.is_valid():
@@ -728,26 +757,14 @@ def formacao_add(request, pk):
             fa.save()
             _recalcular_pontuacao(cadastro)
             messages.success(request, 'Formação adicionada com sucesso!')
-            return render(request, 'cadastro/partials/formacao_section.html', {
-                'formacoes': cadastro.formacoes.all(),
-                'cadastro': cadastro,
-                'can_edit': True,
-            })
+            return render(request, 'cadastro/partials/formacao_section.html', ctx_base)
     else:
         if request.GET.get('cancel'):
-            return render(request, 'cadastro/partials/formacao_section.html', {
-                'formacoes': cadastro.formacoes.all(),
-                'cadastro': cadastro,
-                'can_edit': True,
-            })
+            return render(request, 'cadastro/partials/formacao_section.html', ctx_base)
         form = FormacaoAcademicaForm()
 
-    return render(request, 'cadastro/partials/formacao_section.html', {
-        'formacoes': cadastro.formacoes.all(),
-        'cadastro': cadastro,
-        'formacao_form': form,
-        'can_edit': True,
-    })
+    ctx_base['formacao_form'] = form
+    return render(request, 'cadastro/partials/formacao_section.html', ctx_base)
 
 
 @login_required

@@ -1,0 +1,241 @@
+{
+  "parte": 6,
+  "total_partes": 10,
+  "total_nesta_parte": 20,
+  "descricao": "Lista de Instituições de Ensino Superior do Brasil",
+  "fonte": "Base consolidada com IES federais, estaduais, municipais e privadas",
+  "data_geracao": "2026-07-17",
+  "campos": [
+    "id",
+    "nome",
+    "sigla",
+    "tipo",
+    "categoria_admin",
+    "estado",
+    "regiao",
+    "municipio",
+    "site"
+  ],
+  "instituicoes": [
+    {
+      "id": 101,
+      "nome": "Universidade de Mogi das Cruzes",
+      "sigla": "UMC",
+      "tipo": "Universidade",
+      "categoria_admin": "Privada",
+      "estado": "SP",
+      "regiao": "Sudeste",
+      "municipio": "Mogi das Cruzes",
+      "site": "www.umc.br"
+    },
+    {
+      "id": 102,
+      "nome": "Universidade Cidade de São Paulo",
+      "sigla": "UNICID",
+      "tipo": "Universidade",
+      "categoria_admin": "Privada",
+      "estado": "SP",
+      "regiao": "Sudeste",
+      "municipio": "São Paulo",
+      "site": "www.unicid.edu.br"
+    },
+    {
+      "id": 103,
+      "nome": "Universidade de Santo André",
+      "sigla": "UniABC",
+      "tipo": "Universidade",
+      "categoria_admin": "Privada",
+      "estado": "SP",
+      "regiao": "Sudeste",
+      "municipio": "Santo André",
+      "site": "www.uniabc.br"
+    },
+    {
+      "id": 104,
+      "nome": "Centro Universitário FEI",
+      "sigla": "FEI",
+      "tipo": "Centro Universitário",
+      "categoria_admin": "Privada",
+      "estado": "SP",
+      "regiao": "Sudeste",
+      "municipio": "São Bernardo do Campo",
+      "site": "www.fei.edu.br"
+    },
+    {
+      "id": 105,
+      "nome": "Faculdade de Tecnologia do Estado de São Paulo",
+      "sigla": "FATEC",
+      "tipo": "Faculdade",
+      "categoria_admin": "Estadual",
+      "estado": "SP",
+      "regiao": "Sudeste",
+      "municipio": "São Paulo",
+      "site": "www.fatecsp.br"
+    },
+    {
+      "id": 106,
+      "nome": "Instituto Federal de São Paulo",
+      "sigla": "IFSP",
+      "tipo": "Instituto Federal",
+      "categoria_admin": "Federal",
+      "estado": "SP",
+      "regiao": "Sudeste",
+      "municipio": "São Paulo",
+      "site": "www.ifsp.edu.br"
+    },
+    {
+      "id": 107,
+      "nome": "CEFET-SP",
+      "sigla": "CEFET-SP",
+      "tipo": "CEFET",
+      "categoria_admin": "Federal",
+      "estado": "SP",
+      "regiao": "Sudeste",
+      "municipio": "São Paulo",
+      "site": "www.cefetsp.br"
+    },
+    {
+      "id": 108,
+      "nome": "Escola Politécnica da USP",
+      "sigla": "POLI-USP",
+      "tipo": "Faculdade",
+      "categoria_admin": "Estadual",
+      "estado": "SP",
+      "regiao": "Sudeste",
+      "municipio": "São Paulo",
+      "site": "www.poli.usp.br"
+    },
+    {
+      "id": 109,
+      "nome": "Escola de Administração de Empresas de São Paulo (FGV EAESP)",
+      "sigla": "FGV EAESP",
+      "tipo": "Faculdade",
+      "categoria_admin": "Privada",
+      "estado": "SP",
+      "regiao": "Sudeste",
+      "municipio": "São Paulo",
+      "site": "eaesp.fgv.br"
+    },
+    {
+      "id": 110,
+      "nome": "Insper Instituto de Ensino e Pesquisa",
+      "sigla": "INSPER",
+      "tipo": "Faculdade",
+      "categoria_admin": "Privada",
+      "estado": "SP",
+      "regiao": "Sudeste",
+      "municipio": "São Paulo",
+      "site": "www.insper.edu.br"
+    },
+    {
+      "id": 111,
+      "nome": "Universidade Federal do Rio de Janeiro",
+      "sigla": "UFRJ",
+      "tipo": "Universidade",
+      "categoria_admin": "Federal",
+      "estado": "RJ",
+      "regiao": "Sudeste",
+      "municipio": "Rio de Janeiro",
+      "site": "www.ufrj.br"
+    },
+    {
+      "id": 112,
+      "nome": "Universidade do Estado do Rio de Janeiro",
+      "sigla": "UERJ",
+      "tipo": "Universidade",
+      "categoria_admin": "Estadual",
+      "estado": "RJ",
+      "regiao": "Sudeste",
+      "municipio": "Rio de Janeiro",
+      "site": "www.uerj.br"
+    },
+    {
+      "id": 113,
+      "nome": "Universidade Federal Fluminense",
+      "sigla": "UFF",
+      "tipo": "Universidade",
+      "categoria_admin": "Federal",
+      "estado": "RJ",
+      "regiao": "Sudeste",
+      "municipio": "Niterói",
+      "site": "www.uff.br"
+    },
+    {
+      "id": 114,
+      "nome": "Pontifícia Universidade Católica do Rio de Janeiro",
+      "sigla": "PUC-Rio",
+      "tipo": "Universidade",
+      "categoria_admin": "Privada",
+      "estado": "RJ",
+      "regiao": "Sudeste",
+      "municipio": "Rio de Janeiro",
+      "site": "www.puc-rio.br"
+    },
+    {
+      "id": 115,
+      "nome": "Universidade Federal Rural do Rio de Janeiro",
+      "sigla": "UFRRJ",
+      "tipo": "Universidade",
+      "categoria_admin": "Federal",
+      "estado": "RJ",
+      "regiao": "Sudeste",
+      "municipio": "Seropédica",
+      "site": "www.ufrrj.br"
+    },
+    {
+      "id": 116,
+      "nome": "Universidade do Grande Rio",
+      "sigla": "UNIGRANRIO",
+      "tipo": "Universidade",
+      "categoria_admin": "Privada",
+      "estado": "RJ",
+      "regiao": "Sudeste",
+      "municipio": "Duque de Caxias",
+      "site": "www.unigranrio.edu.br"
+    },
+    {
+      "id": 117,
+      "nome": "Universidade Estácio de Sá",
+      "sigla": "ESTÁCIO",
+      "tipo": "Universidade",
+      "categoria_admin": "Privada",
+      "estado": "RJ",
+      "regiao": "Sudeste",
+      "municipio": "Rio de Janeiro",
+      "site": "www.estacio.br"
+    },
+    {
+      "id": 118,
+      "nome": "Universidade Veiga de Almeida",
+      "sigla": "UVA",
+      "tipo": "Universidade",
+      "categoria_admin": "Privada",
+      "estado": "RJ",
+      "regiao": "Sudeste",
+      "municipio": "Rio de Janeiro",
+      "site": "www.uva.br"
+    },
+    {
+      "id": 119,
+      "nome": "Universidade Cândido Mendes",
+      "sigla": "UCAM",
+      "tipo": "Universidade",
+      "categoria_admin": "Privada",
+      "estado": "RJ",
+      "regiao": "Sudeste",
+      "municipio": "Rio de Janeiro",
+      "site": "www.candidomendes.edu.br"
+    },
+    {
+      "id": 120,
+      "nome": "Universidade Federal do Estado do Rio de Janeiro",
+      "sigla": "UNIRIO",
+      "tipo": "Universidade",
+      "categoria_admin": "Federal",
+      "estado": "RJ",
+      "regiao": "Sudeste",
+      "municipio": "Rio de Janeiro",
+      "site": "www.unirio.br"
+    }
+  ]
+}

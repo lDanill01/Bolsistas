@@ -1,0 +1,241 @@
+{
+  "parte": 1,
+  "total_partes": 10,
+  "total_nesta_parte": 20,
+  "descricao": "Lista de Instituições de Ensino Superior do Brasil",
+  "fonte": "Base consolidada com IES federais, estaduais, municipais e privadas",
+  "data_geracao": "2026-07-17",
+  "campos": [
+    "id",
+    "nome",
+    "sigla",
+    "tipo",
+    "categoria_admin",
+    "estado",
+    "regiao",
+    "municipio",
+    "site"
+  ],
+  "instituicoes": [
+    {
+      "id": 1,
+      "nome": "Universidade Federal do Amazonas",
+      "sigla": "UFAM",
+      "tipo": "Universidade",
+      "categoria_admin": "Federal",
+      "estado": "AM",
+      "regiao": "Norte",
+      "municipio": "Manaus",
+      "site": "www.ufam.edu.br"
+    },
+    {
+      "id": 2,
+      "nome": "Universidade do Estado do Amazonas",
+      "sigla": "UEA",
+      "tipo": "Universidade",
+      "categoria_admin": "Estadual",
+      "estado": "AM",
+      "regiao": "Norte",
+      "municipio": "Manaus",
+      "site": "www.uea.edu.br"
+    },
+    {
+      "id": 3,
+      "nome": "Universidade Federal do Pará",
+      "sigla": "UFPA",
+      "tipo": "Universidade",
+      "categoria_admin": "Federal",
+      "estado": "PA",
+      "regiao": "Norte",
+      "municipio": "Belém",
+      "site": "www.ufpa.br"
+    },
+    {
+      "id": 4,
+      "nome": "Universidade do Estado do Pará",
+      "sigla": "UEPA",
+      "tipo": "Universidade",
+      "categoria_admin": "Estadual",
+      "estado": "PA",
+      "regiao": "Norte",
+      "municipio": "Belém",
+      "site": "www.uepa.br"
+    },
+    {
+      "id": 5,
+      "nome": "Universidade Federal Rural da Amazônia",
+      "sigla": "UFRA",
+      "tipo": "Universidade",
+      "categoria_admin": "Federal",
+      "estado": "PA",
+      "regiao": "Norte",
+      "municipio": "Belém",
+      "site": "www.ufra.edu.br"
+    },
+    {
+      "id": 6,
+      "nome": "Universidade Federal do Oeste do Pará",
+      "sigla": "UFOPA",
+      "tipo": "Universidade",
+      "categoria_admin": "Federal",
+      "estado": "PA",
+      "regiao": "Norte",
+      "municipio": "Santarém",
+      "site": "www.ufopa.edu.br"
+    },
+    {
+      "id": 7,
+      "nome": "Universidade Federal do Sul e Sudeste do Pará",
+      "sigla": "UNIFESSPA",
+      "tipo": "Universidade",
+      "categoria_admin": "Federal",
+      "estado": "PA",
+      "regiao": "Norte",
+      "municipio": "Marabá",
+      "site": "www.unifesspa.edu.br"
+    },
+    {
+      "id": 8,
+      "nome": "Universidade Federal do Tocantins",
+      "sigla": "UFT",
+      "tipo": "Universidade",
+      "categoria_admin": "Federal",
+      "estado": "TO",
+      "regiao": "Norte",
+      "municipio": "Palmas",
+      "site": "www.uft.edu.br"
+    },
+    {
+      "id": 9,
+      "nome": "Universidade Estadual do Tocantins",
+      "sigla": "UNITINS",
+      "tipo": "Universidade",
+      "categoria_admin": "Estadual",
+      "estado": "TO",
+      "regiao": "Norte",
+      "municipio": "Palmas",
+      "site": "www.unitins.br"
+    },
+    {
+      "id": 10,
+      "nome": "Universidade Federal de Roraima",
+      "sigla": "UFRR",
+      "tipo": "Universidade",
+      "categoria_admin": "Federal",
+      "estado": "RR",
+      "regiao": "Norte",
+      "municipio": "Boa Vista",
+      "site": "www.ufrr.br"
+    },
+    {
+      "id": 11,
+      "nome": "Universidade Estadual de Roraima",
+      "sigla": "UERR",
+      "tipo": "Universidade",
+      "categoria_admin": "Estadual",
+      "estado": "RR",
+      "regiao": "Norte",
+      "municipio": "Boa Vista",
+      "site": "www.uerr.edu.br"
+    },
+    {
+      "id": 12,
+      "nome": "Universidade Federal do Acre",
+      "sigla": "UFAC",
+      "tipo": "Universidade",
+      "categoria_admin": "Federal",
+      "estado": "AC",
+      "regiao": "Norte",
+      "municipio": "Rio Branco",
+      "site": "www.ufac.br"
+    },
+    {
+      "id": 13,
+      "nome": "Universidade Federal de Rondônia",
+      "sigla": "UNIR",
+      "tipo": "Universidade",
+      "categoria_admin": "Federal",
+      "estado": "RO",
+      "regiao": "Norte",
+      "municipio": "Porto Velho",
+      "site": "www.unir.br"
+    },
+    {
+      "id": 14,
+      "nome": "Universidade Federal do Amapá",
+      "sigla": "UNIFAP",
+      "tipo": "Universidade",
+      "categoria_admin": "Federal",
+      "estado": "AP",
+      "regiao": "Norte",
+      "municipio": "Macapá",
+      "site": "www.unifap.br"
+    },
+    {
+      "id": 15,
+      "nome": "Instituto Federal do Amazonas",
+      "sigla": "IFAM",
+      "tipo": "Instituto Federal",
+      "categoria_admin": "Federal",
+      "estado": "AM",
+      "regiao": "Norte",
+      "municipio": "Manaus",
+      "site": "www.ifam.edu.br"
+    },
+    {
+      "id": 16,
+      "nome": "Instituto Federal do Pará",
+      "sigla": "IFPA",
+      "tipo": "Instituto Federal",
+      "categoria_admin": "Federal",
+      "estado": "PA",
+      "regiao": "Norte",
+      "municipio": "Belém",
+      "site": "www.ifpa.edu.br"
+    },
+    {
+      "id": 17,
+      "nome": "Instituto Federal do Tocantins",
+      "sigla": "IFTO",
+      "tipo": "Instituto Federal",
+      "categoria_admin": "Federal",
+      "estado": "TO",
+      "regiao": "Norte",
+      "municipio": "Palmas",
+      "site": "www.ifto.edu.br"
+    },
+    {
+      "id": 18,
+      "nome": "Instituto Federal de Roraima",
+      "sigla": "IFRR",
+      "tipo": "Instituto Federal",
+      "categoria_admin": "Federal",
+      "estado": "RR",
+      "regiao": "Norte",
+      "municipio": "Boa Vista",
+      "site": "www.ifrr.edu.br"
+    },
+    {
+      "id": 19,
+      "nome": "Instituto Federal do Acre",
+      "sigla": "IFAC",
+      "tipo": "Instituto Federal",
+      "categoria_admin": "Federal",
+      "estado": "AC",
+      "regiao": "Norte",
+      "municipio": "Rio Branco",
+      "site": "www.ifac.edu.br"
+    },
+    {
+      "id": 20,
+      "nome": "Instituto Federal de Rondônia",
+      "sigla": "IFRO",
+      "tipo": "Instituto Federal",
+      "categoria_admin": "Federal",
+      "estado": "RO",
+      "regiao": "Norte",
+      "municipio": "Porto Velho",
+      "site": "www.ifro.edu.br"
+    }
+  ]
+}

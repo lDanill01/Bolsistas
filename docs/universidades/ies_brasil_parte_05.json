@@ -1,0 +1,241 @@
+{
+  "parte": 5,
+  "total_partes": 10,
+  "total_nesta_parte": 20,
+  "descricao": "Lista de Instituições de Ensino Superior do Brasil",
+  "fonte": "Base consolidada com IES federais, estaduais, municipais e privadas",
+  "data_geracao": "2026-07-17",
+  "campos": [
+    "id",
+    "nome",
+    "sigla",
+    "tipo",
+    "categoria_admin",
+    "estado",
+    "regiao",
+    "municipio",
+    "site"
+  ],
+  "instituicoes": [
+    {
+      "id": 81,
+      "nome": "Instituto Federal de Goiás",
+      "sigla": "IFG",
+      "tipo": "Instituto Federal",
+      "categoria_admin": "Federal",
+      "estado": "GO",
+      "regiao": "Centro-Oeste",
+      "municipio": "Goiânia",
+      "site": "www.ifg.edu.br"
+    },
+    {
+      "id": 82,
+      "nome": "Instituto Federal Goiano",
+      "sigla": "IF Goiano",
+      "tipo": "Instituto Federal",
+      "categoria_admin": "Federal",
+      "estado": "GO",
+      "regiao": "Centro-Oeste",
+      "municipio": "Rio Verde",
+      "site": "www.ifgoiano.edu.br"
+    },
+    {
+      "id": 83,
+      "nome": "Instituto Federal de Mato Grosso",
+      "sigla": "IFMT",
+      "tipo": "Instituto Federal",
+      "categoria_admin": "Federal",
+      "estado": "MT",
+      "regiao": "Centro-Oeste",
+      "municipio": "Cuiabá",
+      "site": "www.ifmt.edu.br"
+    },
+    {
+      "id": 84,
+      "nome": "Instituto Federal de Mato Grosso do Sul",
+      "sigla": "IFMS",
+      "tipo": "Instituto Federal",
+      "categoria_admin": "Federal",
+      "estado": "MS",
+      "regiao": "Centro-Oeste",
+      "municipio": "Campo Grande",
+      "site": "www.ifms.edu.br"
+    },
+    {
+      "id": 85,
+      "nome": "Instituto Federal de Brasília",
+      "sigla": "IFB",
+      "tipo": "Instituto Federal",
+      "categoria_admin": "Federal",
+      "estado": "DF",
+      "regiao": "Centro-Oeste",
+      "municipio": "Brasília",
+      "site": "www.ifb.edu.br"
+    },
+    {
+      "id": 86,
+      "nome": "Universidade de São Paulo",
+      "sigla": "USP",
+      "tipo": "Universidade",
+      "categoria_admin": "Estadual",
+      "estado": "SP",
+      "regiao": "Sudeste",
+      "municipio": "São Paulo",
+      "site": "www.usp.br"
+    },
+    {
+      "id": 87,
+      "nome": "Universidade Estadual de Campinas",
+      "sigla": "UNICAMP",
+      "tipo": "Universidade",
+      "categoria_admin": "Estadual",
+      "estado": "SP",
+      "regiao": "Sudeste",
+      "municipio": "Campinas",
+      "site": "www.unicamp.br"
+    },
+    {
+      "id": 88,
+      "nome": "Universidade Estadual Paulista",
+      "sigla": "UNESP",
+      "tipo": "Universidade",
+      "categoria_admin": "Estadual",
+      "estado": "SP",
+      "regiao": "Sudeste",
+      "municipio": "São Paulo",
+      "site": "www.unesp.br"
+    },
+    {
+      "id": 89,
+      "nome": "Universidade Federal de São Paulo",
+      "sigla": "UNIFESP",
+      "tipo": "Universidade",
+      "categoria_admin": "Federal",
+      "estado": "SP",
+      "regiao": "Sudeste",
+      "municipio": "São Paulo",
+      "site": "www.unifesp.br"
+    },
+    {
+      "id": 90,
+      "nome": "Universidade Federal de São Carlos",
+      "sigla": "UFSCar",
+      "tipo": "Universidade",
+      "categoria_admin": "Federal",
+      "estado": "SP",
+      "regiao": "Sudeste",
+      "municipio": "São Carlos",
+      "site": "www.ufscar.br"
+    },
+    {
+      "id": 91,
+      "nome": "Universidade Federal do ABC",
+      "sigla": "UFABC",
+      "tipo": "Universidade",
+      "categoria_admin": "Federal",
+      "estado": "SP",
+      "regiao": "Sudeste",
+      "municipio": "Santo André",
+      "site": "www.ufabc.edu.br"
+    },
+    {
+      "id": 92,
+      "nome": "Pontifícia Universidade Católica de São Paulo",
+      "sigla": "PUC-SP",
+      "tipo": "Universidade",
+      "categoria_admin": "Privada",
+      "estado": "SP",
+      "regiao": "Sudeste",
+      "municipio": "São Paulo",
+      "site": "www.pucsp.br"
+    },
+    {
+      "id": 93,
+      "nome": "Pontifícia Universidade Católica de Campinas",
+      "sigla": "PUC-CAMPINAS",
+      "tipo": "Universidade",
+      "categoria_admin": "Privada",
+      "estado": "SP",
+      "regiao": "Sudeste",
+      "municipio": "Campinas",
+      "site": "www.puc-campinas.edu.br"
+    },
+    {
+      "id": 94,
+      "nome": "Universidade Presbiteriana Mackenzie",
+      "sigla": "MACKENZIE",
+      "tipo": "Universidade",
+      "categoria_admin": "Privada",
+      "estado": "SP",
+      "regiao": "Sudeste",
+      "municipio": "São Paulo",
+      "site": "www.mackenzie.br"
+    },
+    {
+      "id": 95,
+      "nome": "Universidade Metodista de São Paulo",
+      "sigla": "UMESP",
+      "tipo": "Universidade",
+      "categoria_admin": "Privada",
+      "estado": "SP",
+      "regiao": "Sudeste",
+      "municipio": "São Bernardo do Campo",
+      "site": "www.metodista.br"
+    },
+    {
+      "id": 96,
+      "nome": "Universidade São Francisco",
+      "sigla": "USF",
+      "tipo": "Universidade",
+      "categoria_admin": "Privada",
+      "estado": "SP",
+      "regiao": "Sudeste",
+      "municipio": "Bragança Paulista",
+      "site": "www.usf.edu.br"
+    },
+    {
+      "id": 97,
+      "nome": "Universidade Anhembi Morumbi",
+      "sigla": "UAM",
+      "tipo": "Universidade",
+      "categoria_admin": "Privada",
+      "estado": "SP",
+      "regiao": "Sudeste",
+      "municipio": "São Paulo",
+      "site": "www.anhembi.br"
+    },
+    {
+      "id": 98,
+      "nome": "Universidade Cruzeiro do Sul",
+      "sigla": "CRUZEIRO DO SUL",
+      "tipo": "Universidade",
+      "categoria_admin": "Privada",
+      "estado": "SP",
+      "regiao": "Sudeste",
+      "municipio": "São Paulo",
+      "site": "www.cruzeirodosul.edu.br"
+    },
+    {
+      "id": 99,
+      "nome": "Universidade Paulista",
+      "sigla": "UNIP",
+      "tipo": "Universidade",
+      "categoria_admin": "Privada",
+      "estado": "SP",
+      "regiao": "Sudeste",
+      "municipio": "São Paulo",
+      "site": "www.unip.br"
+    },
+    {
+      "id": 100,
+      "nome": "Universidade Nove de Julho",
+      "sigla": "UNINOVE",
+      "tipo": "Universidade",
+      "categoria_admin": "Privada",
+      "estado": "SP",
+      "regiao": "Sudeste",
+      "municipio": "São Paulo",
+      "site": "www.uninove.br"
+    }
+  ]
+}

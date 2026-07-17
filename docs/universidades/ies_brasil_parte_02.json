@@ -1,0 +1,241 @@
+{
+  "parte": 2,
+  "total_partes": 10,
+  "total_nesta_parte": 20,
+  "descricao": "Lista de Instituições de Ensino Superior do Brasil",
+  "fonte": "Base consolidada com IES federais, estaduais, municipais e privadas",
+  "data_geracao": "2026-07-17",
+  "campos": [
+    "id",
+    "nome",
+    "sigla",
+    "tipo",
+    "categoria_admin",
+    "estado",
+    "regiao",
+    "municipio",
+    "site"
+  ],
+  "instituicoes": [
+    {
+      "id": 21,
+      "nome": "Instituto Federal do Amapá",
+      "sigla": "IFAP",
+      "tipo": "Instituto Federal",
+      "categoria_admin": "Federal",
+      "estado": "AP",
+      "regiao": "Norte",
+      "municipio": "Macapá",
+      "site": "www.ifap.edu.br"
+    },
+    {
+      "id": 22,
+      "nome": "Faculdade Metropolitana de Manaus",
+      "sigla": "FAMETRO",
+      "tipo": "Faculdade",
+      "categoria_admin": "Privada",
+      "estado": "AM",
+      "regiao": "Norte",
+      "municipio": "Manaus",
+      "site": "www.fametro.com.br"
+    },
+    {
+      "id": 23,
+      "nome": "Centro Universitário do Norte",
+      "sigla": "UNINORTE",
+      "tipo": "Centro Universitário",
+      "categoria_admin": "Privada",
+      "estado": "AM",
+      "regiao": "Norte",
+      "municipio": "Manaus",
+      "site": "www.uninorte.com.br"
+    },
+    {
+      "id": 24,
+      "nome": "Universidade Nilton Lins",
+      "sigla": "UNL",
+      "tipo": "Universidade",
+      "categoria_admin": "Privada",
+      "estado": "AM",
+      "regiao": "Norte",
+      "municipio": "Manaus",
+      "site": "www.niltonlins.br"
+    },
+    {
+      "id": 25,
+      "nome": "Universidade Federal da Bahia",
+      "sigla": "UFBA",
+      "tipo": "Universidade",
+      "categoria_admin": "Federal",
+      "estado": "BA",
+      "regiao": "Nordeste",
+      "municipio": "Salvador",
+      "site": "www.ufba.br"
+    },
+    {
+      "id": 26,
+      "nome": "Universidade Estadual de Feira de Santana",
+      "sigla": "UEFS",
+      "tipo": "Universidade",
+      "categoria_admin": "Estadual",
+      "estado": "BA",
+      "regiao": "Nordeste",
+      "municipio": "Feira de Santana",
+      "site": "www.uefs.br"
+    },
+    {
+      "id": 27,
+      "nome": "Universidade Estadual de Santa Cruz",
+      "sigla": "UESC",
+      "tipo": "Universidade",
+      "categoria_admin": "Estadual",
+      "estado": "BA",
+      "regiao": "Nordeste",
+      "municipio": "Ilhéus",
+      "site": "www.uesc.br"
+    },
+    {
+      "id": 28,
+      "nome": "Universidade Estadual do Sudoeste da Bahia",
+      "sigla": "UESB",
+      "tipo": "Universidade",
+      "categoria_admin": "Estadual",
+      "estado": "BA",
+      "regiao": "Nordeste",
+      "municipio": "Vitória da Conquista",
+      "site": "www.uesb.br"
+    },
+    {
+      "id": 29,
+      "nome": "Universidade do Estado da Bahia",
+      "sigla": "UNEB",
+      "tipo": "Universidade",
+      "categoria_admin": "Estadual",
+      "estado": "BA",
+      "regiao": "Nordeste",
+      "municipio": "Salvador",
+      "site": "www.uneb.br"
+    },
+    {
+      "id": 30,
+      "nome": "Universidade Federal do Recôncavo da Bahia",
+      "sigla": "UFRB",
+      "tipo": "Universidade",
+      "categoria_admin": "Federal",
+      "estado": "BA",
+      "regiao": "Nordeste",
+      "municipio": "Cruz das Almas",
+      "site": "www.ufrb.edu.br"
+    },
+    {
+      "id": 31,
+      "nome": "Universidade Federal do Oeste da Bahia",
+      "sigla": "UFOB",
+      "tipo": "Universidade",
+      "categoria_admin": "Federal",
+      "estado": "BA",
+      "regiao": "Nordeste",
+      "municipio": "Barreiras",
+      "site": "www.ufob.edu.br"
+    },
+    {
+      "id": 32,
+      "nome": "Universidade Federal do Sul da Bahia",
+      "sigla": "UFSB",
+      "tipo": "Universidade",
+      "categoria_admin": "Federal",
+      "estado": "BA",
+      "regiao": "Nordeste",
+      "municipio": "Itabuna",
+      "site": "www.ufsb.edu.br"
+    },
+    {
+      "id": 33,
+      "nome": "Universidade Salvador",
+      "sigla": "UNIFACS",
+      "tipo": "Universidade",
+      "categoria_admin": "Privada",
+      "estado": "BA",
+      "regiao": "Nordeste",
+      "municipio": "Salvador",
+      "site": "www.unifacs.br"
+    },
+    {
+      "id": 34,
+      "nome": "Universidade Católica do Salvador",
+      "sigla": "UCSAL",
+      "tipo": "Universidade",
+      "categoria_admin": "Privada",
+      "estado": "BA",
+      "regiao": "Nordeste",
+      "municipio": "Salvador",
+      "site": "www.ucsal.br"
+    },
+    {
+      "id": 35,
+      "nome": "Universidade Federal de Pernambuco",
+      "sigla": "UFPE",
+      "tipo": "Universidade",
+      "categoria_admin": "Federal",
+      "estado": "PE",
+      "regiao": "Nordeste",
+      "municipio": "Recife",
+      "site": "www.ufpe.br"
+    },
+    {
+      "id": 36,
+      "nome": "Universidade Federal Rural de Pernambuco",
+      "sigla": "UFRPE",
+      "tipo": "Universidade",
+      "categoria_admin": "Federal",
+      "estado": "PE",
+      "regiao": "Nordeste",
+      "municipio": "Recife",
+      "site": "www.ufrpe.br"
+    },
+    {
+      "id": 37,
+      "nome": "Universidade de Pernambuco",
+      "sigla": "UPE",
+      "tipo": "Universidade",
+      "categoria_admin": "Estadual",
+      "estado": "PE",
+      "regiao": "Nordeste",
+      "municipio": "Recife",
+      "site": "www.upe.br"
+    },
+    {
+      "id": 38,
+      "nome": "Universidade Federal do Vale do São Francisco",
+      "sigla": "UNIVASF",
+      "tipo": "Universidade",
+      "categoria_admin": "Federal",
+      "estado": "PE",
+      "regiao": "Nordeste",
+      "municipio": "Petrolina",
+      "site": "www.univasf.edu.br"
+    },
+    {
+      "id": 39,
+      "nome": "Universidade Católica de Pernambuco",
+      "sigla": "UNICAP",
+      "tipo": "Universidade",
+      "categoria_admin": "Privada",
+      "estado": "PE",
+      "regiao": "Nordeste",
+      "municipio": "Recife",
+      "site": "www.unicap.br"
+    },
+    {
+      "id": 40,
+      "nome": "Universidade Federal do Ceará",
+      "sigla": "UFC",
+      "tipo": "Universidade",
+      "categoria_admin": "Federal",
+      "estado": "CE",
+      "regiao": "Nordeste",
+      "municipio": "Fortaleza",
+      "site": "www.ufc.br"
+    }
+  ]
+}

@@ -1,0 +1,241 @@
+{
+  "parte": 7,
+  "total_partes": 10,
+  "total_nesta_parte": 20,
+  "descricao": "Lista de Instituições de Ensino Superior do Brasil",
+  "fonte": "Base consolidada com IES federais, estaduais, municipais e privadas",
+  "data_geracao": "2026-07-17",
+  "campos": [
+    "id",
+    "nome",
+    "sigla",
+    "tipo",
+    "categoria_admin",
+    "estado",
+    "regiao",
+    "municipio",
+    "site"
+  ],
+  "instituicoes": [
+    {
+      "id": 121,
+      "nome": "Universidade Federal de Juiz de Fora",
+      "sigla": "UFJF",
+      "tipo": "Universidade",
+      "categoria_admin": "Federal",
+      "estado": "MG",
+      "regiao": "Sudeste",
+      "municipio": "Juiz de Fora",
+      "site": "www.ufjf.br"
+    },
+    {
+      "id": 122,
+      "nome": "FGV Direito Rio",
+      "sigla": "FGV Direito Rio",
+      "tipo": "Faculdade",
+      "categoria_admin": "Privada",
+      "estado": "RJ",
+      "regiao": "Sudeste",
+      "municipio": "Rio de Janeiro",
+      "site": "direitorio.fgv.br"
+    },
+    {
+      "id": 123,
+      "nome": "Instituto Federal do Rio de Janeiro",
+      "sigla": "IFRJ",
+      "tipo": "Instituto Federal",
+      "categoria_admin": "Federal",
+      "estado": "RJ",
+      "regiao": "Sudeste",
+      "municipio": "Rio de Janeiro",
+      "site": "www.ifrj.edu.br"
+    },
+    {
+      "id": 124,
+      "nome": "Instituto Federal Fluminense",
+      "sigla": "IFF",
+      "tipo": "Instituto Federal",
+      "categoria_admin": "Federal",
+      "estado": "RJ",
+      "regiao": "Sudeste",
+      "municipio": "Campos dos Goytacazes",
+      "site": "www.iff.edu.br"
+    },
+    {
+      "id": 125,
+      "nome": "CEFET-RJ",
+      "sigla": "CEFET-RJ",
+      "tipo": "CEFET",
+      "categoria_admin": "Federal",
+      "estado": "RJ",
+      "regiao": "Sudeste",
+      "municipio": "Rio de Janeiro",
+      "site": "www.cefet-rj.br"
+    },
+    {
+      "id": 126,
+      "nome": "Universidade Federal de Minas Gerais",
+      "sigla": "UFMG",
+      "tipo": "Universidade",
+      "categoria_admin": "Federal",
+      "estado": "MG",
+      "regiao": "Sudeste",
+      "municipio": "Belo Horizonte",
+      "site": "www.ufmg.br"
+    },
+    {
+      "id": 127,
+      "nome": "Universidade Estadual de Minas Gerais",
+      "sigla": "UEMG",
+      "tipo": "Universidade",
+      "categoria_admin": "Estadual",
+      "estado": "MG",
+      "regiao": "Sudeste",
+      "municipio": "Belo Horizonte",
+      "site": "www.uemg.br"
+    },
+    {
+      "id": 128,
+      "nome": "Universidade Estadual de Montes Claros",
+      "sigla": "UNIMONTES",
+      "tipo": "Universidade",
+      "categoria_admin": "Estadual",
+      "estado": "MG",
+      "regiao": "Sudeste",
+      "municipio": "Montes Claros",
+      "site": "www.unimontes.br"
+    },
+    {
+      "id": 129,
+      "nome": "Pontifícia Universidade Católica de Minas Gerais",
+      "sigla": "PUC Minas",
+      "tipo": "Universidade",
+      "categoria_admin": "Privada",
+      "estado": "MG",
+      "regiao": "Sudeste",
+      "municipio": "Belo Horizonte",
+      "site": "www.pucminas.br"
+    },
+    {
+      "id": 130,
+      "nome": "Universidade Federal de Lavras",
+      "sigla": "UFLA",
+      "tipo": "Universidade",
+      "categoria_admin": "Federal",
+      "estado": "MG",
+      "regiao": "Sudeste",
+      "municipio": "Lavras",
+      "site": "www.ufla.br"
+    },
+    {
+      "id": 131,
+      "nome": "Universidade Federal de Uberlândia",
+      "sigla": "UFU",
+      "tipo": "Universidade",
+      "categoria_admin": "Federal",
+      "estado": "MG",
+      "regiao": "Sudeste",
+      "municipio": "Uberlândia",
+      "site": "www.ufu.br"
+    },
+    {
+      "id": 132,
+      "nome": "Universidade Federal de Viçosa",
+      "sigla": "UFV",
+      "tipo": "Universidade",
+      "categoria_admin": "Federal",
+      "estado": "MG",
+      "regiao": "Sudeste",
+      "municipio": "Viçosa",
+      "site": "www.ufv.br"
+    },
+    {
+      "id": 133,
+      "nome": "Universidade Federal de Ouro Preto",
+      "sigla": "UFOP",
+      "tipo": "Universidade",
+      "categoria_admin": "Federal",
+      "estado": "MG",
+      "regiao": "Sudeste",
+      "municipio": "Ouro Preto",
+      "site": "www.ufop.br"
+    },
+    {
+      "id": 134,
+      "nome": "Universidade Federal de São João del-Rei",
+      "sigla": "UFSJ",
+      "tipo": "Universidade",
+      "categoria_admin": "Federal",
+      "estado": "MG",
+      "regiao": "Sudeste",
+      "municipio": "São João del-Rei",
+      "site": "www.ufsj.edu.br"
+    },
+    {
+      "id": 135,
+      "nome": "Universidade Federal de Itajubá",
+      "sigla": "UNIFEI",
+      "tipo": "Universidade",
+      "categoria_admin": "Federal",
+      "estado": "MG",
+      "regiao": "Sudeste",
+      "municipio": "Itajubá",
+      "site": "www.unifei.edu.br"
+    },
+    {
+      "id": 136,
+      "nome": "Universidade Federal dos Vales do Jequitinhonha e Mucuri",
+      "sigla": "UFVJM",
+      "tipo": "Universidade",
+      "categoria_admin": "Federal",
+      "estado": "MG",
+      "regiao": "Sudeste",
+      "municipio": "Diamantina",
+      "site": "www.ufvjm.edu.br"
+    },
+    {
+      "id": 137,
+      "nome": "Universidade Federal do Triângulo Mineiro",
+      "sigla": "UFTM",
+      "tipo": "Universidade",
+      "categoria_admin": "Federal",
+      "estado": "MG",
+      "regiao": "Sudeste",
+      "municipio": "Uberaba",
+      "site": "www.uftm.edu.br"
+    },
+    {
+      "id": 138,
+      "nome": "Universidade Federal de Alfenas",
+      "sigla": "UNIFAL",
+      "tipo": "Universidade",
+      "categoria_admin": "Federal",
+      "estado": "MG",
+      "regiao": "Sudeste",
+      "municipio": "Alfenas",
+      "site": "www.unifal-mg.edu.br"
+    },
+    {
+      "id": 139,
+      "nome": "Centro Federal de Educação Tecnológica de Minas Gerais",
+      "sigla": "CEFET-MG",
+      "tipo": "CEFET",
+      "categoria_admin": "Federal",
+      "estado": "MG",
+      "regiao": "Sudeste",
+      "municipio": "Belo Horizonte",
+      "site": "www.cefetmg.br"
+    },
+    {
+      "id": 140,
+      "nome": "Instituto Federal de Minas Gerais",
+      "sigla": "IFMG",
+      "tipo": "Instituto Federal",
+      "categoria_admin": "Federal",
+      "estado": "MG",
+      "regiao": "Sudeste",
+      "municipio": "Belo Horizonte",
+      "site": "www.ifmg.edu.br"
+    }
+  ]
+}

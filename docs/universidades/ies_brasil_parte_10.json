@@ -1,0 +1,241 @@
+{
+  "parte": 10,
+  "total_partes": 10,
+  "total_nesta_parte": 20,
+  "descricao": "Lista de Instituições de Ensino Superior do Brasil",
+  "fonte": "Base consolidada com IES federais, estaduais, municipais e privadas",
+  "data_geracao": "2026-07-17",
+  "campos": [
+    "id",
+    "nome",
+    "sigla",
+    "tipo",
+    "categoria_admin",
+    "estado",
+    "regiao",
+    "municipio",
+    "site"
+  ],
+  "instituicoes": [
+    {
+      "id": 181,
+      "nome": "Universidade Estadual do Oeste do Paraná",
+      "sigla": "UNIOESTE",
+      "tipo": "Universidade",
+      "categoria_admin": "Estadual",
+      "estado": "PR",
+      "regiao": "Sul",
+      "municipio": "Cascavel",
+      "site": "www.unioeste.br"
+    },
+    {
+      "id": 182,
+      "nome": "Universidade Estadual do Centro-Oeste",
+      "sigla": "UNICENTRO",
+      "tipo": "Universidade",
+      "categoria_admin": "Estadual",
+      "estado": "PR",
+      "regiao": "Sul",
+      "municipio": "Guarapuava",
+      "site": "www.unicentro.br"
+    },
+    {
+      "id": 183,
+      "nome": "Universidade Estadual do Norte do Paraná",
+      "sigla": "UENP",
+      "tipo": "Universidade",
+      "categoria_admin": "Estadual",
+      "estado": "PR",
+      "regiao": "Sul",
+      "municipio": "Jacarezinho",
+      "site": "www.uenp.edu.br"
+    },
+    {
+      "id": 184,
+      "nome": "Universidade Tecnológica Federal do Paraná",
+      "sigla": "UTFPR",
+      "tipo": "Universidade",
+      "categoria_admin": "Federal",
+      "estado": "PR",
+      "regiao": "Sul",
+      "municipio": "Curitiba",
+      "site": "www.utfpr.edu.br"
+    },
+    {
+      "id": 185,
+      "nome": "Pontifícia Universidade Católica do Paraná",
+      "sigla": "PUC-PR",
+      "tipo": "Universidade",
+      "categoria_admin": "Privada",
+      "estado": "PR",
+      "regiao": "Sul",
+      "municipio": "Curitiba",
+      "site": "www.pucpr.br"
+    },
+    {
+      "id": 186,
+      "nome": "Universidade Positivo",
+      "sigla": "UP",
+      "tipo": "Universidade",
+      "categoria_admin": "Privada",
+      "estado": "PR",
+      "regiao": "Sul",
+      "municipio": "Curitiba",
+      "site": "www.up.edu.br"
+    },
+    {
+      "id": 187,
+      "nome": "Universidade Tuiuti do Paraná",
+      "sigla": "UTP",
+      "tipo": "Universidade",
+      "categoria_admin": "Privada",
+      "estado": "PR",
+      "regiao": "Sul",
+      "municipio": "Curitiba",
+      "site": "www.utp.br"
+    },
+    {
+      "id": 188,
+      "nome": "Universidade Estadual do Paraná",
+      "sigla": "UNESPAR",
+      "tipo": "Universidade",
+      "categoria_admin": "Estadual",
+      "estado": "PR",
+      "regiao": "Sul",
+      "municipio": "Campo Mourão",
+      "site": "www.unespar.edu.br"
+    },
+    {
+      "id": 189,
+      "nome": "Instituto Federal do Paraná",
+      "sigla": "IFPR",
+      "tipo": "Instituto Federal",
+      "categoria_admin": "Federal",
+      "estado": "PR",
+      "regiao": "Sul",
+      "municipio": "Curitiba",
+      "site": "www.ifpr.edu.br"
+    },
+    {
+      "id": 190,
+      "nome": "Universidade Anhanguera",
+      "sigla": "ANHANGUERA",
+      "tipo": "Universidade",
+      "categoria_admin": "Privada",
+      "estado": "SP",
+      "regiao": "Sudeste",
+      "municipio": "São Paulo",
+      "site": "www.anhanguera.com"
+    },
+    {
+      "id": 191,
+      "nome": "Universidade Kroton (Cogna)",
+      "sigla": "KROTON",
+      "tipo": "Universidade",
+      "categoria_admin": "Privada",
+      "estado": "PR",
+      "regiao": "Sul",
+      "municipio": "Londrina",
+      "site": "www.kroton.com.br"
+    },
+    {
+      "id": 192,
+      "nome": "Universidade Pitágoras",
+      "sigla": "PITÁGORAS",
+      "tipo": "Universidade",
+      "categoria_admin": "Privada",
+      "estado": "MG",
+      "regiao": "Sudeste",
+      "municipio": "Belo Horizonte",
+      "site": "www.pitagoras.com.br"
+    },
+    {
+      "id": 193,
+      "nome": "Universidade Ampli (Grupo Ser Educacional)",
+      "sigla": "SER",
+      "tipo": "Universidade",
+      "categoria_admin": "Privada",
+      "estado": "PE",
+      "regiao": "Nordeste",
+      "municipio": "Recife",
+      "site": "www.sereducacional.com"
+    },
+    {
+      "id": 194,
+      "nome": "Centro Universitário Uninter",
+      "sigla": "UNINTER",
+      "tipo": "Centro Universitário",
+      "categoria_admin": "Privada",
+      "estado": "PR",
+      "regiao": "Sul",
+      "municipio": "Curitiba",
+      "site": "www.uninter.com"
+    },
+    {
+      "id": 195,
+      "nome": "Universidade Cesumar",
+      "sigla": "UNICESUMAR",
+      "tipo": "Universidade",
+      "categoria_admin": "Privada",
+      "estado": "PR",
+      "regiao": "Sul",
+      "municipio": "Maringá",
+      "site": "www.unicesumar.edu.br"
+    },
+    {
+      "id": 196,
+      "nome": "Universidade Leonardo da Vinci",
+      "sigla": "UNIASSELVI",
+      "tipo": "Universidade",
+      "categoria_admin": "Privada",
+      "estado": "SC",
+      "regiao": "Sul",
+      "municipio": "Indaial",
+      "site": "www.uniasselvi.com.br"
+    },
+    {
+      "id": 197,
+      "nome": "Universidade Estácio de Sá (nacional)",
+      "sigla": "ESTÁCIO",
+      "tipo": "Universidade",
+      "categoria_admin": "Privada",
+      "estado": "RJ",
+      "regiao": "Sudeste",
+      "municipio": "Rio de Janeiro",
+      "site": "www.estacio.br"
+    },
+    {
+      "id": 198,
+      "nome": "Faculdade de Tecnologia SENAI",
+      "sigla": "FATEC SENAI",
+      "tipo": "Faculdade",
+      "categoria_admin": "Privada",
+      "estado": "SP",
+      "regiao": "Sudeste",
+      "municipio": "São Paulo",
+      "site": "www.sp.senai.br"
+    },
+    {
+      "id": 199,
+      "nome": "Fundação Getulio Vargas",
+      "sigla": "FGV",
+      "tipo": "Faculdade",
+      "categoria_admin": "Privada",
+      "estado": "SP",
+      "regiao": "Sudeste",
+      "municipio": "São Paulo",
+      "site": "www.fgv.br"
+    },
+    {
+      "id": 200,
+      "nome": "Ibmec",
+      "sigla": "IBMEC",
+      "tipo": "Centro Universitário",
+      "categoria_admin": "Privada",
+      "estado": "RJ",
+      "regiao": "Sudeste",
+      "municipio": "Rio de Janeiro",
+      "site": "www.ibmec.br"
+    }
+  ]
+}

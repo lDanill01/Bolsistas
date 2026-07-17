@@ -29,6 +29,14 @@ def validar_maioridade(data_nascimento):
         raise ValidationError('É necessário ter pelo menos 18 anos.')
 
 
+def validar_pdf(arquivo):
+    if not arquivo:
+        return
+    ext = arquivo.name.rsplit('.', 1)[-1].lower()
+    if ext != 'pdf':
+        raise ValidationError('Apenas arquivos PDF são aceitos.')
+
+
 class CadastroBolsista(DataModel):
 
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='cadastro')
@@ -43,7 +51,7 @@ class CadastroBolsista(DataModel):
     cidade = models.CharField('Cidade', max_length=255, blank=True)
     estado = models.CharField('Estado', max_length=2, choices=ESTADOS_CHOICES, blank=True)
 
-    curriculo = models.FileField('Currículo', upload_to='curriculos/', blank=True)
+    curriculo = models.FileField('Currículo', upload_to='curriculos/', blank=True, validators=[validar_pdf])
     foto = models.ImageField('Foto', upload_to='fotos/', blank=True)
 
     participacao_projetos_anos = models.PositiveIntegerField('Anos de experiência em projetos/pesquisa', default=0)

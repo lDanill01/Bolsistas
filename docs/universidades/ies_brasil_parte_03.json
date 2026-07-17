@@ -1,0 +1,241 @@
+{
+  "parte": 3,
+  "total_partes": 10,
+  "total_nesta_parte": 20,
+  "descricao": "Lista de Instituições de Ensino Superior do Brasil",
+  "fonte": "Base consolidada com IES federais, estaduais, municipais e privadas",
+  "data_geracao": "2026-07-17",
+  "campos": [
+    "id",
+    "nome",
+    "sigla",
+    "tipo",
+    "categoria_admin",
+    "estado",
+    "regiao",
+    "municipio",
+    "site"
+  ],
+  "instituicoes": [
+    {
+      "id": 41,
+      "nome": "Universidade Estadual do Ceará",
+      "sigla": "UECE",
+      "tipo": "Universidade",
+      "categoria_admin": "Estadual",
+      "estado": "CE",
+      "regiao": "Nordeste",
+      "municipio": "Fortaleza",
+      "site": "www.uece.br"
+    },
+    {
+      "id": 42,
+      "nome": "Universidade Regional do Cariri",
+      "sigla": "URCA",
+      "tipo": "Universidade",
+      "categoria_admin": "Estadual",
+      "estado": "CE",
+      "regiao": "Nordeste",
+      "municipio": "Crato",
+      "site": "www.urca.br"
+    },
+    {
+      "id": 43,
+      "nome": "Universidade de Fortaleza",
+      "sigla": "UNIFOR",
+      "tipo": "Universidade",
+      "categoria_admin": "Privada",
+      "estado": "CE",
+      "regiao": "Nordeste",
+      "municipio": "Fortaleza",
+      "site": "www.unifor.br"
+    },
+    {
+      "id": 44,
+      "nome": "Universidade Federal do Rio Grande do Norte",
+      "sigla": "UFRN",
+      "tipo": "Universidade",
+      "categoria_admin": "Federal",
+      "estado": "RN",
+      "regiao": "Nordeste",
+      "municipio": "Natal",
+      "site": "www.ufrn.br"
+    },
+    {
+      "id": 45,
+      "nome": "Universidade do Estado do Rio Grande do Norte",
+      "sigla": "UERN",
+      "tipo": "Universidade",
+      "categoria_admin": "Estadual",
+      "estado": "RN",
+      "regiao": "Nordeste",
+      "municipio": "Mossoró",
+      "site": "www.uern.br"
+    },
+    {
+      "id": 46,
+      "nome": "Universidade Federal de Campina Grande",
+      "sigla": "UFCG",
+      "tipo": "Universidade",
+      "categoria_admin": "Federal",
+      "estado": "PB",
+      "regiao": "Nordeste",
+      "municipio": "Campina Grande",
+      "site": "www.ufcg.edu.br"
+    },
+    {
+      "id": 47,
+      "nome": "Universidade Federal da Paraíba",
+      "sigla": "UFPB",
+      "tipo": "Universidade",
+      "categoria_admin": "Federal",
+      "estado": "PB",
+      "regiao": "Nordeste",
+      "municipio": "João Pessoa",
+      "site": "www.ufpb.br"
+    },
+    {
+      "id": 48,
+      "nome": "Universidade Estadual da Paraíba",
+      "sigla": "UEPB",
+      "tipo": "Universidade",
+      "categoria_admin": "Estadual",
+      "estado": "PB",
+      "regiao": "Nordeste",
+      "municipio": "Campina Grande",
+      "site": "www.uepb.edu.br"
+    },
+    {
+      "id": 49,
+      "nome": "Universidade Federal de Sergipe",
+      "sigla": "UFS",
+      "tipo": "Universidade",
+      "categoria_admin": "Federal",
+      "estado": "SE",
+      "regiao": "Nordeste",
+      "municipio": "São Cristóvão",
+      "site": "www.ufs.br"
+    },
+    {
+      "id": 50,
+      "nome": "Universidade Tiradentes",
+      "sigla": "UNIT",
+      "tipo": "Universidade",
+      "categoria_admin": "Privada",
+      "estado": "SE",
+      "regiao": "Nordeste",
+      "municipio": "Aracaju",
+      "site": "www.unit.br"
+    },
+    {
+      "id": 51,
+      "nome": "Universidade Federal de Alagoas",
+      "sigla": "UFAL",
+      "tipo": "Universidade",
+      "categoria_admin": "Federal",
+      "estado": "AL",
+      "regiao": "Nordeste",
+      "municipio": "Maceió",
+      "site": "www.ufal.edu.br"
+    },
+    {
+      "id": 52,
+      "nome": "Universidade Estadual de Alagoas",
+      "sigla": "UNEAL",
+      "tipo": "Universidade",
+      "categoria_admin": "Estadual",
+      "estado": "AL",
+      "regiao": "Nordeste",
+      "municipio": "Arapiraca",
+      "site": "www.uneal.edu.br"
+    },
+    {
+      "id": 53,
+      "nome": "Universidade Federal do Maranhão",
+      "sigla": "UFMA",
+      "tipo": "Universidade",
+      "categoria_admin": "Federal",
+      "estado": "MA",
+      "regiao": "Nordeste",
+      "municipio": "São Luís",
+      "site": "www.ufma.br"
+    },
+    {
+      "id": 54,
+      "nome": "Universidade Estadual do Maranhão",
+      "sigla": "UEMA",
+      "tipo": "Universidade",
+      "categoria_admin": "Estadual",
+      "estado": "MA",
+      "regiao": "Nordeste",
+      "municipio": "São Luís",
+      "site": "www.uema.br"
+    },
+    {
+      "id": 55,
+      "nome": "Universidade Federal do Piauí",
+      "sigla": "UFPI",
+      "tipo": "Universidade",
+      "categoria_admin": "Federal",
+      "estado": "PI",
+      "regiao": "Nordeste",
+      "municipio": "Teresina",
+      "site": "www.ufpi.br"
+    },
+    {
+      "id": 56,
+      "nome": "Universidade Estadual do Piauí",
+      "sigla": "UESPI",
+      "tipo": "Universidade",
+      "categoria_admin": "Estadual",
+      "estado": "PI",
+      "regiao": "Nordeste",
+      "municipio": "Teresina",
+      "site": "www.uespi.br"
+    },
+    {
+      "id": 57,
+      "nome": "Instituto Federal da Bahia",
+      "sigla": "IFBA",
+      "tipo": "Instituto Federal",
+      "categoria_admin": "Federal",
+      "estado": "BA",
+      "regiao": "Nordeste",
+      "municipio": "Salvador",
+      "site": "www.ifba.edu.br"
+    },
+    {
+      "id": 58,
+      "nome": "Instituto Federal do Ceará",
+      "sigla": "IFCE",
+      "tipo": "Instituto Federal",
+      "categoria_admin": "Federal",
+      "estado": "CE",
+      "regiao": "Nordeste",
+      "municipio": "Fortaleza",
+      "site": "www.ifce.edu.br"
+    },
+    {
+      "id": 59,
+      "nome": "Instituto Federal de Pernambuco",
+      "sigla": "IFPE",
+      "tipo": "Instituto Federal",
+      "categoria_admin": "Federal",
+      "estado": "PE",
+      "regiao": "Nordeste",
+      "municipio": "Recife",
+      "site": "www.ifpe.edu.br"
+    },
+    {
+      "id": 60,
+      "nome": "Instituto Federal do Sertão Pernambucano",
+      "sigla": "IF Sertão-PE",
+      "tipo": "Instituto Federal",
+      "categoria_admin": "Federal",
+      "estado": "PE",
+      "regiao": "Nordeste",
+      "municipio": "Petrolina",
+      "site": "www.ifsertao-pe.edu.br"
+    }
+  ]
+}

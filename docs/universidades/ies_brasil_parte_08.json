@@ -1,0 +1,241 @@
+{
+  "parte": 8,
+  "total_partes": 10,
+  "total_nesta_parte": 20,
+  "descricao": "Lista de Instituições de Ensino Superior do Brasil",
+  "fonte": "Base consolidada com IES federais, estaduais, municipais e privadas",
+  "data_geracao": "2026-07-17",
+  "campos": [
+    "id",
+    "nome",
+    "sigla",
+    "tipo",
+    "categoria_admin",
+    "estado",
+    "regiao",
+    "municipio",
+    "site"
+  ],
+  "instituicoes": [
+    {
+      "id": 141,
+      "nome": "Instituto Federal do Norte de Minas Gerais",
+      "sigla": "IFNMG",
+      "tipo": "Instituto Federal",
+      "categoria_admin": "Federal",
+      "estado": "MG",
+      "regiao": "Sudeste",
+      "municipio": "Montes Claros",
+      "site": "www.ifnmg.edu.br"
+    },
+    {
+      "id": 142,
+      "nome": "Instituto Federal do Sudeste de Minas Gerais",
+      "sigla": "IF Sudeste MG",
+      "tipo": "Instituto Federal",
+      "categoria_admin": "Federal",
+      "estado": "MG",
+      "regiao": "Sudeste",
+      "municipio": "Juiz de Fora",
+      "site": "www.ifsudeste.edu.br"
+    },
+    {
+      "id": 143,
+      "nome": "Instituto Federal do Sul de Minas Gerais",
+      "sigla": "IFSULDEMINAS",
+      "tipo": "Instituto Federal",
+      "categoria_admin": "Federal",
+      "estado": "MG",
+      "regiao": "Sudeste",
+      "municipio": "Pouso Alegre",
+      "site": "www.ifsuldeminas.edu.br"
+    },
+    {
+      "id": 144,
+      "nome": "Instituto Federal do Triângulo Mineiro",
+      "sigla": "IFTM",
+      "tipo": "Instituto Federal",
+      "categoria_admin": "Federal",
+      "estado": "MG",
+      "regiao": "Sudeste",
+      "municipio": "Uberaba",
+      "site": "www.iftm.edu.br"
+    },
+    {
+      "id": 145,
+      "nome": "Universidade Federal do Espírito Santo",
+      "sigla": "UFES",
+      "tipo": "Universidade",
+      "categoria_admin": "Federal",
+      "estado": "ES",
+      "regiao": "Sudeste",
+      "municipio": "Vitória",
+      "site": "www.ufes.br"
+    },
+    {
+      "id": 146,
+      "nome": "Universidade Estadual do Norte Fluminense",
+      "sigla": "UENF",
+      "tipo": "Universidade",
+      "categoria_admin": "Estadual",
+      "estado": "RJ",
+      "regiao": "Sudeste",
+      "municipio": "Campos dos Goytacazes",
+      "site": "www.uenf.br"
+    },
+    {
+      "id": 147,
+      "nome": "Instituto Federal do Espírito Santo",
+      "sigla": "IFES",
+      "tipo": "Instituto Federal",
+      "categoria_admin": "Federal",
+      "estado": "ES",
+      "regiao": "Sudeste",
+      "municipio": "Vitória",
+      "site": "www.ifes.edu.br"
+    },
+    {
+      "id": 148,
+      "nome": "Universidade Federal do Rio Grande do Sul",
+      "sigla": "UFRGS",
+      "tipo": "Universidade",
+      "categoria_admin": "Federal",
+      "estado": "RS",
+      "regiao": "Sul",
+      "municipio": "Porto Alegre",
+      "site": "www.ufrgs.br"
+    },
+    {
+      "id": 149,
+      "nome": "Universidade Federal de Santa Maria",
+      "sigla": "UFSM",
+      "tipo": "Universidade",
+      "categoria_admin": "Federal",
+      "estado": "RS",
+      "regiao": "Sul",
+      "municipio": "Santa Maria",
+      "site": "www.ufsm.br"
+    },
+    {
+      "id": 150,
+      "nome": "Universidade Federal de Pelotas",
+      "sigla": "UFPel",
+      "tipo": "Universidade",
+      "categoria_admin": "Federal",
+      "estado": "RS",
+      "regiao": "Sul",
+      "municipio": "Pelotas",
+      "site": "www.ufpel.edu.br"
+    },
+    {
+      "id": 151,
+      "nome": "Universidade Federal do Rio Grande",
+      "sigla": "FURG",
+      "tipo": "Universidade",
+      "categoria_admin": "Federal",
+      "estado": "RS",
+      "regiao": "Sul",
+      "municipio": "Rio Grande",
+      "site": "www.furg.br"
+    },
+    {
+      "id": 152,
+      "nome": "Universidade Federal de Ciências da Saúde de Porto Alegre",
+      "sigla": "UFCSPA",
+      "tipo": "Universidade",
+      "categoria_admin": "Federal",
+      "estado": "RS",
+      "regiao": "Sul",
+      "municipio": "Porto Alegre",
+      "site": "www.ufcspa.edu.br"
+    },
+    {
+      "id": 153,
+      "nome": "Universidade Federal da Fronteira Sul",
+      "sigla": "UFFS",
+      "tipo": "Universidade",
+      "categoria_admin": "Federal",
+      "estado": "RS",
+      "regiao": "Sul",
+      "municipio": "Chapecó",
+      "site": "www.uffs.edu.br"
+    },
+    {
+      "id": 154,
+      "nome": "Universidade Federal do Pampa",
+      "sigla": "UNIPAMPA",
+      "tipo": "Universidade",
+      "categoria_admin": "Federal",
+      "estado": "RS",
+      "regiao": "Sul",
+      "municipio": "Bagé",
+      "site": "www.unipampa.edu.br"
+    },
+    {
+      "id": 155,
+      "nome": "Pontifícia Universidade Católica do Rio Grande do Sul",
+      "sigla": "PUC-RS",
+      "tipo": "Universidade",
+      "categoria_admin": "Privada",
+      "estado": "RS",
+      "regiao": "Sul",
+      "municipio": "Porto Alegre",
+      "site": "www.pucrs.br"
+    },
+    {
+      "id": 156,
+      "nome": "Universidade do Vale do Rio dos Sinos",
+      "sigla": "UNISINOS",
+      "tipo": "Universidade",
+      "categoria_admin": "Privada",
+      "estado": "RS",
+      "regiao": "Sul",
+      "municipio": "São Leopoldo",
+      "site": "www.unisinos.br"
+    },
+    {
+      "id": 157,
+      "nome": "Universidade de Caxias do Sul",
+      "sigla": "UCS",
+      "tipo": "Universidade",
+      "categoria_admin": "Privada",
+      "estado": "RS",
+      "regiao": "Sul",
+      "municipio": "Caxias do Sul",
+      "site": "www.ucs.br"
+    },
+    {
+      "id": 158,
+      "nome": "Universidade Regional do Noroeste do Estado do Rio Grande do Sul",
+      "sigla": "UNIJUÍ",
+      "tipo": "Universidade",
+      "categoria_admin": "Privada",
+      "estado": "RS",
+      "regiao": "Sul",
+      "municipio": "Ijuí",
+      "site": "www.unijui.edu.br"
+    },
+    {
+      "id": 159,
+      "nome": "Universidade de Passo Fundo",
+      "sigla": "UPF",
+      "tipo": "Universidade",
+      "categoria_admin": "Privada",
+      "estado": "RS",
+      "regiao": "Sul",
+      "municipio": "Passo Fundo",
+      "site": "www.upf.br"
+    },
+    {
+      "id": 160,
+      "nome": "Universidade Regional Integrada do Alto Uruguai e das Missões",
+      "sigla": "URI",
+      "tipo": "Universidade",
+      "categoria_admin": "Privada",
+      "estado": "RS",
+      "regiao": "Sul",
+      "municipio": "Erechim",
+      "site": "www.uricer.edu.br"
+    }
+  ]
+}

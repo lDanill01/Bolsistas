@@ -24,3 +24,6 @@ graphify-out/
 *.swp
 .DS_Store
 Thumbs.db
+logs.md
+PLANO_DESENVOLVIMENTO.md
+PRD.md

@@ -1,0 +1,241 @@
+{
+  "parte": 4,
+  "total_partes": 10,
+  "total_nesta_parte": 20,
+  "descricao": "Lista de Instituições de Ensino Superior do Brasil",
+  "fonte": "Base consolidada com IES federais, estaduais, municipais e privadas",
+  "data_geracao": "2026-07-17",
+  "campos": [
+    "id",
+    "nome",
+    "sigla",
+    "tipo",
+    "categoria_admin",
+    "estado",
+    "regiao",
+    "municipio",
+    "site"
+  ],
+  "instituicoes": [
+    {
+      "id": 61,
+      "nome": "Instituto Federal do Rio Grande do Norte",
+      "sigla": "IFRN",
+      "tipo": "Instituto Federal",
+      "categoria_admin": "Federal",
+      "estado": "RN",
+      "regiao": "Nordeste",
+      "municipio": "Natal",
+      "site": "www.ifrn.edu.br"
+    },
+    {
+      "id": 62,
+      "nome": "Instituto Federal da Paraíba",
+      "sigla": "IFPB",
+      "tipo": "Instituto Federal",
+      "categoria_admin": "Federal",
+      "estado": "PB",
+      "regiao": "Nordeste",
+      "municipio": "João Pessoa",
+      "site": "www.ifpb.edu.br"
+    },
+    {
+      "id": 63,
+      "nome": "Instituto Federal de Alagoas",
+      "sigla": "IFAL",
+      "tipo": "Instituto Federal",
+      "categoria_admin": "Federal",
+      "estado": "AL",
+      "regiao": "Nordeste",
+      "municipio": "Maceió",
+      "site": "www.ifal.edu.br"
+    },
+    {
+      "id": 64,
+      "nome": "Instituto Federal de Sergipe",
+      "sigla": "IFS",
+      "tipo": "Instituto Federal",
+      "categoria_admin": "Federal",
+      "estado": "SE",
+      "regiao": "Nordeste",
+      "municipio": "Aracaju",
+      "site": "www.ifs.edu.br"
+    },
+    {
+      "id": 65,
+      "nome": "Instituto Federal do Maranhão",
+      "sigla": "IFMA",
+      "tipo": "Instituto Federal",
+      "categoria_admin": "Federal",
+      "estado": "MA",
+      "regiao": "Nordeste",
+      "municipio": "São Luís",
+      "site": "www.ifma.edu.br"
+    },
+    {
+      "id": 66,
+      "nome": "Instituto Federal do Piauí",
+      "sigla": "IFPI",
+      "tipo": "Instituto Federal",
+      "categoria_admin": "Federal",
+      "estado": "PI",
+      "regiao": "Nordeste",
+      "municipio": "Teresina",
+      "site": "www.ifpi.edu.br"
+    },
+    {
+      "id": 67,
+      "nome": "Universidade de Brasília",
+      "sigla": "UnB",
+      "tipo": "Universidade",
+      "categoria_admin": "Federal",
+      "estado": "DF",
+      "regiao": "Centro-Oeste",
+      "municipio": "Brasília",
+      "site": "www.unb.br"
+    },
+    {
+      "id": 68,
+      "nome": "Universidade Católica de Brasília",
+      "sigla": "UCB",
+      "tipo": "Universidade",
+      "categoria_admin": "Privada",
+      "estado": "DF",
+      "regiao": "Centro-Oeste",
+      "municipio": "Brasília",
+      "site": "www.ucb.br"
+    },
+    {
+      "id": 69,
+      "nome": "Centro Universitário de Brasília",
+      "sigla": "CEUB",
+      "tipo": "Centro Universitário",
+      "categoria_admin": "Privada",
+      "estado": "DF",
+      "regiao": "Centro-Oeste",
+      "municipio": "Brasília",
+      "site": "www.ceub.br"
+    },
+    {
+      "id": 70,
+      "nome": "Instituto de Educação Superior de Brasília",
+      "sigla": "IESB",
+      "tipo": "Centro Universitário",
+      "categoria_admin": "Privada",
+      "estado": "DF",
+      "regiao": "Centro-Oeste",
+      "municipio": "Brasília",
+      "site": "www.iesb.br"
+    },
+    {
+      "id": 71,
+      "nome": "Universidade Federal de Goiás",
+      "sigla": "UFG",
+      "tipo": "Universidade",
+      "categoria_admin": "Federal",
+      "estado": "GO",
+      "regiao": "Centro-Oeste",
+      "municipio": "Goiânia",
+      "site": "www.ufg.br"
+    },
+    {
+      "id": 72,
+      "nome": "Universidade Estadual de Goiás",
+      "sigla": "UEG",
+      "tipo": "Universidade",
+      "categoria_admin": "Estadual",
+      "estado": "GO",
+      "regiao": "Centro-Oeste",
+      "municipio": "Anápolis",
+      "site": "www.ueg.br"
+    },
+    {
+      "id": 73,
+      "nome": "Pontifícia Universidade Católica de Goiás",
+      "sigla": "PUC-GO",
+      "tipo": "Universidade",
+      "categoria_admin": "Privada",
+      "estado": "GO",
+      "regiao": "Centro-Oeste",
+      "municipio": "Goiânia",
+      "site": "www.pucgoias.edu.br"
+    },
+    {
+      "id": 74,
+      "nome": "Universidade Federal de Catalão",
+      "sigla": "UFCAT",
+      "tipo": "Universidade",
+      "categoria_admin": "Federal",
+      "estado": "GO",
+      "regiao": "Centro-Oeste",
+      "municipio": "Catalão",
+      "site": "www.ufcat.edu.br"
+    },
+    {
+      "id": 75,
+      "nome": "Universidade Federal de Jataí",
+      "sigla": "UFJ",
+      "tipo": "Universidade",
+      "categoria_admin": "Federal",
+      "estado": "GO",
+      "regiao": "Centro-Oeste",
+      "municipio": "Jataí",
+      "site": "www.ufj.edu.br"
+    },
+    {
+      "id": 76,
+      "nome": "Universidade Federal de Mato Grosso",
+      "sigla": "UFMT",
+      "tipo": "Universidade",
+      "categoria_admin": "Federal",
+      "estado": "MT",
+      "regiao": "Centro-Oeste",
+      "municipio": "Cuiabá",
+      "site": "www.ufmt.br"
+    },
+    {
+      "id": 77,
+      "nome": "Universidade do Estado de Mato Grosso",
+      "sigla": "UNEMAT",
+      "tipo": "Universidade",
+      "categoria_admin": "Estadual",
+      "estado": "MT",
+      "regiao": "Centro-Oeste",
+      "municipio": "Cáceres",
+      "site": "www.unemat.br"
+    },
+    {
+      "id": 78,
+      "nome": "Universidade Federal de Mato Grosso do Sul",
+      "sigla": "UFMS",
+      "tipo": "Universidade",
+      "categoria_admin": "Federal",
+      "estado": "MS",
+      "regiao": "Centro-Oeste",
+      "municipio": "Campo Grande",
+      "site": "www.ufms.br"
+    },
+    {
+      "id": 79,
+      "nome": "Universidade Estadual de Mato Grosso do Sul",
+      "sigla": "UEMS",
+      "tipo": "Universidade",
+      "categoria_admin": "Estadual",
+      "estado": "MS",
+      "regiao": "Centro-Oeste",
+      "municipio": "Dourados",
+      "site": "www.uems.br"
+    },
+    {
+      "id": 80,
+      "nome": "Universidade Federal da Grande Dourados",
+      "sigla": "UFGD",
+      "tipo": "Universidade",
+      "categoria_admin": "Federal",
+      "estado": "MS",
+      "regiao": "Centro-Oeste",
+      "municipio": "Dourados",
+      "site": "www.ufgd.edu.br"
+    }
+  ]
+}

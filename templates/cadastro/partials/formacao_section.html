@@ -7,6 +7,7 @@
                 {% if fa.status_display %}
                 <span class="badge bg-info text-dark ms-2">{{ fa.status_display }}</span>
                 {% endif %}
+                {% if fa.instituicao %}<small class="text-muted d-block">{{ fa.instituicao }}</small>{% endif %}
                 {% if fa.area %}<span class="text-muted ms-2">- {{ fa.area }}</span>{% endif %}
                 {% if fa.curso %}<small class="text-muted d-block">{{ fa.curso }}</small>{% endif %}
                 {% if fa.ano_conclusao %}<small class="text-muted">Conclusão: {{ fa.ano_conclusao }}</small>{% endif %}
@@ -35,27 +36,37 @@
               hx-target="#formacao-section" hx-swap="outerHTML" class="card p-3 bg-light">
             {% csrf_token %}
             <div class="row g-2 align-items-end">
-                <div class="col-md-3">
+                <div class="col-md-2">
                     <label class="form-label small">Formação</label>
-                    <div class="input-group">
+                    <div class="input-group input-group-sm">
                         <span class="input-group-text"><i class="bi bi-mortarboard"></i></span>
                         {{ formacao_form.tipo }}
                     </div>
                 </div>
-                <div class="col-md-2">
+                <div class="col-md-1">
                     <label class="form-label small">Status</label>
-                    <div class="input-group">
-                        <span class="input-group-text"><i class="bi bi-info-circle"></i></span>
-                        {{ formacao_form.status }}
-                    </div>
+                    {{ formacao_form.status }}
                 </div>
                 <div class="col-md-3">
+                    <label class="form-label small">Instituição</label>
+                    {{ formacao_form.instituicao }}
+                    <select class="form-select form-select-sm instituicao-select" onchange="formSectionOutraSelect(this, 'instituicao')">
+                    </select>
+                    <input type="text" class="form-control form-control-sm outra-input d-none mt-1" placeholder="Digite o nome da instituição..." oninput="formSectionOutraInput(this, 'instituicao')">
+                </div>
+                <div class="col-md-2">
                     <label class="form-label small">Área</label>
                     {{ formacao_form.area }}
+                    <select class="form-select form-select-sm area-select" onchange="formSectionOutraSelect(this, 'area')">
+                    </select>
+                    <input type="text" class="form-control form-control-sm outra-input d-none mt-1" placeholder="Digite a área..." oninput="formSectionOutraInput(this, 'area')">
                 </div>
                 <div class="col-md-2">
                     <label class="form-label small">Curso</label>
                     {{ formacao_form.curso }}
+                    <select class="form-select form-select-sm curso-select" onchange="formSectionOutraSelect(this, 'curso')">
+                    </select>
+                    <input type="text" class="form-control form-control-sm outra-input d-none mt-1" placeholder="Digite o curso..." oninput="formSectionOutraInput(this, 'curso')">
                 </div>
                 <div class="col-md-2">
                     <label class="form-label small">Ano de Conclusão</label>
@@ -82,4 +93,114 @@
         {% endif %}
     </div>
     {% endif %}
+
+{% if formacao_form %}
+<script>
+(function () {
+    var _areas = {{ areas|safe }};
+    var _cursosPorArea = {{ cursos_por_area|safe }};
+    var _instituicoes = {{ instituicoes|safe }};
+
+    function populateSelect(select, options) {
+        select.innerHTML = '<option value="">--- Selecione ---</option>';
+        select.innerHTML += '<option value="OUTRA">OUTRA</option>';
+        options.forEach(function (val) {
+            var opt = document.createElement('option');
+            opt.value = val;
+            opt.textContent = val;
+            select.appendChild(opt);
+        });
+    }
+
+    window.formSectionOutraSelect = function (sel, fieldName) {
+        var col = sel.parentElement;
+        var hidden = col.querySelector('input[type="hidden"]');
+        var outraInput = col.querySelector('.outra-input');
+
+        if (sel.value === 'OUTRA') {
+            outraInput.classList.remove('d-none');
+            hidden.value = outraInput.value;
+        } else {
+            outraInput.classList.add('d-none');
+            hidden.value = sel.value;
+        }
+
+        if (fieldName === 'area') {
+            var form = sel.closest('form');
+            var cursoSelect = form.querySelector('.curso-select');
+            var cursoHidden = form.querySelector('select[name*="curso"]') || form.querySelector('input[name*="curso"]');
+            if (!cursoSelect || !cursoHidden) return;
+
+            var areaVal = sel.value === 'OUTRA' ? hidden.value : sel.value;
+            var currentCurso = cursoHidden.value;
+            var allCursos = [];
+
+            cursoSelect.innerHTML = '<option value="">--- Selecione ---</option>';
+            cursoSelect.innerHTML += '<option value="OUTRA">OUTRA</option>';
+            var found = false;
+
+            if (areaVal && sel.value !== 'OUTRA' && _cursosPorArea[areaVal]) {
+                allCursos = _cursosPorArea[areaVal];
+            } else if (areaVal) {
+                var seen = {};
+                Object.values(_cursosPorArea).forEach(function (arr) {
+                    arr.forEach(function (c) { seen[c] = true; });
+                });
+                allCursos = Object.keys(seen);
+            }
+
+            allCursos.forEach(function (curso) {
+                var opt = document.createElement('option');
+                opt.value = curso;
+                opt.textContent = curso;
+                if (curso === currentCurso) found = true;
+                cursoSelect.appendChild(opt);
+            });
+
+            if (currentCurso && !found) {
+                if (currentCurso === 'OUTRA') {
+                    cursoSelect.value = 'OUTRA';
+                } else {
+                    var opt = document.createElement('option');
+                    opt.value = currentCurso;
+                    opt.textContent = currentCurso;
+                    opt.selected = true;
+                    cursoSelect.appendChild(opt);
+                }
+            } else if (found) {
+                cursoSelect.value = currentCurso;
+            }
+
+            var cursoOutraInput = cursoSelect.parentElement.querySelector('.outra-input');
+            if (cursoSelect.value === 'OUTRA' && cursoOutraInput) {
+                cursoOutraInput.classList.remove('d-none');
+                if (cursoHidden.value !== 'OUTRA') cursoOutraInput.value = cursoHidden.value;
+            } else if (cursoOutraInput) {
+                cursoOutraInput.classList.add('d-none');
+            }
+        }
+    };
+
+    window.formSectionOutraInput = function (inp, fieldName) {
+        var col = inp.parentElement;
+        var hidden = col.querySelector('input[type="hidden"]');
+        hidden.value = inp.value;
+    };
+
+    setTimeout(function () {
+        var form = document.querySelector('#formacao-section form');
+        if (form) {
+            var areaSelect = form.querySelector('.area-select');
+            if (areaSelect) populateSelect(areaSelect, _areas);
+
+            var cursoSelect = form.querySelector('.curso-select');
+            if (cursoSelect) populateSelect(cursoSelect, []);
+
+            var instSelect = form.querySelector('.instituicao-select');
+            if (instSelect) populateSelect(instSelect, _instituicoes);
+        }
+    }, 10);
+})();
+</script>
+{% endif %}
 </div>

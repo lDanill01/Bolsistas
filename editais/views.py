@@ -3,7 +3,7 @@ from django.urls import reverse_lazy
 from django.contrib import messages
 from django.shortcuts import get_object_or_404, redirect, render
 from django.http import HttpResponse
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.template.loader import render_to_string
 from django.views.decorators.http import require_POST
 from django.core.cache import cache
@@ -230,11 +230,13 @@ class EditalProvisorioDetailView(LoginRequiredMixin, ContextMixin, DetailView):
         return context
 
 
-class EditalProvisorioDeleteView(ManagerRequiredMixin, ContextMixin, DeleteView):
+class EditalProvisorioDeleteView(UserPassesTestMixin, ContextMixin, DeleteView):
     model = EditalProvisorio
     template_name = 'editais/edital_confirm_delete.html'
-    context_object_name = 'edital'
     success_url = reverse_lazy('edital_list')
+
+    def test_func(self):
+        return self.request.user.is_superuser
 
     def form_valid(self, form):
         messages.success(self.request, 'Edital removido com sucesso!')

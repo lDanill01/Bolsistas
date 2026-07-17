@@ -1,0 +1,241 @@
+{
+  "parte": 9,
+  "total_partes": 10,
+  "total_nesta_parte": 20,
+  "descricao": "Lista de Instituições de Ensino Superior do Brasil",
+  "fonte": "Base consolidada com IES federais, estaduais, municipais e privadas",
+  "data_geracao": "2026-07-17",
+  "campos": [
+    "id",
+    "nome",
+    "sigla",
+    "tipo",
+    "categoria_admin",
+    "estado",
+    "regiao",
+    "municipio",
+    "site"
+  ],
+  "instituicoes": [
+    {
+      "id": 161,
+      "nome": "Universidade Estadual do Rio Grande do Sul",
+      "sigla": "UERGS",
+      "tipo": "Universidade",
+      "categoria_admin": "Estadual",
+      "estado": "RS",
+      "regiao": "Sul",
+      "municipio": "Porto Alegre",
+      "site": "www.uergs.edu.br"
+    },
+    {
+      "id": 162,
+      "nome": "Instituto Federal do Rio Grande do Sul",
+      "sigla": "IFRS",
+      "tipo": "Instituto Federal",
+      "categoria_admin": "Federal",
+      "estado": "RS",
+      "regiao": "Sul",
+      "municipio": "Bento Gonçalves",
+      "site": "www.ifrs.edu.br"
+    },
+    {
+      "id": 163,
+      "nome": "Instituto Federal Sul-Rio-Grandense",
+      "sigla": "IFSul",
+      "tipo": "Instituto Federal",
+      "categoria_admin": "Federal",
+      "estado": "RS",
+      "regiao": "Sul",
+      "municipio": "Pelotas",
+      "site": "www.ifsul.edu.br"
+    },
+    {
+      "id": 164,
+      "nome": "Instituto Federal Farroupilha",
+      "sigla": "IFFar",
+      "tipo": "Instituto Federal",
+      "categoria_admin": "Federal",
+      "estado": "RS",
+      "regiao": "Sul",
+      "municipio": "Santa Maria",
+      "site": "www.iffarroupilha.edu.br"
+    },
+    {
+      "id": 165,
+      "nome": "Universidade Federal de Santa Catarina",
+      "sigla": "UFSC",
+      "tipo": "Universidade",
+      "categoria_admin": "Federal",
+      "estado": "SC",
+      "regiao": "Sul",
+      "municipio": "Florianópolis",
+      "site": "www.ufsc.br"
+    },
+    {
+      "id": 166,
+      "nome": "Universidade do Estado de Santa Catarina",
+      "sigla": "UDESC",
+      "tipo": "Universidade",
+      "categoria_admin": "Estadual",
+      "estado": "SC",
+      "regiao": "Sul",
+      "municipio": "Florianópolis",
+      "site": "www.udesc.br"
+    },
+    {
+      "id": 167,
+      "nome": "Universidade Federal da Fronteira Sul",
+      "sigla": "UFFS-SC",
+      "tipo": "Universidade",
+      "categoria_admin": "Federal",
+      "estado": "SC",
+      "regiao": "Sul",
+      "municipio": "Chapecó",
+      "site": "www.uffs.edu.br"
+    },
+    {
+      "id": 168,
+      "nome": "Universidade da Região de Joinville",
+      "sigla": "UNIVILLE",
+      "tipo": "Universidade",
+      "categoria_admin": "Privada",
+      "estado": "SC",
+      "regiao": "Sul",
+      "municipio": "Joinville",
+      "site": "www.univille.edu.br"
+    },
+    {
+      "id": 169,
+      "nome": "Universidade do Extremo Sul Catarinense",
+      "sigla": "UNESC",
+      "tipo": "Universidade",
+      "categoria_admin": "Privada",
+      "estado": "SC",
+      "regiao": "Sul",
+      "municipio": "Criciúma",
+      "site": "www.unesc.net"
+    },
+    {
+      "id": 170,
+      "nome": "Universidade Regional de Blumenau",
+      "sigla": "FURB",
+      "tipo": "Universidade",
+      "categoria_admin": "Municipal",
+      "estado": "SC",
+      "regiao": "Sul",
+      "municipio": "Blumenau",
+      "site": "www.furb.br"
+    },
+    {
+      "id": 171,
+      "nome": "Universidade do Contestado",
+      "sigla": "UNC",
+      "tipo": "Universidade",
+      "categoria_admin": "Privada",
+      "estado": "SC",
+      "regiao": "Sul",
+      "municipio": "Caçador",
+      "site": "www.unc.br"
+    },
+    {
+      "id": 172,
+      "nome": "Universidade do Planalto Catarinense",
+      "sigla": "UNIPLAC",
+      "tipo": "Universidade",
+      "categoria_admin": "Privada",
+      "estado": "SC",
+      "regiao": "Sul",
+      "municipio": "Lages",
+      "site": "www.uniplac.net"
+    },
+    {
+      "id": 173,
+      "nome": "Universidade do Vale do Itajaí",
+      "sigla": "UNIVALI",
+      "tipo": "Universidade",
+      "categoria_admin": "Privada",
+      "estado": "SC",
+      "regiao": "Sul",
+      "municipio": "Itajaí",
+      "site": "www.univali.br"
+    },
+    {
+      "id": 174,
+      "nome": "Universidade do Oeste de Santa Catarina",
+      "sigla": "UNOESC",
+      "tipo": "Universidade",
+      "categoria_admin": "Privada",
+      "estado": "SC",
+      "regiao": "Sul",
+      "municipio": "Joaçaba",
+      "site": "www.unoesc.edu.br"
+    },
+    {
+      "id": 175,
+      "nome": "Instituto Federal de Santa Catarina",
+      "sigla": "IFSC",
+      "tipo": "Instituto Federal",
+      "categoria_admin": "Federal",
+      "estado": "SC",
+      "regiao": "Sul",
+      "municipio": "Florianópolis",
+      "site": "www.ifsc.edu.br"
+    },
+    {
+      "id": 176,
+      "nome": "Instituto Federal Catarinense",
+      "sigla": "IFC",
+      "tipo": "Instituto Federal",
+      "categoria_admin": "Federal",
+      "estado": "SC",
+      "regiao": "Sul",
+      "municipio": "Blumenau",
+      "site": "www.ifc.edu.br"
+    },
+    {
+      "id": 177,
+      "nome": "Universidade Federal do Paraná",
+      "sigla": "UFPR",
+      "tipo": "Universidade",
+      "categoria_admin": "Federal",
+      "estado": "PR",
+      "regiao": "Sul",
+      "municipio": "Curitiba",
+      "site": "www.ufpr.br"
+    },
+    {
+      "id": 178,
+      "nome": "Universidade Estadual de Maringá",
+      "sigla": "UEM",
+      "tipo": "Universidade",
+      "categoria_admin": "Estadual",
+      "estado": "PR",
+      "regiao": "Sul",
+      "municipio": "Maringá",
+      "site": "www.uem.br"
+    },
+    {
+      "id": 179,
+      "nome": "Universidade Estadual de Londrina",
+      "sigla": "UEL",
+      "tipo": "Universidade",
+      "categoria_admin": "Estadual",
+      "estado": "PR",
+      "regiao": "Sul",
+      "municipio": "Londrina",
+      "site": "www.uel.br"
+    },
+    {
+      "id": 180,
+      "nome": "Universidade Estadual de Ponta Grossa",
+      "sigla": "UEPG",
+      "tipo": "Universidade",
+      "categoria_admin": "Estadual",
+      "estado": "PR",
+      "regiao": "Sul",
+      "municipio": "Ponta Grossa",
+      "site": "www.uepg.br"
+    }
+  ]
+}

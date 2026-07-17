@@ -1,0 +1,198 @@
+[
+  {
+    "Area Geral": "Ciências da Saúde",
+    "Nome do Curso": "Medicina"
+  },
+  {
+    "Area Geral": "Ciências da Saúde",
+    "Nome do Curso": "Fisioterapia"
+  },
+  {
+    "Area Geral": "Ciências da Saúde",
+    "Nome do Curso": "Psicologia"
+  },
+  {
+    "Area Geral": "Ciências da Saúde",
+    "Nome do Curso": "Enfermagem"
+  },
+  {
+    "Area Geral": "Ciências da Saúde",
+    "Nome do Curso": "Odontologia"
+  },
+  {
+    "Area Geral": "Ciências da Saúde",
+    "Nome do Curso": "Nutrição"
+  },
+  {
+    "Area Geral": "Ciências da Saúde",
+    "Nome do Curso": "Biomedicina"
+  },
+  {
+    "Area Geral": "Ciências da Saúde",
+    "Nome do Curso": "Farmácia"
+  },
+  {
+    "Area Geral": "Ciências da Saúde",
+    "Nome do Curso": "Educação Física"
+  },
+  {
+    "Area Geral": "Ciências Exatas e da Terra",
+    "Nome do Curso": "Ciência da Computação"
+  },
+  {
+    "Area Geral": "Ciências Exatas e da Terra",
+    "Nome do Curso": "Engenharia de Software"
+  },
+  {
+    "Area Geral": "Ciências Exatas e da Terra",
+    "Nome do Curso": "Análise e Desenvolvimento de Sistemas (ADS)"
+  },
+  {
+    "Area Geral": "Ciências Exatas e da Terra",
+    "Nome do Curso": "Sistemas de Informação"
+  },
+  {
+    "Area Geral": "Ciências Exatas e da Terra",
+    "Nome do Curso": "Ciência de Dados"
+  },
+  {
+    "Area Geral": "Engenharias",
+    "Nome do Curso": "Engenharia Civil"
+  },
+  {
+    "Area Geral": "Engenharias",
+    "Nome do Curso": "Engenharia de Produção"
+  },
+  {
+    "Area Geral": "Engenharias",
+    "Nome do Curso": "Engenharia de Alimentos"
+  },
+  {
+    "Area Geral": "Engenharias",
+    "Nome do Curso": "Engenharia Florestal"
+  },
+  {
+    "Area Geral": "Engenharias",
+    "Nome do Curso": "Engenharia Elétrica"
+  },
+  {
+    "Area Geral": "Engenharias",
+    "Nome do Curso": "Engenharia Ambiental"
+  },
+  {
+    "Area Geral": "Engenharias",
+    "Nome do Curso": "Engenharia de Minas"
+  },
+  {
+    "Area Geral": "Engenharias",
+    "Nome do Curso": "Engenharia de Petróleo e Gás"
+  },
+  {
+    "Area Geral": "Engenharias",
+    "Nome do Curso": "Engenharia Mecânica"
+  },
+  {
+    "Area Geral": "Engenharias",
+    "Nome do Curso": "Engenharia Química"
+  },
+  {
+    "Area Geral": "Ciências Exatas e da Terra",
+    "Nome do Curso": "Matemática"
+  },
+  {
+    "Area Geral": "Ciências Exatas e da Terra",
+    "Nome do Curso": "Física"
+  },
+  {
+    "Area Geral": "Ciências Sociais Aplicadas",
+    "Nome do Curso": "Direito"
+  },
+  {
+    "Area Geral": "Ciências Sociais Aplicadas",
+    "Nome do Curso": "Administração"
+  },
+  {
+    "Area Geral": "Ciências Sociais Aplicadas",
+    "Nome do Curso": "Ciências Contábeis"
+  },
+  {
+    "Area Geral": "Ciências Sociais Aplicadas",
+    "Nome do Curso": "Ciências Econômicas (Economia)"
+  },
+  {
+    "Area Geral": "Ciências Sociais Aplicadas",
+    "Nome do Curso": "Relações Internacionais"
+  },
+  {
+    "Area Geral": "Ciências Sociais Aplicadas",
+    "Nome do Curso": "Jornalismo"
+  },
+  {
+    "Area Geral": "Ciências Sociais Aplicadas",
+    "Nome do Curso": "Publicidade e Propaganda"
+  },
+  {
+    "Area Geral": "Ciências Sociais Aplicadas",
+    "Nome do Curso": "Marketing"
+  },
+  {
+    "Area Geral": "Ciências Sociais Aplicadas",
+    "Nome do Curso": "Logística"
+  },
+  {
+    "Area Geral": "Ciências Sociais Aplicadas",
+    "Nome do Curso": "Gestão de Recursos Humanos"
+  },
+  {
+    "Area Geral": "Ciências Humanas",
+    "Nome do Curso": "Pedagogia"
+  },
+  {
+    "Area Geral": "Ciências Humanas",
+    "Nome do Curso": "História"
+  },
+  {
+    "Area Geral": "Ciências Humanas",
+    "Nome do Curso": "Geografia"
+  },
+  {
+    "Area Geral": "Linguística, Letras e Artes",
+    "Nome do Curso": "Letras (Português / Inglês)"
+  },
+  {
+    "Area Geral": "Ciências Humanas",
+    "Nome do Curso": "Serviço Social"
+  },
+  {
+    "Area Geral": "Ciências Humanas",
+    "Nome do Curso": "Ciências Sociais"
+  },
+  {
+    "Area Geral": "Ciências Humanas",
+    "Nome do Curso": "Filosofia"
+  },
+  {
+    "Area Geral": "Linguística, Letras e Artes",
+    "Nome do Curso": "Artes Visuais"
+  },
+  {
+    "Area Geral": "Linguística, Letras e Artes",
+    "Nome do Curso": "Design (Gráfico / Produto / Interiores)"
+  },
+  {
+    "Area Geral": "Linguística, Letras e Artes",
+    "Nome do Curso": "Arquitetura e Urbanismo"
+  },
+  {
+    "Area Geral": "Ciências Agrárias",
+    "Nome do Curso": "Agronomia"
+  },
+  {
+    "Area Geral": "Ciências Agrárias",
+    "Nome do Curso": "Medicina Veterinária"
+  },
+  {
+    "Area Geral": "Ciências Biológicas",
+    "Nome do Curso": "Ciências Biológicas (Biologia)"
+  }
+]
