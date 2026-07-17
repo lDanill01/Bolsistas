@@ -40,6 +40,7 @@
 
     <div class="row g-4">
         <div class="col-12">
+            {% if is_superuser or is_manager or is_execute_user %}
             <div class="card mb-4">
                 <button class="card-header bg-white border-0 w-100 text-center py-3" type="button" data-bs-toggle="collapse" data-bs-target="#analise-ia-collapse" aria-expanded="false" aria-controls="analise-ia-collapse">
                     <h5 class="fw-semibold mb-0">
@@ -96,6 +97,7 @@
                     </div>
                 </div>
             </div>
+            {% endif %}
 
             <div class="card p-4 mb-4">
                 <h5 class="fw-semibold mb-3">
@@ -232,11 +234,13 @@
                         <label class="form-label small text-muted mb-0">Critérios de Desempate</label>
                         <p class="fw-medium">{{ edital.criterios_desempate|linebreaksbr }}</p>
                     </div>
+                    {% if is_superuser or is_manager or is_execute_user %}
                     {% if edital.comentarios %}
                     <div class="col-12">
                         <label class="form-label small text-muted mb-0">Comentários</label>
                         <p class="fw-medium">{{ edital.comentarios|linebreaksbr }}</p>
                     </div>
+                    {% endif %}
                     {% endif %}
                 </div>
             </div>
@@ -270,6 +274,7 @@
                 {% endif %}
             {% endif %}
 
+            {% if is_superuser or is_execute_user %}
             <div class="card p-4 mb-4">
                 <h5 class="fw-semibold mb-3">
                     <i class="bi bi-info-circle me-2 text-primary"></i>Informações
@@ -286,6 +291,10 @@
                         <p class="fw-medium">{{ edital.criado_por.nome_completo }}</p>
                     </div>
                     <div class="col-md-4">
+                        <label class="form-label small text-muted mb-0">Responsável</label>
+                        <p class="fw-medium">{{ edital.responsavel.nome_completo|default:'—' }}</p>
+                    </div>
+                    <div class="col-md-4">
                         <label class="form-label small text-muted mb-0">Criado em</label>
                         <p class="fw-medium">{{ edital.created_at|date:'d/m/Y H:i' }}</p>
                     </div>
@@ -295,6 +304,25 @@
                     </div>
                 </div>
             </div>
+            {% endif %}
+
+            {% if edital.status == 'aberto' and edital.dias_para_proxima_etapa is not None %}
+            <div class="alert alert-info py-2 small mb-3">
+                <i class="bi bi-clock me-1"></i>
+                <strong>Próxima etapa:</strong> {{ edital.nome_proxima_etapa }}
+                — {{ edital.dias_para_proxima_etapa }} dia{{ edital.dias_para_proxima_etapa|pluralize:'s' }} restante{{ edital.dias_para_proxima_etapa|pluralize:'s' }}
+            </div>
+            {% elif edital.status == 'em_analise' %}
+            <div class="alert alert-warning py-2 small mb-3">
+                <i class="bi bi-hourglass-split me-1"></i>
+                Cronograma será calculado quando o edital for aprovado e aberto.
+            </div>
+            {% elif edital.status == 'encerrado' or edital.status == 'cancelado' %}
+            <div class="alert alert-secondary py-2 small mb-3">
+                <i class="bi bi-pause-circle me-1"></i>
+                Contagem pausada — edital {{ edital.get_status_display|lower }}.
+            </div>
+            {% endif %}
 
             {% if cronograma %}
             <div class="card p-4 mb-4">
