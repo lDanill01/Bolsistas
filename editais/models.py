@@ -284,9 +284,30 @@ class AplicacaoEdital(DataModel):
     edital = models.ForeignKey(EditalProvisorio, on_delete=models.CASCADE, related_name='aplicacoes')
     numero_inscricao = models.CharField('Número de Inscrição', max_length=10, unique=True, blank=True)
     status = models.CharField('Status', max_length=20, choices=STATUS_CHOICES, default='pendente')
-    nota = models.DecimalField('Nota do avaliador', max_digits=5, decimal_places=2, blank=True, null=True)
+    nota = models.DecimalField('Nota da Prova', max_digits=5, decimal_places=2, blank=True, null=True)
+    nota_entrevista = models.DecimalField('Nota da Entrevista', max_digits=5, decimal_places=2, blank=True, null=True)
     data_entrevista = models.DateField('Data da Entrevista', null=True, blank=True)
     data_aplicacao = models.DateTimeField('Data de aplicação', auto_now_add=True)
+
+    @property
+    def status_prova(self):
+        if self.nota is None:
+            return None
+        return 'aprovado' if self.nota > 6 else 'rejeitado'
+
+    @property
+    def status_prova_display(self):
+        return 'Apto' if self.status_prova == 'aprovado' else 'Inapto' if self.status_prova == 'rejeitado' else '—'
+
+    @property
+    def status_entrevista(self):
+        if self.nota_entrevista is None:
+            return None
+        return 'aprovado' if self.nota_entrevista > 6 else 'rejeitado'
+
+    @property
+    def status_entrevista_display(self):
+        return 'Apto' if self.status_entrevista == 'aprovado' else 'Inapto' if self.status_entrevista == 'rejeitado' else '—'
 
     class Meta:
         verbose_name = 'Aplicação em Edital'
@@ -301,3 +322,56 @@ class AplicacaoEdital(DataModel):
             if self.bolsista.numero_serie and self.edital.numero_serie:
                 self.numero_inscricao = f'{self.bolsista.numero_serie}-{self.edital.numero_serie}'
         super().save(*args, **kwargs)
+
+
+class AplicacaoEditalLog(DataModel):
+    aplicacao = models.ForeignKey(
+        AplicacaoEdital,
+        on_delete=models.CASCADE,
+        related_name='logs',
+        verbose_name='Aplicação'
+    )
+    alterado_por = models.ForeignKey(
+        User,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='logs_avaliacao',
+        verbose_name='Alterado por'
+    )
+
+    nota_anterior = models.DecimalField(
+        'Nota da Prova Anterior', max_digits=5, decimal_places=2, blank=True, null=True
+    )
+    nota_nova = models.DecimalField(
+        'Nota da Prova Nova', max_digits=5, decimal_places=2, blank=True, null=True
+    )
+
+    nota_entrevista_anterior = models.DecimalField(
+        'Nota da Entrevista Anterior', max_digits=5, decimal_places=2, blank=True, null=True
+    )
+    nota_entrevista_nova = models.DecimalField(
+        'Nota da Entrevista Nova', max_digits=5, decimal_places=2, blank=True, null=True
+    )
+
+    data_entrevista_anterior = models.DateField(
+        'Data da Entrevista Anterior', null=True, blank=True
+    )
+    data_entrevista_nova = models.DateField(
+        'Data da Entrevista Nova', null=True, blank=True
+    )
+
+    status_anterior = models.CharField(
+        'Status Anterior', max_length=20, blank=True, default=''
+    )
+    status_novo = models.CharField(
+        'Status Novo', max_length=20, blank=True, default=''
+    )
+
+    class Meta:
+        verbose_name = 'Log de Avaliação'
+        verbose_name_plural = 'Logs de Avaliação'
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return f'Log #{self.pk} - {self.aplicacao} em {self.created_at}'

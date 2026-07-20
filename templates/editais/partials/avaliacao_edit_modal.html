@@ -1,0 +1,133 @@
+<div class="modal fade" id="modalEditarAvaliacao" tabindex="-1" aria-labelledby="modalEditarAvaliacaoLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalEditarAvaliacaoLabel">
+          <i class="bi bi-pencil-square me-2"></i>Editar Avaliação — {{ aplicacao.bolsista.user.nome_completo }}
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+      </div>
+      <form method="post" action="{% url 'editar_avaliacao' aplicacao.pk %}" id="formEditarAvaliacao">
+        {% csrf_token %}
+        <div class="modal-body">
+          <ul class="nav nav-tabs mb-3" id="tabAvaliacao" role="tablist">
+            <li class="nav-item" role="presentation">
+              <button class="nav-link active" id="editar-tab" data-bs-toggle="tab" data-bs-target="#editar-pane"
+                      type="button" role="tab" aria-controls="editar-pane" aria-selected="true">
+                <i class="bi bi-pencil me-1"></i>Editar
+              </button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button class="nav-link" id="historico-tab" data-bs-toggle="tab" data-bs-target="#historico-pane"
+                      type="button" role="tab" aria-controls="historico-pane" aria-selected="false">
+                <i class="bi bi-clock-history me-1"></i>Histórico
+                <span class="badge bg-secondary ms-1">{{ logs|length }}</span>
+              </button>
+            </li>
+          </ul>
+
+          <div class="tab-content" id="tabAvaliacaoContent">
+            <div class="tab-pane fade show active" id="editar-pane" role="tabpanel" aria-labelledby="editar-tab">
+              <div class="row g-3">
+                <div class="col-md-6">
+                  <label for="{{ form.nota.id_for_label }}" class="form-label">{{ form.nota.label }}</label>
+                  {{ form.nota }}
+                  {% if form.nota.errors %}<div class="text-danger small mt-1">{{ form.nota.errors.0 }}</div>{% endif %}
+                </div>
+                <div class="col-md-6">
+                  <label for="{{ form.nota_entrevista.id_for_label }}" class="form-label">{{ form.nota_entrevista.label }}</label>
+                  {{ form.nota_entrevista }}
+                  {% if form.nota_entrevista.errors %}<div class="text-danger small mt-1">{{ form.nota_entrevista.errors.0 }}</div>{% endif %}
+                </div>
+                <div class="col-md-6">
+                  <label for="{{ form.data_entrevista.id_for_label }}" class="form-label">{{ form.data_entrevista.label }}</label>
+                  {{ form.data_entrevista }}
+                  {% if form.data_entrevista.errors %}<div class="text-danger small mt-1">{{ form.data_entrevista.errors.0 }}</div>{% endif %}
+                </div>
+                <div class="col-md-6">
+                  <label for="{{ form.status.id_for_label }}" class="form-label">{{ form.status.label }}</label>
+                  {{ form.status }}
+                  {% if form.status.errors %}<div class="text-danger small mt-1">{{ form.status.errors.0 }}</div>{% endif %}
+                  <div class="form-text">Deixe em branco para recalcular automaticamente.</div>
+                </div>
+              </div>
+              <div class="alert alert-info mt-3 mb-0 small">
+                <i class="bi bi-info-circle me-2"></i>
+                Ao salvar aqui, qualquer campo deixado em branco será limpo. Use o botão <strong>Salvar Etapa Atual</strong> na tela anterior para preservar informações já preenchidas.
+              </div>
+            </div>
+
+            <div class="tab-pane fade" id="historico-pane" role="tabpanel" aria-labelledby="historico-tab">
+              {% if logs %}
+              <div class="table-responsive">
+                <table class="table table-sm table-hover align-middle">
+                  <thead class="table-light">
+                    <tr>
+                      <th>Data/Hora</th>
+                      <th>Usuário</th>
+                      <th>Campo</th>
+                      <th>Anterior</th>
+                      <th>Novo</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for log in logs %}
+                      {% if log.nota_anterior != log.nota_nova %}
+                      <tr>
+                        <td>{{ log.created_at|date:'d/m/Y H:i' }}</td>
+                        <td>{{ log.alterado_por.nome_completo|default:'Sistema' }}</td>
+                        <td>Nota da Prova</td>
+                        <td>{{ log.nota_anterior|default:'—' }}</td>
+                        <td>{{ log.nota_nova|default:'—' }}</td>
+                      </tr>
+                      {% endif %}
+                      {% if log.nota_entrevista_anterior != log.nota_entrevista_nova %}
+                      <tr>
+                        <td>{{ log.created_at|date:'d/m/Y H:i' }}</td>
+                        <td>{{ log.alterado_por.nome_completo|default:'Sistema' }}</td>
+                        <td>Nota da Entrevista</td>
+                        <td>{{ log.nota_entrevista_anterior|default:'—' }}</td>
+                        <td>{{ log.nota_entrevista_nova|default:'—' }}</td>
+                      </tr>
+                      {% endif %}
+                      {% if log.data_entrevista_anterior != log.data_entrevista_nova %}
+                      <tr>
+                        <td>{{ log.created_at|date:'d/m/Y H:i' }}</td>
+                        <td>{{ log.alterado_por.nome_completo|default:'Sistema' }}</td>
+                        <td>Data da Entrevista</td>
+                        <td>{{ log.data_entrevista_anterior|date:'d/m/Y'|default:'—' }}</td>
+                        <td>{{ log.data_entrevista_nova|date:'d/m/Y'|default:'—' }}</td>
+                      </tr>
+                      {% endif %}
+                      {% if log.status_anterior != log.status_novo %}
+                      <tr>
+                        <td>{{ log.created_at|date:'d/m/Y H:i' }}</td>
+                        <td>{{ log.alterado_por.nome_completo|default:'Sistema' }}</td>
+                        <td>Status</td>
+                        <td>{{ log.status_anterior|default:'—' }}</td>
+                        <td>{{ log.status_novo|default:'—' }}</td>
+                      </tr>
+                      {% endif %}
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+              {% else %}
+              <div class="text-center text-muted py-4">
+                <i class="bi bi-inbox fs-2 mb-2 d-block"></i>
+                Nenhuma alteração registrada para este candidato.
+              </div>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+          <button type="submit" class="btn btn-primary">
+            <i class="bi bi-check-lg me-1"></i>Salvar Alterações
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

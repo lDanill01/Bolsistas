@@ -8,7 +8,7 @@
             <i class="bi bi-people me-2"></i>Candidatos — {{ edital.nome_edital }}
         </h2>
         <div>
-            <a href="{% url 'edital_detail' edital.pk %}" class="btn btn-outline-secondary">
+            <a href="{% url 'edital_detail' edital.pk %}" class="btn btn-outline-secondary" id="btnVoltarEdital">
                 <i class="bi bi-arrow-left me-1"></i>Voltar ao Edital
             </a>
         </div>
@@ -17,13 +17,13 @@
     <div class="row g-2 mb-3">
         <div class="col-md-4">
             <div class="input-group">
-                <span class="input-group-text bg-white"><i class="bi bi-hash"></i></span>
+                <span class="input-group-text"><i class="bi bi-hash"></i></span>
                 <input type="text" class="form-control" readonly value="Edital Nº {{ edital.numero_serie }}">
             </div>
         </div>
         <div class="col-md-4">
             <div class="input-group">
-                <span class="input-group-text bg-white"><i class="bi bi-people-fill"></i></span>
+                <span class="input-group-text"><i class="bi bi-people-fill"></i></span>
                 <input type="text" class="form-control" readonly value="{{ page_obj.paginator.count }} candidato{{ page_obj.paginator.count|pluralize }}">
             </div>
         </div>
@@ -41,69 +41,111 @@
     </div>
 
     {% if aplicacoes %}
-    <div class="card p-0">
-        <div class="table-responsive">
-            <table class="table table-hover align-middle mb-0">
-                <thead class="table-light">
-                    <tr>
-                        <th>Nº Inscrição</th>
-                        <th>Candidato</th>
-                        <th>Avaliação</th>
-                        <th>Nota</th>
-                        <th>Entrevista</th>
-                        <th>Data da Candidatura</th>
-                        {% if is_manager %}
-                        <th class="text-end">Ações</th>
-                        {% endif %}
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for a in aplicacoes %}
-                    <tr>
-                        <td><span class="badge bg-dark">{{ a.numero_inscricao|default:'—' }}</span></td>
-                        <td class="fw-medium">{{ a.bolsista.user.nome_completo }}</td>
-                        <td>
-                            {% if a.nota is not None %}
-                                {% if a.nota > 6 %}
-                                <span class="badge bg-success">Apto</span>
-                                {% else %}
-                                <span class="badge bg-danger">Inapto</span>
-                                {% endif %}
-                            {% else %}
-                                <span class="badge {% if a.status == 'em_analise' %}bg-warning text-dark{% else %}bg-secondary{% endif %}">
-                                    {{ a.get_status_display }}
-                                </span>
-                            {% endif %}
-                        </td>
-                        <td class="fw-semibold">{{ a.nota|default:'—' }}</td>
-                        <td class="small">{{ a.data_entrevista|date:'d/m/Y'|default:'—' }}</td>
-                        <td class="small text-muted">{{ a.data_aplicacao|date:'d/m/Y H:i' }}</td>
-                        {% if is_manager %}
-                        <td class="text-end">
-                            {% if a.nota is not None %}
-                            <a href="{% url 'avaliar_candidato' a.pk %}" class="btn btn-outline-success btn-sm me-1" title="Editar avaliação">
-                                <i class="bi bi-pencil"></i>
-                            </a>
-                            {% else %}
-                            <a href="{% url 'avaliar_candidato' a.pk %}" class="btn btn-outline-warning btn-sm me-1" title="Avaliar">
-                                <i class="bi bi-star"></i>
-                            </a>
-                            {% endif %}
-                            <a href="{% url 'cadastro_detail_pk' a.bolsista.pk %}" class="btn btn-outline-primary btn-sm" title="Ver cadastro">
-                                <i class="bi bi-person-lines-fill"></i>
-                            </a>
-                        </td>
-                        {% endif %}
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+    <div class="alert alert-info d-flex align-items-center mb-3" role="alert">
+        <i class="bi bi-info-circle-fill me-2"></i>
+        <div>
+            <strong>Lembrete:</strong> salve as alterações de cada candidato individualmente antes de passar para o próximo.
         </div>
     </div>
 
-    {% if page_obj.paginator.num_pages > 1 %}
-    {% include 'components/pagination.html' %}
-    {% endif %}
+    <form method="post" action="{% url 'salvar_avaliacoes_lote' %}" id="form-avaliacoes">
+        {% csrf_token %}
+        <input type="hidden" name="edital_pk" value="{{ edital.pk }}">
+
+        <div class="card p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0" id="tabela-candidatos">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Nº Inscrição</th>
+                            <th>Nome Candidato</th>
+                            <th>Nota da Prova</th>
+                            <th>Status Prova</th>
+                            <th>Data da Entrevista</th>
+                            <th>Nota Entrevista</th>
+                            <th>Status Entrevista</th>
+                            <th class="text-end">Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for a in aplicacoes %}
+                        <tr>
+                            <td><span class="badge bg-dark">{{ a.numero_inscricao|default:'—' }}</span></td>
+                            <td class="fw-medium">{{ a.bolsista.user.nome_completo }}</td>
+                            <td>
+                                <input type="text"
+                                       name="nota_prova_{{ a.pk }}"
+                                       class="form-control form-control-sm nota-prova {% if a.nota %}bg-light{% endif %}"
+                                       data-pk="{{ a.pk }}"
+                                       inputmode="decimal"
+                                       pattern="^\d{1,2}([,.]\d{1,2})?$"
+                                       value="{{ a.nota|default_if_none:'' }}"
+                                       placeholder=""
+                                       {% if a.nota %}readonly{% endif %}
+                                       style="width: 90px;">
+                            </td>
+                            <td>
+                                <span id="status-prova-{{ a.pk }}" class="badge {% if a.status_prova == 'aprovado' %}bg-success{% elif a.status_prova == 'rejeitado' %}bg-danger{% else %}bg-secondary{% endif %}">
+                                    {{ a.status_prova_display }}
+                                </span>
+                            </td>
+                            <td>
+                                <input type="date"
+                                       name="data_entrevista_{{ a.pk }}"
+                                       class="form-control form-control-sm {% if a.data_entrevista %}bg-light{% endif %}"
+                                       value="{{ a.data_entrevista|date:'Y-m-d'|default_if_none:'' }}"
+                                       {% if a.data_entrevista %}readonly{% endif %}
+                                       style="width: 150px;">
+                            </td>
+                            <td>
+                                <input type="text"
+                                       name="nota_entrevista_{{ a.pk }}"
+                                       class="form-control form-control-sm nota-entrevista {% if a.nota_entrevista %}bg-light{% endif %}"
+                                       data-pk="{{ a.pk }}"
+                                       inputmode="decimal"
+                                       pattern="^\d{1,2}([,.]\d{1,2})?$"
+                                       value="{{ a.nota_entrevista|default_if_none:'' }}"
+                                       placeholder=""
+                                       {% if a.nota_entrevista %}readonly{% endif %}
+                                       style="width: 90px;">
+                            </td>
+                            <td>
+                                <span id="status-entrevista-{{ a.pk }}" class="badge {% if a.status_entrevista == 'aprovado' %}bg-success{% elif a.status_entrevista == 'rejeitado' %}bg-danger{% else %}bg-secondary{% endif %}">
+                                    {{ a.status_entrevista_display }}
+                                </span>
+                            </td>
+                            <td class="text-end">
+                                <a href="{% url 'cadastro_detail_pk' a.bolsista.pk %}" class="btn btn-outline-primary btn-sm" title="Ver cadastro">
+                                    <i class="bi bi-person-lines-fill"></i>
+                                </a>
+                                <button type="button"
+                                        class="btn btn-warning btn-sm btn-salvar-etapa"
+                                        data-pk="{{ a.pk }}"
+                                        title="Salvar etapa atual deste candidato">
+                                    <i class="bi bi-floppy"></i>
+                                </button>
+                                <button type="button"
+                                        class="btn btn-outline-dark btn-sm btn-editar-avaliacao"
+                                        data-url="{% url 'editar_avaliacao' a.pk %}"
+                                        title="Editar informações">
+                                    <i class="bi bi-pencil-square"></i>
+                                </button>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        {% if page_obj.paginator.num_pages > 1 %}
+        <div class="d-flex justify-content-between align-items-center mt-3">
+            {% include 'components/pagination.html' %}
+        </div>
+        {% endif %}
+    </form>
+
+    <div id="modalEditarAvaliacaoContainer"></div>
 
     {% else %}
     <div class="card p-5 text-center">
@@ -112,4 +154,203 @@
     </div>
     {% endif %}
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+(function () {
+    function atualizarStatus(input, prefix) {
+        var pk = input.getAttribute('data-pk');
+        var badge = document.getElementById(prefix + '-' + pk);
+        if (!badge) return;
+
+        var val = parseFloat(input.value.replace(',', '.'));
+        if (isNaN(val) || input.value.trim() === '') {
+            badge.textContent = '—';
+            badge.className = 'badge bg-secondary';
+        } else if (val > 6) {
+            badge.textContent = 'Apto';
+            badge.className = 'badge bg-success';
+        } else {
+            badge.textContent = 'Inapto';
+            badge.className = 'badge bg-danger';
+        }
+    }
+
+    function bloquearEtapaEntrevista(inputProva) {
+        var pk = inputProva.getAttribute('data-pk');
+        var val = parseFloat(inputProva.value.replace(',', '.'));
+        var inputData = document.querySelector('input[name="data_entrevista_' + pk + '"]');
+        var inputNotaEntrevista = document.querySelector('input[name="nota_entrevista_' + pk + '"]');
+        var inapto = !isNaN(val) && inputProva.value.trim() !== '' && val <= 6;
+
+        if (inputData) {
+            inputData.disabled = inapto;
+            if (inapto) inputData.value = '';
+        }
+        if (inputNotaEntrevista) {
+            inputNotaEntrevista.disabled = inapto;
+            if (inapto) inputNotaEntrevista.value = '';
+        }
+    }
+
+    document.querySelectorAll('.nota-prova').forEach(function (input) {
+        input.addEventListener('input', function () {
+            atualizarStatus(this, 'status-prova');
+            bloquearEtapaEntrevista(this);
+        });
+        bloquearEtapaEntrevista(input);
+    });
+
+    document.querySelectorAll('.nota-entrevista').forEach(function (input) {
+        input.addEventListener('input', function () {
+            atualizarStatus(this, 'status-entrevista');
+        });
+    });
+
+    var modalContainer = document.getElementById('modalEditarAvaliacaoContainer');
+    var modalInstancia = null;
+
+    document.querySelectorAll('.btn-editar-avaliacao').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+            var url = btn.getAttribute('data-url');
+            fetch(url, {
+                method: 'GET',
+                cache: 'no-store',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Accept': 'text/html',
+                },
+            })
+            .then(function (response) {
+                if (!response.ok) {
+                    return response.text().then(function (text) {
+                        throw {status: response.status, text: text};
+                    });
+                }
+                return response.text();
+            })
+            .then(function (html) {
+                modalContainer.innerHTML = html;
+                var modalEl = document.getElementById('modalEditarAvaliacao');
+                if (!modalEl) {
+                    console.error('Modal não encontrado no HTML retornado.');
+                    alert('Erro: modal não encontrado na resposta do servidor.');
+                    return;
+                }
+                modalInstancia = new bootstrap.Modal(modalEl);
+                modalInstancia.show();
+
+                modalEl.addEventListener('hidden.bs.modal', function () {
+                    modalContainer.innerHTML = '';
+                    modalInstancia = null;
+                });
+            })
+            .catch(function (err) {
+                var msg = 'Não foi possível abrir o editor de avaliação.\n';
+                msg += 'URL: ' + url + '\n';
+                if (err && err.status) {
+                    msg += 'Status: ' + err.status + '\n';
+                    msg += 'Resposta: ' + (err.text || '').substring(0, 200);
+                } else {
+                    msg += 'Erro: ' + (err ? err.message : 'desconhecido');
+                }
+                alert(msg);
+                console.error('Erro ao abrir editor:', err);
+            });
+        });
+    });
+
+    function getCsrfToken() {
+        var input = document.querySelector('input[name="csrfmiddlewaretoken"]');
+        return input ? input.value : '';
+    }
+
+    function mostrarFeedback(tipo, mensagem) {
+        var container = document.querySelector('.container-fluid');
+        var alert = document.createElement('div');
+        alert.className = 'alert alert-' + tipo + ' alert-dismissible fade show mt-3';
+        alert.setAttribute('role', 'alert');
+        alert.innerHTML = mensagem + '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fechar"></button>';
+        container.insertBefore(alert, container.firstChild);
+        setTimeout(function () {
+            var bsAlert = bootstrap.Alert.getOrCreateInstance(alert);
+            bsAlert.close();
+        }, 5000);
+    }
+
+    document.querySelectorAll('.btn-salvar-etapa').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+            var pk = btn.getAttribute('data-pk');
+            var form = document.getElementById('form-avaliacoes');
+            var editalPk = form.querySelector('input[name="edital_pk"]').value;
+
+            var inputProva = form.querySelector('input[name="nota_prova_' + pk + '"]');
+            var inputEntrevista = form.querySelector('input[name="nota_entrevista_' + pk + '"]');
+            var inputData = form.querySelector('input[name="data_entrevista_' + pk + '"]');
+
+            if (!inputProva || !inputEntrevista || !inputData) {
+                console.error('Inputs do candidato ' + pk + ' não encontrados.');
+                return;
+            }
+
+            var valorProva = inputProva.value.trim().replace(',', '.');
+            var valorEntrevista = inputEntrevista.value.trim().replace(',', '.');
+            var valorData = inputData.value.trim();
+
+            console.log('Salvando etapa candidato', pk, {prova: valorProva, entrevista: valorEntrevista, data: valorData});
+
+            var dados = new FormData();
+            dados.append('csrfmiddlewaretoken', getCsrfToken());
+            dados.append('ajax', '1');
+            dados.append('edital_pk', editalPk);
+            dados.append('nota_prova_' + pk, valorProva);
+            dados.append('nota_entrevista_' + pk, valorEntrevista);
+            dados.append('data_entrevista_' + pk, valorData);
+
+            var iconeOriginal = btn.innerHTML;
+            btn.disabled = true;
+            btn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>';
+
+            fetch(form.getAttribute('action'), {
+                method: 'POST',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                },
+                body: dados,
+            })
+            .then(function (response) {
+                if (!response.ok) {
+                    return response.text().then(function (text) {
+                        throw new Error('Status ' + response.status + ': ' + text);
+                    });
+                }
+                var contentType = response.headers.get('content-type');
+                if (contentType && contentType.indexOf('application/json') !== -1) {
+                    return response.json();
+                }
+                return {sucesso: true, erros: []};
+            })
+            .then(function (json) {
+                if (json.erros && json.erros.length) {
+                    mostrarFeedback('danger', json.erros.join('<br>'));
+                } else {
+                    mostrarFeedback('success', 'Etapa do candidato salva com sucesso!');
+                    setTimeout(function () {
+                        window.location.reload();
+                    }, 800);
+                }
+            })
+            .catch(function (err) {
+                mostrarFeedback('danger', 'Não foi possível salvar a etapa. Tente novamente.');
+                console.error('Erro ao salvar etapa:', err);
+            })
+            .finally(function () {
+                btn.disabled = false;
+                btn.innerHTML = iconeOriginal;
+            });
+        });
+    });
+})();
+</script>
 {% endblock %}

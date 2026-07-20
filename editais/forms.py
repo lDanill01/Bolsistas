@@ -2,7 +2,7 @@ from django import forms
 from django.core.validators import MaxLengthValidator
 from django.forms import inlineformset_factory, BaseInlineFormSet
 from decimal import Decimal, InvalidOperation
-from .models import EditalProvisorio, CronogramaEvento, NIVEL_BOLSA_CONFIG
+from .models import EditalProvisorio, CronogramaEvento, AplicacaoEdital, NIVEL_BOLSA_CONFIG
 
 
 class EditalProvisorioForm(forms.ModelForm):
@@ -292,3 +292,54 @@ CronogramaEventoFormSet = inlineformset_factory(
     extra=7,
     can_delete=True,
 )
+
+
+class AvaliacaoIndividualForm(forms.ModelForm):
+    nota = forms.DecimalField(
+        label='Nota da Prova',
+        max_digits=5,
+        decimal_places=2,
+        min_value=Decimal('0'),
+        max_value=Decimal('10'),
+        required=False,
+        widget=forms.NumberInput(attrs={
+            'class': 'form-control',
+            'min': 0,
+            'max': 10,
+            'step': 0.01,
+            'placeholder': '0,00',
+        }),
+    )
+    nota_entrevista = forms.DecimalField(
+        label='Nota da Entrevista',
+        max_digits=5,
+        decimal_places=2,
+        min_value=Decimal('0'),
+        max_value=Decimal('10'),
+        required=False,
+        widget=forms.NumberInput(attrs={
+            'class': 'form-control',
+            'min': 0,
+            'max': 10,
+            'step': 0.01,
+            'placeholder': '0,00',
+        }),
+    )
+    data_entrevista = forms.DateField(
+        label='Data da Entrevista',
+        required=False,
+        widget=forms.DateInput(attrs={
+            'type': 'date',
+            'class': 'form-control',
+        }),
+    )
+    status = forms.ChoiceField(
+        label='Status Geral',
+        choices=AplicacaoEdital.STATUS_CHOICES,
+        required=False,
+        widget=forms.Select(attrs={'class': 'form-select'}),
+    )
+
+    class Meta:
+        model = AplicacaoEdital
+        fields = ['nota', 'nota_entrevista', 'data_entrevista', 'status']

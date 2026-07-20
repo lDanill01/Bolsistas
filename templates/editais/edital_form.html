@@ -6,19 +6,19 @@
     <form method="post" enctype="multipart/form-data" novalidate>
         {% csrf_token %}
 
-        <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+        <div class="d-flex justify-content-between align-items-center mb-5 flex-wrap gap-2">
             <h2 class="fw-bold text-primary mb-0">
                 <i class="bi bi-journal-plus me-2"></i>
                 {% if object %}Editar{% else %}Novo{% endif %} Edital
             </h2>
             <div class="d-flex gap-2 flex-wrap">
                 {% if not object %}
-                <button type="button" class="btn btn-outline-secondary btn-sm px-3" onclick="limparDados()">
+                <button type="button" class="btn btn-warning" onclick="limparDados()">
                     <i class="bi bi-eraser me-1"></i>Limpar Dados
                 </button>
                 {% endif %}
-                <a href="{% url 'edital_list' %}" class="btn btn-outline-secondary btn-sm">
-                    <i class="bi bi-arrow-left me-1"></i>Voltar
+                <a href="{% url 'edital_list' %}" class="btn btn-primary btn-sm d-inline-flex align-items-center">
+                    <i class="bi bi-arrow-left me-2"></i>Voltar
                 </a>
             </div>
         </div>
@@ -70,9 +70,6 @@
                 <div class="col-12">
                     <label class="form-label fw-semibold">{{ form.documento_anexo.label }}</label>
                     {{ form.documento_anexo }}
-                    <span class="badge bg-info text-dark mt-1">
-                        <i class="bi bi-file-earmark-pdf me-1"></i>Termo de Parceria e/ou Plano de Projeto
-                    </span>
                     {% if object and object.documento_anexo %}
                     <div class="mt-1">
                         <a href="{% url 'protected_media' object.documento_anexo.name %}" class="btn btn-outline-info btn-sm" target="_blank">
@@ -299,10 +296,10 @@
                         </div>
 
                         <div class="d-flex flex-wrap gap-2 align-items-start mb-3">
-                            <button type="button" class="btn btn-outline-success btn-sm" id="adicionar-etapa">
+                            <button type="button" class="btn btn-success btn-sm" id="adicionar-etapa">
                                 <i class="bi bi-plus-circle me-1"></i>Adicionar Etapa
                             </button>
-                            <button type="button" class="btn btn-outline-primary btn-sm" id="calcular-cronograma">
+                            <button type="button" class="btn btn-primary btn-sm" id="calcular-cronograma">
                                 <i class="bi bi-magic me-1"></i>Calcular
                             </button>
                         </div>
@@ -372,11 +369,11 @@
                     <i class="bi bi-check-lg me-1"></i>{% if object %}Atualizar{% else %}Salvar{% endif %}
                 </button>
                 {% if not object %}
-                <button type="button" class="btn btn-outline-secondary px-4" onclick="limparDados()">
+                <button type="button" class="btn btn-warning px-4" onclick="limparDados()">
                     <i class="bi bi-eraser me-1"></i>Limpar Dados
                 </button>
                 {% endif %}
-                <a href="{% url 'edital_list' %}" class="btn btn-outline-secondary">
+                <a href="{% url 'edital_list' %}" class="btn btn-primary btn-sm d-inline-flex align-items-center">
                     <i class="bi bi-arrow-left me-1"></i>Voltar
                 </a>
             </div>

@@ -1,8 +1,8 @@
-from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, TemplateView
-from django.urls import reverse_lazy
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, TemplateView, View
+from django.urls import reverse_lazy, reverse
 from django.contrib import messages
 from django.shortcuts import get_object_or_404, redirect, render
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.template.loader import render_to_string
 from django.views.decorators.http import require_POST
@@ -20,8 +20,8 @@ from base.mixins import (
     ViewUserRequiredMixin, GROUP_MANAGER, GROUP_EXECUTE_USER, GROUP_VIEW_USER,
 )
 from cadastro.models import CadastroBolsista
-from .models import EditalProvisorio, AplicacaoEdital, NIVEL_BOLSA_CONFIG
-from .forms import EditalProvisorioForm, CronogramaEventoFormSet
+from .models import EditalProvisorio, AplicacaoEdital, AplicacaoEditalLog, NIVEL_BOLSA_CONFIG
+from .forms import EditalProvisorioForm, CronogramaEventoFormSet, AvaliacaoIndividualForm
 from . import tasks as ia_tasks
 from .ai_service import _score_heuristico
 
@@ -429,57 +429,232 @@ class AlterarStatusAplicacaoView(ManagerOrExecuteRequiredMixin, TemplateView):
         return redirect('aplicacao_list')
 
 
-class AvaliarCandidatoView(ManagerOrExecuteRequiredMixin, TemplateView):
-    template_name = 'editais/avaliar_candidato.html'
+def _calcular_status(nota_prova, nota_entrevista):
+    if nota_prova is None and nota_entrevista is None:
+        return None
+    if nota_prova is not None and nota_entrevista is not None:
+        return 'aprovado' if nota_prova > 6 and nota_entrevista > 6 else 'rejeitado'
+    if nota_prova is not None:
+        return 'aprovado' if nota_prova > 6 else 'rejeitado'
+    if nota_entrevista is not None:
+        return 'aprovado' if nota_entrevista > 6 else 'rejeitado'
+    return None
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['aplicacao'] = get_object_or_404(
-            AplicacaoEdital.objects.select_related('bolsista__user', 'edital'),
-            pk=kwargs['pk'],
+
+def _registrar_log(aplicacao, usuario, valores_anteriores, valores_novos):
+    campos = ['nota', 'nota_entrevista', 'data_entrevista', 'status']
+    houve_mudanca = any(
+        valores_anteriores.get(c) != valores_novos.get(c) for c in campos
+    )
+    if not houve_mudanca:
+        return None
+    return AplicacaoEditalLog.objects.create(
+        aplicacao=aplicacao,
+        alterado_por=usuario,
+        nota_anterior=valores_anteriores.get('nota'),
+        nota_nova=valores_novos.get('nota'),
+        nota_entrevista_anterior=valores_anteriores.get('nota_entrevista'),
+        nota_entrevista_nova=valores_novos.get('nota_entrevista'),
+        data_entrevista_anterior=valores_anteriores.get('data_entrevista'),
+        data_entrevista_nova=valores_novos.get('data_entrevista'),
+        status_anterior=valores_anteriores.get('status') or '',
+        status_novo=valores_novos.get('status') or '',
+    )
+
+
+class SalvarAvaliacoesLoteView(ManagerOrExecuteRequiredMixin, TemplateView):
+    def post(self, request, *args, **kwargs):
+        edital_pk = request.POST.get('edital_pk')
+        edital = get_object_or_404(EditalProvisorio, pk=edital_pk)
+
+        aplicacoes = AplicacaoEdital.objects.filter(edital=edital).select_related(
+            'bolsista', 'bolsista__user'
         )
-        context['feriados_json'] = json.dumps(getattr(settings, 'FERIADOS_NACIONAIS', []))
-        return context
+        atualizadas = 0
+        erros = []
+
+        for aplicacao in aplicacoes:
+            pk = aplicacao.pk
+            prefix_prova = f'nota_prova_{pk}'
+            prefix_entrevista = f'nota_entrevista_{pk}'
+            prefix_data = f'data_entrevista_{pk}'
+
+            # Ignora candidatos sem nenhum campo enviado (outras páginas de paginação, por exemplo)
+            if prefix_prova not in request.POST and prefix_entrevista not in request.POST and prefix_data not in request.POST:
+                continue
+
+            nota_prova_str = (request.POST.get(prefix_prova, '') or '').strip().replace(',', '.')
+            nota_entrevista_str = (request.POST.get(prefix_entrevista, '') or '').strip().replace(',', '.')
+            data_entrevista_str = (request.POST.get(prefix_data, '') or '').strip()
+
+            valores_anteriores = {
+                'nota': aplicacao.nota,
+                'nota_entrevista': aplicacao.nota_entrevista,
+                'data_entrevista': aplicacao.data_entrevista,
+                'status': aplicacao.status,
+            }
+
+            # Preserva valores existentes quando o campo é enviado em branco (salvar por etapas)
+            nota_prova = valores_anteriores['nota']
+            nota_entrevista = valores_anteriores['nota_entrevista']
+            data_entrevista = valores_anteriores['data_entrevista']
+
+            if nota_prova_str:
+                try:
+                    nota_prova = Decimal(nota_prova_str)
+                    if nota_prova < 0 or nota_prova > 10:
+                        erros.append(f'{aplicacao.bolsista.user.nome_completo}: Nota da Prova deve estar entre 0 e 10.')
+                        continue
+                except (ValueError, InvalidOperation):
+                    erros.append(f'{aplicacao.bolsista.user.nome_completo}: Nota da Prova inválida.')
+                    continue
+
+            if nota_entrevista_str:
+                try:
+                    nota_entrevista = Decimal(nota_entrevista_str)
+                    if nota_entrevista < 0 or nota_entrevista > 10:
+                        erros.append(f'{aplicacao.bolsista.user.nome_completo}: Nota da Entrevista deve estar entre 0 e 10.')
+                        continue
+                except (ValueError, InvalidOperation):
+                    erros.append(f'{aplicacao.bolsista.user.nome_completo}: Nota da Entrevista inválida.')
+                    continue
+
+            if data_entrevista_str:
+                try:
+                    data_entrevista = datetime.strptime(data_entrevista_str, '%Y-%m-%d').date()
+                except (ValueError, TypeError):
+                    erros.append(f'{aplicacao.bolsista.user.nome_completo}: Data da Entrevista inválida.')
+                    continue
+
+            # Candidato inapto na prova: bloqueia etapas seguintes
+            if nota_prova is not None and nota_prova <= 6:
+                nota_entrevista = None
+                data_entrevista = None
+
+            novo_status = _calcular_status(nota_prova, nota_entrevista) or aplicacao.status
+
+            valores_novos = {
+                'nota': nota_prova,
+                'nota_entrevista': nota_entrevista,
+                'data_entrevista': data_entrevista,
+                'status': novo_status,
+            }
+
+            aplicacao.nota = nota_prova
+            aplicacao.nota_entrevista = nota_entrevista
+            aplicacao.data_entrevista = data_entrevista
+            aplicacao.status = novo_status
+            aplicacao.save(update_fields=['nota', 'nota_entrevista', 'data_entrevista', 'status'])
+
+            _registrar_log(aplicacao, request.user, valores_anteriores, valores_novos)
+            atualizadas += 1
+
+        if erros:
+            for erro in erros:
+                messages.error(request, erro)
+        if atualizadas:
+            messages.success(request, f'{atualizadas} candidatura(s) atualizada(s) com sucesso.')
+
+        is_ajax = (
+            request.headers.get('X-Requested-With') == 'XMLHttpRequest'
+            or request.POST.get('ajax') == '1'
+        )
+        if is_ajax:
+            return JsonResponse({
+                'sucesso': not erros or atualizadas > 0,
+                'atualizadas': atualizadas,
+                'erros': erros,
+                'redirect_url': reverse('edital_candidatos', kwargs={'edital_pk': edital.pk}),
+            })
+
+        return redirect('edital_candidatos', edital_pk=edital.pk)
+
+
+class EditarAvaliacaoView(ManagerOrExecuteRequiredMixin, View):
+    def get(self, request, *args, **kwargs):
+        try:
+            aplicacao = get_object_or_404(
+                AplicacaoEdital.objects.select_related('bolsista', 'bolsista__user', 'edital'),
+                pk=kwargs['pk']
+            )
+            form = AvaliacaoIndividualForm(instance=aplicacao)
+            logs = aplicacao.logs.select_related('alterado_por').all()[:20]
+            html = render_to_string(
+                'editais/partials/avaliacao_edit_modal.html',
+                {'aplicacao': aplicacao, 'form': form, 'logs': logs},
+                request=request,
+            )
+            return HttpResponse(html)
+        except Exception as e:
+            import traceback
+            traceback.print_exc()
+            return HttpResponse(
+                f'<p class="text-danger">Erro ao carregar editor: {str(e)}</p>',
+                status=500,
+                content_type='text/html; charset=utf-8',
+            )
 
     def post(self, request, *args, **kwargs):
-        aplicacao = get_object_or_404(
-            AplicacaoEdital.objects.select_related('edital'),
-            pk=kwargs['pk'],
-        )
-        nota_str = (request.POST.get('nota', '') or '').strip().replace(',', '.')
-
         try:
-            nota = Decimal(nota_str) if nota_str else Decimal('0')
-        except (ValueError, InvalidOperation):
-            messages.error(request, 'Nota inválida. Use um número entre 0 e 10.')
-            return redirect('avaliar_candidato', pk=aplicacao.pk)
+            aplicacao = get_object_or_404(
+                AplicacaoEdital.objects.select_related('bolsista', 'bolsista__user', 'edital'),
+                pk=kwargs['pk']
+            )
 
-        if nota < 0 or nota > 10:
-            messages.error(request, 'Nota deve estar entre 0 e 10.')
-            return redirect('avaliar_candidato', pk=aplicacao.pk)
+            valores_anteriores = {
+                'nota': aplicacao.nota,
+                'nota_entrevista': aplicacao.nota_entrevista,
+                'data_entrevista': aplicacao.data_entrevista,
+                'status': aplicacao.status,
+            }
 
-        novo_status = 'aprovado' if nota > 6 else 'rejeitado'
+            form = AvaliacaoIndividualForm(request.POST, instance=aplicacao)
+            if not form.is_valid():
+                logs = aplicacao.logs.select_related('alterado_por').all()[:20]
+                html = render_to_string(
+                    'editais/partials/avaliacao_edit_modal.html',
+                    {'aplicacao': aplicacao, 'form': form, 'logs': logs},
+                    request=request,
+                )
+                return HttpResponse(html, status=422)
 
-        data_entrevista_str = (request.POST.get('data_entrevista', '') or '').strip()
-        data_entrevista = None
-        if data_entrevista_str:
-            try:
-                data_entrevista = datetime.strptime(data_entrevista_str, '%Y-%m-%d').date()
-            except (ValueError, TypeError):
-                messages.error(request, 'Data da entrevista inválida.')
-                return redirect('avaliar_candidato', pk=aplicacao.pk)
+            aplicacao = form.save(commit=False)
 
-        aplicacao.nota = nota
-        aplicacao.status = novo_status
-        aplicacao.data_entrevista = data_entrevista
-        aplicacao.save(update_fields=['nota', 'status', 'data_entrevista'])
+            # Candidato inapto na prova: bloqueia etapas seguintes
+            if aplicacao.nota is not None and aplicacao.nota <= 6:
+                aplicacao.nota_entrevista = None
+                aplicacao.data_entrevista = None
 
-        status_display = 'Apto' if novo_status == 'aprovado' else 'Inapto'
-        messages.success(
-            request,
-            f'{aplicacao.bolsista.user.nome_completo}: nota {nota} — {status_display}.',
-        )
-        return redirect('edital_candidatos', edital_pk=aplicacao.edital.pk)
+            # Se o status não foi informado manualmente, recalcula automaticamente
+            if not form.cleaned_data.get('status'):
+                novo_status = _calcular_status(aplicacao.nota, aplicacao.nota_entrevista)
+                if novo_status:
+                    aplicacao.status = novo_status
+
+            valores_novos = {
+                'nota': aplicacao.nota,
+                'nota_entrevista': aplicacao.nota_entrevista,
+                'data_entrevista': aplicacao.data_entrevista,
+                'status': aplicacao.status,
+            }
+
+            aplicacao.save(update_fields=['nota', 'nota_entrevista', 'data_entrevista', 'status'])
+            _registrar_log(aplicacao, request.user, valores_anteriores, valores_novos)
+
+            messages.success(
+                request,
+                f'Avaliação de {aplicacao.bolsista.user.nome_completo} atualizada com sucesso.'
+            )
+            return redirect('edital_candidatos', edital_pk=aplicacao.edital.pk)
+        except Exception as e:
+            import traceback
+            traceback.print_exc()
+            return HttpResponse(
+                f'<p class="text-danger">Erro ao salvar avaliação: {str(e)}</p>',
+                status=500,
+                content_type='text/html; charset=utf-8',
+            )
+
 
 
 def _task_running_partial(request, task_id):

@@ -30,7 +30,7 @@
         {% if formacao_form %}
         <form method="post" action="{% url 'formacao_add' cadastro.pk %}"
               hx-post="{% url 'formacao_add' cadastro.pk %}"
-              hx-target="#formacao-section" hx-swap="outerHTML" class="card p-3 bg-light">
+              hx-target="#formacao-section" hx-swap="outerHTML" class="card p-3">
             {% csrf_token %}
             <div class="row g-2 align-items-end">
                 <div class="col-md-2">
