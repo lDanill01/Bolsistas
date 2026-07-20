@@ -16,29 +16,36 @@
 
     <div class="row g-4">
         <div class="col-12">
-            <div class="card p-4">
-                <div class="text-center mb-3">
-                    <h5 class="fw-semibold mb-3">
+            <div class="card mb-4">
+                <button class="card-header bg-white border-0 w-100 text-center py-3" type="button" data-bs-toggle="collapse" data-bs-target="#analise-ia-collapse" aria-expanded="false" aria-controls="analise-ia-collapse">
+                    <h5 class="fw-semibold mb-0">
                         <i class="bi bi-stars me-2 text-primary"></i>Análise por IA
+                        <i class="bi bi-chevron-down ms-2 small text-muted"></i>
                     </h5>
-                    <button class="btn btn-primary btn-sm"
-                            hx-post="{% url 'painel_analisar_bolsista' bolsista.pk %}"
-                            hx-target="#analise-ia-resultado"
-                            hx-indicator="#analise-ia-spinner"
-                            hx-swap="innerHTML">
-                        <i class="bi bi-magic me-1"></i>Resumir por IA
-                    </button>
-                </div>
+                </button>
+                <div class="collapse" id="analise-ia-collapse">
+                    <div class="card-body">
+                        <div class="text-center mb-3">
+                            <button class="btn btn-primary btn-sm"
+                                    hx-post="{% url 'painel_analisar_bolsista' bolsista.pk %}"
+                                    hx-target="#analise-ia-resultado"
+                                    hx-indicator="#analise-ia-spinner"
+                                    hx-swap="innerHTML">
+                                <i class="bi bi-magic me-1"></i>Resumir por IA
+                            </button>
+                        </div>
 
-                <div id="analise-ia-spinner" class="htmx-indicator text-center py-3">
-                    <div class="spinner-border text-primary" role="status">
-                        <span class="visually-hidden">Analisando...</span>
+                        <div id="analise-ia-spinner" class="htmx-indicator text-center py-3">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Analisando...</span>
+                            </div>
+                            <p class="text-muted small mt-2 mb-0">A IA está analisando o perfil e comparando com os editais...</p>
+                        </div>
+
+                        <div id="analise-ia-resultado">
+                            <p class="text-muted mb-0">Clique em <strong>Resumir por IA</strong> para gerar um resumo do perfil e uma análise comparativa com os editais disponíveis.</p>
+                        </div>
                     </div>
-                    <p class="text-muted small mt-2 mb-0">A IA está analisando o perfil e comparando com os editais...</p>
-                </div>
-
-                <div id="analise-ia-resultado">
-                    <p class="text-muted mb-0">Clique em <strong>Resumir por IA</strong> para gerar um resumo do perfil e uma análise comparativa com os editais disponíveis.</p>
                 </div>
             </div>
 
@@ -68,21 +75,21 @@
                     <i class="bi bi-person me-2 text-primary"></i>Dados Pessoais
                 </h5>
                 <div class="row g-3">
-                    <div class="col-sm-6">
-                        <label class="form-label small text-muted mb-0">Nome</label>
-                        <p class="fw-medium">{{ bolsista.user.nome_completo }}</p>
+                    <div class="col-md-6">
+                        <label class="form-label small text-muted mb-1">Nome</label>
+                        <div class="form-control bg-light">{{ bolsista.user.nome_completo }}</div>
                     </div>
-                    <div class="col-sm-6">
-                        <label class="form-label small text-muted mb-0">E-mail</label>
-                        <p class="fw-medium">{{ bolsista.user.email }}</p>
+                    <div class="col-md-6">
+                        <label class="form-label small text-muted mb-1">E-mail</label>
+                        <div class="form-control bg-light">{{ bolsista.user.email }}</div>
                     </div>
-                    <div class="col-sm-6">
-                        <label class="form-label small text-muted mb-0">Telefone</label>
-                        <p class="fw-medium">{{ bolsista.telefone|default:'Nao informado' }}</p>
+                    <div class="col-md-6">
+                        <label class="form-label small text-muted mb-1">Telefone</label>
+                        <div class="form-control bg-light">{{ bolsista.telefone|default:'Não informado' }}</div>
                     </div>
-                    <div class="col-sm-6">
-                        <label class="form-label small text-muted mb-0">Data de Nascimento</label>
-                        <p class="fw-medium">{{ bolsista.data_nascimento|date:'d/m/Y' }}</p>
+                    <div class="col-md-6">
+                        <label class="form-label small text-muted mb-1">Data de Nascimento</label>
+                        <div class="form-control bg-light">{{ bolsista.data_nascimento|date:'d/m/Y' }}</div>
                     </div>
                 </div>
 
@@ -92,25 +99,25 @@
                     <i class="bi bi-geo-alt me-2 text-primary"></i>Endereço
                 </h6>
                 <div class="row g-3">
-                    <div class="col-sm-8">
-                        <label class="form-label small text-muted mb-0">Rua</label>
-                        <p class="fw-medium">{{ bolsista.rua|default:'-' }}</p>
+                    <div class="col-md-8">
+                        <label class="form-label small text-muted mb-1">Rua</label>
+                        <div class="form-control bg-light">{{ bolsista.rua|default:'-' }}</div>
                     </div>
-                    <div class="col-sm-4">
-                        <label class="form-label small text-muted mb-0">Número</label>
-                        <p class="fw-medium">{{ bolsista.numero|default:'-' }}</p>
+                    <div class="col-md-4">
+                        <label class="form-label small text-muted mb-1">Número</label>
+                        <div class="form-control bg-light">{{ bolsista.numero|default:'-' }}</div>
                     </div>
-                    <div class="col-sm-4">
-                        <label class="form-label small text-muted mb-0">Bairro</label>
-                        <p class="fw-medium">{{ bolsista.bairro|default:'-' }}</p>
+                    <div class="col-md-4">
+                        <label class="form-label small text-muted mb-1">Bairro</label>
+                        <div class="form-control bg-light">{{ bolsista.bairro|default:'-' }}</div>
                     </div>
-                    <div class="col-sm-5">
-                        <label class="form-label small text-muted mb-0">Cidade</label>
-                        <p class="fw-medium">{{ bolsista.cidade|default:'-' }}</p>
+                    <div class="col-md-4">
+                        <label class="form-label small text-muted mb-1">Cidade</label>
+                        <div class="form-control bg-light">{{ bolsista.cidade|default:'-' }}</div>
                     </div>
-                    <div class="col-sm-3">
-                        <label class="form-label small text-muted mb-0">Estado</label>
-                        <p class="fw-medium">{{ bolsista.get_estado_display|default:'-' }}</p>
+                    <div class="col-md-4">
+                        <label class="form-label small text-muted mb-1">Estado</label>
+                        <div class="form-control bg-light">{{ bolsista.get_estado_display|default:'-' }}</div>
                     </div>
                 </div>
             </div>

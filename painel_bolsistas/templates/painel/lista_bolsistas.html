@@ -47,7 +47,7 @@
                     <td>
                         {% with ultima=b.ultima_formacao %}
                         {% if ultima %}
-                        <span class="badge bg-primary bg-opacity-10 text-primary mb-1">{{ ultima.get_tipo_display }}</span>
+                        <span class="badge bg-primary bg-opacity-10 text-white mb-1">{{ ultima.get_tipo_display }}</span>
                         <small class="d-block text-muted">{{ ultima.area|default:ultima.curso }}</small>
                         {% if ultima.ano_conclusao %}
                         <small class="text-muted">Conclusão: {{ ultima.ano_conclusao }}</small>
@@ -58,7 +58,7 @@
                         {% endwith %}
                     </td>
                     <td class="text-end">
-                        <button class="btn btn-outline-success btn-sm me-1"
+                        <button class="btn btn-success btn-sm me-1"
                                 title="Resumir com IA"
                                 data-bs-toggle="collapse"
                                 data-bs-target="#resumo-ia-{{ b.pk }}"
@@ -68,7 +68,7 @@
                                 hx-swap="innerHTML">
                             <i class="bi bi-magic"></i>
                         </button>
-                        <a href="{% url 'painel_detalhe' b.pk %}" class="btn btn-outline-primary btn-sm" title="Ver detalhes">
+                        <a href="{% url 'painel_detalhe' b.pk %}" class="btn btn-warning btn-sm" title="Ver detalhes">
                             <i class="bi bi-eye-fill"></i>
                         </a>
                     </td>
