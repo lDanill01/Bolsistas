@@ -161,6 +161,14 @@ CELERY_TASK_TRACK_STARTED = True
 CELERY_TASK_TIME_LIMIT = 600  # 10 minutos
 CELERY_RESULT_EXTENDED = True
 
+from celery.schedules import crontab
+CELERY_BEAT_SCHEDULE = {
+    'fechar-editais-vencidos': {
+        'task': 'editais.tasks.fechar_editais_vencidos',
+        'schedule': crontab(hour=0, minute=5),
+    },
+}
+
 # Config futura para S3 (descomentar quando migrar para producao)
 # INSTALLED_APPS += ['storages']
 # AWS_ACCESS_KEY_ID = read_secret('AWS_ACCESS_KEY_ID')

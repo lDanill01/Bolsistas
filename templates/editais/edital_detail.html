@@ -25,16 +25,18 @@
                 <i class="bi bi-check-circle me-1"></i>Validar
             </a>
             {% endif %}
+            {% if edital.status != 'encerrado' or is_superuser %}
             <a href="{% url 'edital_update' edital.pk %}" class="btn btn-warning">
                 <i class="bi bi-pencil-square me-1"></i>Editar
             </a>
+            {% endif %}
             {% endif %}
             {% if is_superuser %}
             <a href="{% url 'edital_delete' edital.pk %}" class="btn btn-outline-danger">
                 <i class="bi bi-trash me-1"></i>Excluir
             </a>
             {% endif %}
-            <a href="{% url 'edital_list' %}" class="btn btn-outline-secondary">
+            <a href="{% url 'edital_list' %}" class="btn btn-warning">
                 <i class="bi bi-arrow-left me-1"></i>Voltar
             </a>
         </div>
@@ -248,7 +250,7 @@
             </div>
 
             {% if is_view_user %}
-                {% if edital.status == 'aberto' and tem_cadastro and not ja_aplicou %}
+                {% if periodo_submissao_ativo and tem_cadastro and not ja_aplicou %}
                 <div class="card p-4 mb-4 text-center">
                     <form method="post" action="{% url 'aplicar_edital' edital.pk %}">
                         {% csrf_token %}

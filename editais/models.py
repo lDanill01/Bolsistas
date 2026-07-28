@@ -76,7 +76,7 @@ class EditalProvisorio(DataModel):
     STATUS_CHOICES = [
         ('em_analise', 'Em Análise'),
         ('aberto', 'Aberto'),
-        ('encerrado', 'Encerrado'),
+        ('encerrado', 'Fechado'),
         ('cancelado', 'Cancelado'),
     ]
 
@@ -233,6 +233,55 @@ class EditalProvisorio(DataModel):
             evento='outorga', data_evento__isnull=False
         ).order_by('data_evento').last()
         return evento.data_evento if evento else None
+
+    @property
+    def data_inicio_submissao(self):
+        ev = self.cronograma.filter(evento='inicio_submissao').order_by('data_evento').first()
+        return ev.data_evento if ev else None
+
+    @property
+    def data_limite_submissao(self):
+        ev = self.cronograma.filter(evento='limite_submissao').order_by('data_evento').first()
+        return ev.data_evento if ev else None
+
+    @property
+    def periodo_submissao_ativo(self):
+        inicio = self.data_inicio_submissao
+        fim = self.data_limite_submissao
+        if not inicio or not fim:
+            return False
+        hoje = timezone.now().date()
+        return self.status == 'aberto' and inicio <= hoje <= fim
+
+    @property
+    def prazo_submissao_expirado(self):
+        fim = self.data_limite_submissao
+        if not fim:
+            return False
+        return self.status == 'aberto' and timezone.now().date() > fim
+
+    def _etapa_liberada(self, evento_codigo):
+        ev = self.cronograma.filter(evento=evento_codigo).order_by('data_evento').first()
+        if not ev or not ev.data_evento:
+            return False
+        return timezone.now().date() >= ev.data_evento
+
+    @property
+    def prova_liberada(self):
+        return self._etapa_liberada('prova_teorica')
+
+    @property
+    def entrevista_liberada(self):
+        return self._etapa_liberada('entrevista')
+
+    @property
+    def resultado_liberado(self):
+        return self._etapa_liberada('resultado_final')
+
+    def get_status_display(self):
+        if self.status == 'encerrado':
+            return 'Fechado'
+        return dict(self.STATUS_CHOICES).get(self.status, self.status)
 
     @property
     def proxima_etapa(self):

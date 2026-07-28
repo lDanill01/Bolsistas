@@ -1,4 +1,4 @@
-from datetime import date
+from datetime import date, timedelta
 from decimal import Decimal
 import json
 from django.test import TestCase, RequestFactory, override_settings
@@ -6,7 +6,7 @@ from django.contrib.auth.models import Group
 from accounts.models import User
 from base.mixins import GROUP_MANAGER
 from cadastro.models import CadastroBolsista
-from editais.models import EditalProvisorio, AplicacaoEdital, AplicacaoEditalLog
+from editais.models import EditalProvisorio, CronogramaEvento, AplicacaoEdital, AplicacaoEditalLog
 from editais.views import SalvarAvaliacoesLoteView, EditarAvaliacaoView, AplicacaoEditalListView
 
 
@@ -43,6 +43,19 @@ class SalvarAvaliacoesLoteTests(TestCase):
 
         self.aplicacao = AplicacaoEdital.objects.create(
             bolsista=self.bolsista, edital=self.edital)
+
+        hoje = date.today()
+        for ordem, (evento, dias) in enumerate([
+            ('prova_teorica', -1),
+            ('entrevista', -1),
+            ('resultado_final', -1),
+        ]):
+            CronogramaEvento.objects.create(
+                edital=self.edital,
+                evento=evento,
+                data_evento=hoje + timedelta(days=dias),
+                ordem=ordem,
+            )
 
     def _req(self, method, path, data=None):
         req = getattr(self.factory, method)(path, data=data or {})

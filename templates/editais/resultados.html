@@ -69,14 +69,20 @@
                     <tr>
                         <th>Nome</th>
                         <th>Nº Inscrição</th>
+                        {% if edital.prova_liberada %}
                         {% if view_atual == 'todas' or view_atual == 'prova' %}
                         <th>Nota da Prova</th>
                         {% endif %}
+                        {% endif %}
+                        {% if edital.entrevista_liberada %}
                         {% if view_atual == 'todas' or view_atual == 'entrevista' %}
                         <th>Nota da Entrevista</th>
                         {% endif %}
+                        {% endif %}
+                        {% if edital.resultado_liberado %}
                         {% if view_atual == 'todas' or view_atual == 'final' %}
                         <th>Nota Final</th>
+                        {% endif %}
                         {% endif %}
                         <th>Status</th>
                     </tr>
@@ -86,20 +92,26 @@
                     <tr>
                         <td class="fw-medium">{{ a.bolsista.user.nome_completo }}</td>
                         <td><span class="badge bg-dark">{{ a.numero_inscricao|default:'—' }}</span></td>
+                        {% if edital.prova_liberada %}
                         {% if view_atual == 'todas' or view_atual == 'prova' %}
                         <td>
                             <div class="form-control bg-light">{% if a.nota is not None %}{{ a.nota|floatformat:2 }}{% else %}—{% endif %}</div>
                         </td>
                         {% endif %}
+                        {% endif %}
+                        {% if edital.entrevista_liberada %}
                         {% if view_atual == 'todas' or view_atual == 'entrevista' %}
                         <td>
                             <div class="form-control bg-light">{% if a.nota_entrevista is not None %}{{ a.nota_entrevista|floatformat:2 }}{% else %}—{% endif %}</div>
                         </td>
                         {% endif %}
+                        {% endif %}
+                        {% if edital.resultado_liberado %}
                         {% if view_atual == 'todas' or view_atual == 'final' %}
                         <td>
                             <div class="form-control bg-light">{{ a.nota_final_display }}</div>
                         </td>
+                        {% endif %}
                         {% endif %}
                         <td>
                             <span class="badge {{ a.status_resultado_class }}">
@@ -109,7 +121,7 @@
                     </tr>
                     {% empty %}
                     <tr>
-                        <td colspan="7" class="text-center text-muted py-3">Nenhum candidato neste edital.</td>
+                        <td colspan="6" class="text-center text-muted py-3">Nenhum candidato neste edital.</td>
                     </tr>
                     {% endfor %}
                 </tbody>
