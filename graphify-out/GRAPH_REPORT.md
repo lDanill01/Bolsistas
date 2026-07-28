@@ -1,7 +1,7 @@
-# Graph Report - Fork---Bolsistas  (2026-07-23)
+# Graph Report - Fork---Bolsistas  (2026-07-28)
 
 ## Corpus Check
-- 124 files · ~53,102 words
+- 124 files · ~53,119 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
@@ -10,7 +10,7 @@
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `e07303ce`
+- Built from commit: `72a1936f`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 

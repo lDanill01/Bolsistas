@@ -9,6 +9,7 @@ from django.views.decorators.http import require_POST
 from django.core.cache import cache
 from django.db.models import Count, Q, Prefetch
 from celery.result import AsyncResult
+import csv
 import json
 from datetime import date, datetime
 from decimal import Decimal, InvalidOperation
@@ -396,7 +397,10 @@ class ResultadosListView(LoginRequiredMixin, ListView):
     paginate_by = 10
 
     def get_queryset(self):
-        qs = EditalProvisorio.objects.filter(status='encerrado').order_by('-created_at')
+        qs = EditalProvisorio.objects.filter(status__in=['aberto', 'encerrado']).order_by('-created_at')
+        qs = qs.filter(
+            Q(aplicacoes__nota__isnull=False) | Q(aplicacoes__nota_entrevista__isnull=False)
+        ).distinct()
         user = self.request.user
         is_gestor = user.is_superuser or user.groups.filter(
             name__in=[GROUP_MANAGER, GROUP_EXECUTE_USER]
@@ -434,6 +438,37 @@ class ResultadosListView(LoginRequiredMixin, ListView):
             name__in=[GROUP_MANAGER, GROUP_EXECUTE_USER]
         ).exists()
         return context
+
+
+class ResultadosDownloadView(LoginRequiredMixin, View):
+    def get(self, request, edital_pk):
+        edital = get_object_or_404(EditalProvisorio, pk=edital_pk)
+        aplicacoes = edital.aplicacoes.select_related('bolsista__user')
+
+        aplicacoes = sorted(
+            aplicacoes,
+            key=lambda a: a.nota_final or Decimal('0'),
+            reverse=True,
+        )
+
+        response = HttpResponse(content_type='text/csv; charset=utf-8-sig')
+        filename = f'resultados_{edital.numero_serie}_{edital.nome_edital}.csv'
+        response['Content-Disposition'] = f'attachment; filename="{filename}"'
+
+        writer = csv.writer(response)
+        writer.writerow(['Nome', 'Nº Inscrição', 'Nota da Prova', 'Nota da Entrevista', 'Nota Final', 'Status'])
+
+        for a in aplicacoes:
+            writer.writerow([
+                a.bolsista.user.nome_completo,
+                a.numero_inscricao or '',
+                f'{a.nota:.2f}'.replace('.', ',') if a.nota is not None else '—',
+                f'{a.nota_entrevista:.2f}'.replace('.', ',') if a.nota_entrevista is not None else '—',
+                a.nota_final_display,
+                a.status_resultado_display,
+            ])
+
+        return response
 
 
 class CancelarAplicacaoView(ViewUserRequiredMixin, TemplateView):
