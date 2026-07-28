@@ -31,7 +31,12 @@
     <div class="card p-4 mb-4">
         <div class="row g-3 mb-4">
             <div class="col-md-8">
-                <h5 class="fw-semibold mb-1">{{ edital.nome_edital }}</h5>
+                <h5 class="fw-semibold mb-1">
+                    {{ edital.nome_edital }}
+                    <a href="{% url 'resultados_download' edital.pk %}" class="btn btn-sm btn-outline-secondary ms-2" title="Baixar resultados">
+                        <i class="bi bi-download me-1"></i>Baixar CSV
+                    </a>
+                </h5>
                 <p class="text-muted small mb-1">
                     <i class="bi bi-building me-1"></i>{{ edital.get_nome_instituto_display }}
                     <span class="mx-2">|</span>
@@ -97,8 +102,8 @@
                         </td>
                         {% endif %}
                         <td>
-                            <span class="badge {% if a.status == 'aprovado' %}bg-success{% elif a.status == 'rejeitado' %}bg-danger{% elif a.status == 'em_analise' %}bg-warning text-dark{% else %}bg-secondary{% endif %}">
-                                {{ a.get_status_display }}
+                            <span class="badge {{ a.status_resultado_class }}">
+                                {{ a.status_resultado_display }}
                             </span>
                         </td>
                     </tr>

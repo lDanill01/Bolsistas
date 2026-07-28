@@ -280,8 +280,8 @@
     "semantic_hash": ""
   },
   "editais/views.py": {
-    "mtime": 1784810788.3597143,
-    "ast_hash": "dcad14e0bb0a557d57069e8e805556ee",
+    "mtime": 1785247423.67848,
+    "ast_hash": "d0e09810db4690cbe28e73f63486e84e",
     "semantic_hash": ""
   },
   "manage.py": {
@@ -665,8 +665,8 @@
     "semantic_hash": ""
   },
   "docker-compose.yml": {
-    "mtime": 1784293593.7902608,
-    "ast_hash": "afad1726ade933e69d6617314a0f65f3",
+    "mtime": 1785246014.3682935,
+    "ast_hash": "fb74d0d1373629f3edb5bb5f1046dea9",
     "semantic_hash": ""
   },
   "painel_bolsistas/templates/painel/partials/sugestao_avaliacao.html": {
@@ -690,7 +690,7 @@
     "semantic_hash": ""
   },
   "base/ai_client.py": {
-    "mtime": 1784221965.711022,
+    "mtime": 1785245024.2454648,
     "ast_hash": "83f4b2ba992ae2eda98ce595ea81aa3d",
     "semantic_hash": "83f4b2ba992ae2eda98ce595ea81aa3d"
   },

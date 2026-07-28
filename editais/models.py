@@ -312,6 +312,47 @@ class AplicacaoEdital(DataModel):
         return 'Apto' if self.status_entrevista == 'aprovado' else 'Inapto' if self.status_entrevista == 'rejeitado' else '—'
 
     @property
+    def status_resultado(self):
+        """Status para exibicao na pagina de resultados."""
+        if self.nota is None and self.nota_entrevista is None:
+            return None
+        if self.nota is not None and self.nota_entrevista is None:
+            if self.nota <= 6:
+                return 'rejeitado'
+            return 'pendente_entrevista'
+        if self.nota is None and self.nota_entrevista is not None:
+            if self.nota_entrevista <= 6:
+                return 'rejeitado'
+            return 'pendente_prova'
+        if self.nota > 6 and self.nota_entrevista > 6:
+            return 'aprovado'
+        return 'rejeitado'
+
+    @property
+    def status_resultado_display(self):
+        stat = self.status_resultado
+        if stat == 'aprovado':
+            return 'Aprovado'
+        if stat == 'rejeitado':
+            return 'Rejeitado'
+        if stat == 'pendente_entrevista':
+            return 'Pendente Entrevista'
+        if stat == 'pendente_prova':
+            return 'Pendente Prova'
+        return '—'
+
+    @property
+    def status_resultado_class(self):
+        stat = self.status_resultado
+        if stat == 'aprovado':
+            return 'bg-success'
+        if stat == 'rejeitado':
+            return 'bg-danger'
+        if stat in ('pendente_entrevista', 'pendente_prova'):
+            return 'bg-warning text-dark'
+        return 'bg-secondary'
+
+    @property
     def nota_final(self):
         notas = [n for n in (self.nota, self.nota_entrevista) if n is not None]
         if not notas:
