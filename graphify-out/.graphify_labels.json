@@ -73,8 +73,18 @@
   "71": "users.md",
   "72": "editais/migrations/__init__.py",
   "73": "templatetags/__init__.py",
+  "74": "EditalProvisorioForm",
+  "75": "editais/views.py",
+  "76": "EditalProvisorioDeleteView",
   "77": "notifications/admin.py",
   "78": "notifications/migrations/__init__.py",
   "79": "notifications/tests.py",
-  "80": "README.md"
+  "80": "README.md",
+  "81": "cadastro/models.py",
+  "82": "cadastro/views.py",
+  "83": "CadastroBolsista",
+  "84": "CadastroUpdateView",
+  "85": "EditalProvisorioUpdateView",
+  "86": "base/views.py",
+  "87": "0004_alter_cadastrobolsista_curriculo.py"
 }

@@ -58,3 +58,18 @@ def analisar_edital_task(self, edital_id, user_id):
     except Exception as exc:
         logger.exception('Erro na task analisar_edital')
         raise self.retry(exc=exc, countdown=10)
+
+
+@shared_task
+def fechar_editais_vencidos():
+    """Fecha automaticamente editais abertos cujo prazo de submissao expirou."""
+    from django.utils import timezone
+    hoje = timezone.now().date()
+    fechados = 0
+    for edital in EditalProvisorio.objects.filter(status='aberto').prefetch_related('cronograma'):
+        if edital.prazo_submissao_expirado:
+            edital.status = 'encerrado'
+            edital.save(update_fields=['status'])
+            fechados += 1
+            logger.info('Edital %s (%s) fechado automaticamente.', edital.pk, edital.nome_edital)
+    return fechados

@@ -27,6 +27,15 @@ from . import tasks as ia_tasks
 from .ai_service import _score_heuristico
 
 
+def _sincronizar_fechamento(edital):
+    """Fecha o edital se o prazo de submissao expirou (fallback defensivo)."""
+    if edital.prazo_submissao_expirado:
+        edital.status = 'encerrado'
+        edital.save(update_fields=['status'])
+        return True
+    return False
+
+
 class ContextMixin:
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -42,9 +51,26 @@ class EditalProvisorioListView(LoginRequiredMixin, ContextMixin, ListView):
     paginate_by = 10
 
     def get_queryset(self):
+        user = self.request.user
+        is_gestor = user.is_superuser or user.groups.filter(
+            name__in=[GROUP_MANAGER, GROUP_EXECUTE_USER]
+        ).exists()
+
         qs = EditalProvisorio.objects.all().select_related('criado_por')\
             .prefetch_related('cronograma')\
             .annotate(num_inscritos=Count('aplicacoes'))
+
+        if not is_gestor:
+            if hasattr(user, 'cadastro'):
+                editais_aplicados = AplicacaoEdital.objects.filter(
+                    bolsista=user.cadastro
+                ).values_list('edital_id', flat=True)
+                qs = qs.filter(
+                    Q(status='aberto') | Q(pk__in=editais_aplicados)
+                )
+            else:
+                qs = qs.filter(status='aberto')
+
         busca = self.request.GET.get('busca', '')
         status = self.request.GET.get('status', '')
         if busca:
@@ -104,6 +130,14 @@ class EditalProvisorioUpdateView(ManagerRequiredMixin, ContextMixin, UpdateView)
     form_class = EditalProvisorioForm
     success_url = reverse_lazy('edital_list')
 
+    def dispatch(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        _sincronizar_fechamento(self.object)
+        if self.object.prazo_submissao_expirado and not request.user.is_superuser:
+            messages.error(request, 'Este edital está fechado. Apenas superusuários podem editá-lo.')
+            return redirect('edital_detail', pk=self.object.pk)
+        return super().dispatch(request, *args, **kwargs)
+
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
         kwargs['user'] = self.request.user
@@ -147,6 +181,21 @@ class EditalProvisorioDetailView(LoginRequiredMixin, ContextMixin, DetailView):
         '#0dcaf0',  # ciano
         '#d63384',  # rosa
     ]
+
+    def dispatch(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        _sincronizar_fechamento(self.object)
+        user = request.user
+        is_gestor = user.is_superuser or user.groups.filter(
+            name__in=[GROUP_MANAGER, GROUP_EXECUTE_USER]
+        ).exists()
+        if not is_gestor and self.object.status == 'encerrado':
+            if not hasattr(user, 'cadastro') or not AplicacaoEdital.objects.filter(
+                bolsista=user.cadastro, edital=self.object
+            ).exists():
+                messages.warning(request, 'Este edital não está mais disponível.')
+                return redirect('edital_list')
+        return super().dispatch(request, *args, **kwargs)
 
     def get_queryset(self):
         return EditalProvisorio.objects.all().select_related('criado_por')
@@ -222,6 +271,8 @@ class EditalProvisorioDetailView(LoginRequiredMixin, ContextMixin, DetailView):
         context['is_execute_user'] = user.groups.filter(name=GROUP_EXECUTE_USER).exists()
         context['tem_cadastro'] = hasattr(user, 'cadastro')
         context['is_view_user'] = user.groups.filter(name=GROUP_VIEW_USER).exists()
+        context['periodo_submissao_ativo'] = self.object.periodo_submissao_ativo
+        context['prazo_submissao_expirado'] = self.object.prazo_submissao_expirado
         if hasattr(user, 'cadastro'):
             context['ja_aplicou'] = AplicacaoEdital.objects.filter(
                 bolsista=user.cadastro, edital=self.object
@@ -290,9 +341,13 @@ def edital_pdf_view(request, pk):
 class AplicarEditalView(ViewUserRequiredMixin, TemplateView):
     def post(self, request, *args, **kwargs):
         edital = get_object_or_404(EditalProvisorio, pk=kwargs['pk'])
+        _sincronizar_fechamento(edital)
 
-        if edital.status != 'aberto':
-            messages.error(request, 'Este edital não está aberto para candidaturas.')
+        if not edital.periodo_submissao_ativo:
+            if edital.status == 'encerrado':
+                messages.error(request, 'Este edital está fechado para candidaturas.')
+            else:
+                messages.error(request, 'Este edital não está aberto para candidaturas.')
             return redirect('edital_detail', pk=edital.pk)
 
         if not hasattr(request.user, 'cadastro'):
@@ -381,6 +436,8 @@ class AplicacaoEditalListView(LoginRequiredMixin, ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['edital'] = self.edital
+        context['prova_liberada'] = self.edital.prova_liberada
+        context['entrevista_liberada'] = self.edital.entrevista_liberada
         context['status_choices'] = AplicacaoEdital.STATUS_CHOICES
         context['status_atual'] = self.request.GET.get('status', '')
         user = self.request.user
@@ -548,6 +605,10 @@ class SalvarAvaliacoesLoteView(ManagerOrExecuteRequiredMixin, TemplateView):
     def post(self, request, *args, **kwargs):
         edital_pk = request.POST.get('edital_pk')
         edital = get_object_or_404(EditalProvisorio, pk=edital_pk)
+        _sincronizar_fechamento(edital)
+
+        prova_liberada = edital.prova_liberada
+        entrevista_liberada = edital.entrevista_liberada
 
         aplicacoes = AplicacaoEdital.objects.filter(edital=edital).select_related(
             'bolsista', 'bolsista__user'
@@ -582,6 +643,9 @@ class SalvarAvaliacoesLoteView(ManagerOrExecuteRequiredMixin, TemplateView):
             data_entrevista = valores_anteriores['data_entrevista']
 
             if nota_prova_str:
+                if not prova_liberada:
+                    erros.append(f'{aplicacao.bolsista.user.nome_completo}: Nota da Prova só pode ser atribuída após a data da prova teórica.')
+                    continue
                 try:
                     nota_prova = Decimal(nota_prova_str)
                     if nota_prova < 0 or nota_prova > 10:
@@ -592,6 +656,9 @@ class SalvarAvaliacoesLoteView(ManagerOrExecuteRequiredMixin, TemplateView):
                     continue
 
             if nota_entrevista_str:
+                if not entrevista_liberada:
+                    erros.append(f'{aplicacao.bolsista.user.nome_completo}: Nota da Entrevista só pode ser atribuída após a data da entrevista.')
+                    continue
                 try:
                     nota_entrevista = Decimal(nota_entrevista_str)
                     if nota_entrevista < 0 or nota_entrevista > 10:
@@ -602,6 +669,9 @@ class SalvarAvaliacoesLoteView(ManagerOrExecuteRequiredMixin, TemplateView):
                     continue
 
             if data_entrevista_str:
+                if not entrevista_liberada:
+                    erros.append(f'{aplicacao.bolsista.user.nome_completo}: Data da Entrevista só pode ser atribuída após a data da entrevista.')
+                    continue
                 try:
                     data_entrevista = datetime.strptime(data_entrevista_str, '%Y-%m-%d').date()
                 except (ValueError, TypeError):
@@ -701,6 +771,16 @@ class EditarAvaliacaoView(ManagerOrExecuteRequiredMixin, View):
                 return HttpResponse(html, status=422)
 
             aplicacao = form.save(commit=False)
+
+            edital = aplicacao.edital
+            if aplicacao.nota != valores_anteriores['nota'] and not edital.prova_liberada:
+                messages.error(request, 'Nota da Prova só pode ser atribuída após a data da prova teórica.')
+                return redirect('edital_candidatos', edital_pk=edital.pk)
+            if (aplicacao.nota_entrevista != valores_anteriores['nota_entrevista']
+                    or aplicacao.data_entrevista != valores_anteriores['data_entrevista']):
+                if not edital.entrevista_liberada:
+                    messages.error(request, 'Nota e Data da Entrevista só podem ser atribuídas após a data da entrevista.')
+                    return redirect('edital_candidatos', edital_pk=edital.pk)
 
             # Candidato inapto na prova: bloqueia etapas seguintes
             if aplicacao.nota is not None and aplicacao.nota <= 6:

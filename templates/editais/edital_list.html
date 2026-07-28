@@ -33,7 +33,7 @@
                     </select>
                 </div>
                 <div class="col-md-1">
-                    <button type="submit" class="btn btn-outline-primary w-100">Filtrar</button>
+                    <button type="submit" class="btn btn-primary w-100">Filtrar</button>
                 </div>
             </form>
 
@@ -87,9 +87,11 @@
                                     <i class="bi bi-check-circle"></i>
                                 </a>
                                 {% endif %}
+                                {% if edital.status != 'encerrado' or is_superuser %}
                                 <a href="{% url 'edital_update' edital.pk %}" class="btn btn-sm btn-outline-warning" title="Editar">
                                     <i class="bi bi-pencil"></i>
                                 </a>
+                                {% endif %}
                                 {% endif %}
                                 {% if is_superuser %}
                                 <a href="{% url 'edital_delete' edital.pk %}" class="btn btn-sm btn-outline-danger" title="Excluir">
