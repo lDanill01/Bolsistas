@@ -15,6 +15,9 @@ Tree.md
 letsencrypt/
 acme.json
 
+# Celery
+celerybeat-schedule
+
 # Graphify (knowledge graph)
 graphify-out/
 
@@ -25,5 +28,3 @@ graphify-out/
 .DS_Store
 Thumbs.db
 logs.md
-PLANO_DESENVOLVIMENTO.md
-PRD.md
