@@ -54,14 +54,14 @@
 
                     {# Ações: resumo por IA e detalhes #}
                     <div class="d-flex flex-wrap gap-2 align-items-center mb-4">
-                        <button class="btn btn-sm btn-outline-success" title="Resumir com IA"
+                        <button class="btn btn-sm btn-success" title="Resumir com IA"
                                 hx-post="{% url 'painel_resumir_bolsista' bolsista.pk %}"
                                 hx-target="#resumo-ia-{{ bolsista.pk }}"
                                 hx-indicator="#resumo-ia-spinner-{{ bolsista.pk }}"
                                 hx-swap="innerHTML">
                             <i class="bi bi-magic"></i> Resumir com IA
                         </button>
-                        <a href="{% url 'painel_detalhe' bolsista.pk %}" class="btn btn-sm btn-outline-primary" title="Ver detalhes">
+                        <a href="{% url 'painel_detalhe' bolsista.pk %}" class="btn btn-sm btn-primary" title="Ver detalhes">
                             <i class="bi bi-eye-fill"></i> Ver detalhes
                         </a>
                     </div>

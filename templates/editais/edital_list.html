@@ -80,23 +80,23 @@
                             </td>
                             <td class="small">{{ edital.nome_proxima_etapa|default:'—' }}</td>
                             <td class="text-end">
-                                <a href="{% url 'edital_detail' edital.pk %}" class="btn btn-sm btn-outline-primary" title="Ver detalhes">
+                                <a href="{% url 'edital_detail' edital.pk %}" class="btn btn-sm btn-primary" title="Ver detalhes">
                                     <i class="bi bi-eye"></i>
                                 </a>
                                 {% if is_superuser or is_manager %}
                                 {% if edital.status == 'em_analise' %}
-                                <a href="{% url 'edital_validar' edital.pk %}" class="btn btn-sm btn-outline-success" title="Validar e abrir edital">
+                                <a href="{% url 'edital_validar' edital.pk %}" class="btn btn-sm btn-success" title="Validar e abrir edital">
                                     <i class="bi bi-check-circle"></i>
                                 </a>
                                 {% endif %}
                                 {% if edital.status != 'encerrado' or is_superuser %}
-                                <a href="{% url 'edital_update' edital.pk %}" class="btn btn-sm btn-outline-warning" title="Editar">
+                                <a href="{% url 'edital_update' edital.pk %}" class="btn btn-sm btn-warning" title="Editar">
                                     <i class="bi bi-pencil"></i>
                                 </a>
                                 {% endif %}
                                 {% endif %}
                                 {% if is_superuser %}
-                                <a href="{% url 'edital_delete' edital.pk %}" class="btn btn-sm btn-outline-danger" title="Excluir">
+                                <a href="{% url 'edital_delete' edital.pk %}" class="btn btn-sm btn-danger" title="Excluir">
                                     <i class="bi bi-trash"></i>
                                 </a>
                                 {% endif %}

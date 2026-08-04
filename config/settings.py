@@ -120,6 +120,7 @@ USE_TZ = True
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
 STATIC_ROOT = BASE_DIR / 'staticfiles'
+
 STORAGES = {
     'default': {
         'BACKEND': 'django.core.files.storage.FileSystemStorage',
@@ -131,6 +132,30 @@ STORAGES = {
 
 MEDIA_URL = 'media/'
 MEDIA_ROOT = BASE_DIR / 'media'
+
+# -----------------------------------------------------------------------------
+# Storage de arquivos (media) — Azure Blob Storage em producao.
+# Quando AZURE_ACCOUNT_NAME e AZURE_CONTAINER estao definidos, os arquivos
+# enviados (curriculo, foto, anexos, documentos, documento de resultado) sao
+# gravados em um container do Azure Blob. Caso contrario, usa o filesystem
+# local (desenvolvimento).
+# Credencial: se AZURE_CONNECTION_STRING ou AZURE_ACCOUNT_KEY forem fornecidos
+# (via _FILE/secret), sao usados. Caso contrario, usa DefaultAzureCredential
+# (managed identity do Container App) — recomendado. Nesse caso, conceda a role
+# "Storage Blob Data Contributor" a identity do app no storage account.
+# -----------------------------------------------------------------------------
+AZURE_ACCOUNT_NAME = env('AZURE_ACCOUNT_NAME', default='')
+AZURE_CONTAINER = env('AZURE_CONTAINER', default='')
+
+if AZURE_ACCOUNT_NAME and AZURE_CONTAINER:
+    STORAGES['default']['BACKEND'] = 'storages.backends.azure_storage.AzureStorage'
+    AZURE_URL_EXPIRATION_SECS = env.int('AZURE_URL_EXPIRATION_SECS', default=300)
+    _azure_connection_string = read_secret('AZURE_CONNECTION_STRING')
+    _azure_account_key = read_secret('AZURE_ACCOUNT_KEY')
+    if _azure_connection_string:
+        AZURE_CONNECTION_STRING = _azure_connection_string
+    elif _azure_account_key:
+        AZURE_ACCOUNT_KEY = _azure_account_key
 
 # Cache (Redis por padrao; locmem:// para dev local sem Docker)
 CACHES = {
@@ -168,19 +193,6 @@ CELERY_BEAT_SCHEDULE = {
         'schedule': crontab(hour=0, minute=5),
     },
 }
-
-# Config futura para S3 (descomentar quando migrar para producao)
-# INSTALLED_APPS += ['storages']
-# AWS_ACCESS_KEY_ID = read_secret('AWS_ACCESS_KEY_ID')
-# AWS_SECRET_ACCESS_KEY = read_secret('AWS_SECRET_ACCESS_KEY')
-# AWS_STORAGE_BUCKET_NAME = env('AWS_STORAGE_BUCKET_NAME')
-# AWS_S3_REGION_NAME = env('AWS_S3_REGION_NAME', default='us-east-1')
-# AWS_S3_FILE_OVERWRITE = False
-# AWS_DEFAULT_ACL = 'private'
-# STORAGES = {
-#     'default': {'BACKEND': 'storages.backends.s3boto3.S3Boto3Storage'},
-#     'staticfiles': {'BACKEND': 'django.contrib.staticfiles.storage.StaticFilesStorage'},
-# }
 
 AUTH_USER_MODEL = 'accounts.User'
 

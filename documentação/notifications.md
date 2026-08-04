@@ -14,17 +14,11 @@ Notificação para um usuário:
 
 ## Signals
 
-Os sinais são registrados em `notifications/apps.py:ready()` e criam notificações automaticamente:
-
-### `notificar_cadastro`
-Disparado no `post_save` de `CadastroBolsista`. Quando um novo cadastro é criado, notifica o bolsista.
-
-### `notificar_classificacao`
-Disparado no `post_save` de `Classificacao`. Quando uma classificação com pontuação > 0 é salva, notifica o bolsista com o nome do edital e a pontuação total.
+Os sinais são registrados em `notifications/apps.py:ready()` e criam notificações automaticamente. As notificações são geradas **somente** quando há solicitação de alteração de dados de usuários (`SolicitacaoEdicao`). Não são geradas notificações para cadastro, avaliação ou análises de IA.
 
 ### `notificar_solicitacao`
 Disparado no `post_save` de `SolicitacaoEdicao`:
-- **Status pendente**: Notifica todos os gestores (ADMIN/MANAGER)
+- **Status pendente**: Notifica todos os gestores (grupo Manager)
 - **Status aprovado**: Notifica o bolsista que a solicitação foi aprovada
 - **Status rejeitado**: Notifica o bolsista que a solicitação foi rejeitada
 

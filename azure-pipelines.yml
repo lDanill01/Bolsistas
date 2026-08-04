@@ -24,18 +24,23 @@
 #   CSRF_TRUSTED_ORIGINS (https://...), DB_NAME, DB_HOST, DB_PORT, DB_USER,
 #   CACHE_URL, CELERY_RESULT_BACKEND, RABBITMQ_USER, RABBITMQ_HOST, RABBITMQ_VHOST,
 #   IA_PROVIDER, GROQ_MODEL, EMAIL_BACKEND, EMAIL_HOST, EMAIL_PORT,
-#   EMAIL_USE_TLS, DEFAULT_FROM_EMAIL, EMAIL_SUBJECT_PREFIX
+#   EMAIL_USE_TLS, DEFAULT_FROM_EMAIL, EMAIL_SUBJECT_PREFIX,
+#   AZURE_ACCOUNT_NAME (conta do Blob Storage), AZURE_CONTAINER (container dos arquivos),
+#   AZURE_URL_EXPIRATION_SECS (padrao 300)
 #
 # Variable group "Bolsas-Prod" (SECRETAS):
-#   SECRET_KEY, DB_PASSWORD, GROQ_API_KEY, RABBITMQ_PASSWORD, EMAIL_HOST_PASSWORD
+#   SECRET_KEY, DB_PASSWORD, GROQ_API_KEY, RABBITMQ_PASSWORD, EMAIL_HOST_PASSWORD,
+#   AZURE_CONNECTION_STRING (ou AZURE_ACCOUNT_KEY) — opcionais: se ausentes, o
+#   Storage usa DefaultAzureCredential (managed identity do Container App com a
+#   role "Storage Blob Data Contributor" no storage account).
 #
 # Observações:
-#   - As migrações e o collectstatic rodam no entrypoint da imagem
-#     (docker/entrypoint.sh) a cada start do container (comportamento herdado
-#     do Docker Swarm). Para um banco já existente, o primeiro start de cada
-#     revisão aplica as migrações.
-#   - Arquivos de media são efêmeros no Container App. Para persistência,
-#     monte um Azure Files share no caminho /app/media.
+#   - As migrações rodam em um Container Apps Job dedicado (bolsas-migrate)
+#     antes do deploy das réplicas, evitando corridas entre réplicas.
+#     O entrypoint da imagem ainda roda migrate/collectstatic no start (fallback).
+#   - Arquivos de media são persistidos em Azure Blob Storage (django-storages)
+#     quando AZURE_ACCOUNT_NAME + AZURE_CONTAINER estão configurados; senão,
+#     usa o filesystem local (efêmero no Container App).
 #   - O domínio padrão *.azurecontainerapps.io já tem HTTPS automático.
 #     Domínio customizado exige certificado gerenciado (fora do escopo).
 # ---------------------------------------------------------------------------
@@ -170,6 +175,13 @@ stages:
                         "EMAIL_SUBJECT_PREFIX=${EMAIL_SUBJECT_PREFIX}"
                       )
 
+                      # Azure Blob Storage (media) — só injeta se configurado no variable group
+                      for azure_var in AZURE_ACCOUNT_NAME AZURE_CONTAINER AZURE_URL_EXPIRATION_SECS; do
+                        if [ -n "${!azure_var:-}" ]; then
+                          COMMON_ENVS+=("${azure_var}=${!azure_var}")
+                        fi
+                      done
+
                       # ---------- segredos (Docker Secret do ACA) ----------
                       # Valores sensiveis vêm do variable group e são gravados
                       # como secrets do Container App.
@@ -189,6 +201,16 @@ stages:
                         "RABBITMQ_PASSWORD=secretref:RABBITMQ_PASSWORD"
                         "EMAIL_HOST_PASSWORD=secretref:EMAIL_HOST_PASSWORD"
                       )
+
+                      # Azure Blob: credencial via connection string ou account key
+                      # (opcional — sem ela, o app usa DefaultAzureCredential/managed identity)
+                      if [ -n "${AZURE_CONNECTION_STRING:-}" ]; then
+                        COMMON_SECRETS+=("AZURE_CONNECTION_STRING=${AZURE_CONNECTION_STRING}")
+                        SECRET_ENVS+=("AZURE_CONNECTION_STRING=secretref:AZURE_CONNECTION_STRING")
+                      elif [ -n "${AZURE_ACCOUNT_KEY:-}" ]; then
+                        COMMON_SECRETS+=("AZURE_ACCOUNT_KEY=${AZURE_ACCOUNT_KEY}")
+                        SECRET_ENVS+=("AZURE_ACCOUNT_KEY=secretref:AZURE_ACCOUNT_KEY")
+                      fi
 
                       deploy_app() {
                         local name="$1"
@@ -236,6 +258,51 @@ stages:
                             --scope "$ACR_ID" -o none 2>/dev/null || true
                         fi
                       }
+
+                      # Job de migração (Container Apps Job Manual) — evita corrida
+                      # entre réplicas aplicando migrate antes do deploy das apps.
+                      MIGRATION_JOB="bolsas-migrate"
+
+                      deploy_migration_job() {
+                        echo ">>> Deploy job de migracao: ${MIGRATION_JOB}"
+                        if az containerapp job show --name "$MIGRATION_JOB" \
+                          --resource-group "$RESOURCE_GROUP" -o none 2>/dev/null; then
+                          az containerapp job update --name "$MIGRATION_JOB" \
+                            --resource-group "$RESOURCE_GROUP" \
+                            --image "$IMAGE"
+                        else
+                          az containerapp job create --name "$MIGRATION_JOB" \
+                            --resource-group "$RESOURCE_GROUP" \
+                            --environment "$CONTAINER_APP_ENV" \
+                            --image "$IMAGE" \
+                            --trigger-type Manual \
+                            --replica-timeout 600 \
+                            --replica-retry-limit 0 \
+                            --replica-completion-count 1 \
+                            --parallelism 1 \
+                            --system-assigned \
+                            --registry-server "$ACR_REGISTRY" \
+                            --env-vars "${COMMON_ENVS[@]}" "${SECRET_ENVS[@]}" \
+                            --secrets "${COMMON_SECRETS[@]}" \
+                            --command "/bin/sh" \
+                            --args "-c" "python manage.py migrate --noinput"
+                        fi
+
+                        local principal_id
+                        principal_id="$(az containerapp job show --name "$MIGRATION_JOB" \
+                          --resource-group "$RESOURCE_GROUP" \
+                          --query identity.principalId -o tsv 2>/dev/null || true)"
+                        if [ -n "$principal_id" ] && [ -n "$ACR_ID" ]; then
+                          az role assignment create --assignee "$principal_id" \
+                            --role AcrPull --scope "$ACR_ID" -o none 2>/dev/null || true
+                        fi
+                      }
+
+                      # Roda o job de migracao e aguarda concluir
+                      deploy_migration_job
+                      echo ">>> Rodando migracoes (${MIGRATION_JOB})..."
+                      az containerapp job start --name "$MIGRATION_JOB" \
+                        --resource-group "$RESOURCE_GROUP" --wait
 
                       # web: entrypoint padrão da imagem (migrate + collectstatic + gunicorn :8000)
                       deploy_app "bolsas-web" "external" "8000" "2" "" ""

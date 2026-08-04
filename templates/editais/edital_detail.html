@@ -26,13 +26,13 @@
             </a>
             {% endif %}
             {% if edital.status != 'encerrado' or is_superuser %}
-            <a href="{% url 'edital_update' edital.pk %}" class="btn btn-warning">
+            <a href="{% url 'edital_update' edital.pk %}" class="btn btn-secondary">
                 <i class="bi bi-pencil-square me-1"></i>Editar
             </a>
             {% endif %}
             {% endif %}
             {% if is_superuser %}
-            <a href="{% url 'edital_delete' edital.pk %}" class="btn btn-outline-danger">
+            <a href="{% url 'edital_delete' edital.pk %}" class="btn btn-danger">
                 <i class="bi bi-trash me-1"></i>Excluir
             </a>
             {% endif %}
