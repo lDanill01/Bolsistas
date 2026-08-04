@@ -245,6 +245,16 @@ class EditalProvisorio(DataModel):
         return ev.data_evento if ev else None
 
     @property
+    def data_prova_teorica(self):
+        ev = self.cronograma.filter(evento='prova_teorica').order_by('data_evento').first()
+        return ev.data_evento if ev else None
+
+    @property
+    def data_entrevista_prevista(self):
+        ev = self.cronograma.filter(evento='entrevista').order_by('data_evento').first()
+        return ev.data_evento if ev else None
+
+    @property
     def periodo_submissao_ativo(self):
         inicio = self.data_inicio_submissao
         fim = self.data_limite_submissao
@@ -259,6 +269,14 @@ class EditalProvisorio(DataModel):
         if not fim:
             return False
         return self.status == 'aberto' and timezone.now().date() > fim
+
+    @property
+    def processo_concluido(self):
+        """True quando a última etapa do cronograma já passou (processo finalizado)."""
+        ultimo = self.cronograma.order_by('-data_evento').first()
+        if not ultimo or not ultimo.data_evento:
+            return False
+        return timezone.now().date() > ultimo.data_evento
 
     def _etapa_liberada(self, evento_codigo):
         ev = self.cronograma.filter(evento=evento_codigo).order_by('data_evento').first()
@@ -339,6 +357,9 @@ class AplicacaoEdital(DataModel):
     nota_entrevista = models.DecimalField('Nota da Entrevista', max_digits=5, decimal_places=2, blank=True, null=True)
     data_entrevista = models.DateField('Data da Entrevista', null=True, blank=True)
     data_aplicacao = models.DateTimeField('Data de aplicação', auto_now_add=True)
+    documento_resultado = models.FileField(
+        'Documento do Resultado', upload_to='avaliacoes/', blank=True, null=True
+    )
 
     @property
     def status_prova(self):

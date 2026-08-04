@@ -141,6 +141,11 @@ class CronogramaTests(TestCase):
             criado_por=self.user,
         )
 
+    def _abrir_edital(self):
+        """Abre o edital sem disparar calcular_cronograma() (via QuerySet.update)."""
+        EditalProvisorio.objects.filter(pk=self.edital.pk).update(status='aberto')
+        self.edital.refresh_from_db()
+
     def test_data_final_outorga(self):
         hoje = timezone.now().date()
         data_outorga = hoje + timedelta(days=60)
@@ -175,6 +180,7 @@ class CronogramaTests(TestCase):
             data_evento=hoje + timedelta(days=15),
             ordem=2,
         )
+        self._abrir_edital()
         prox = self.edital.proxima_etapa
         self.assertIsNotNone(prox)
         self.assertEqual(prox.evento, 'inicio_submissao')
@@ -193,6 +199,7 @@ class CronogramaTests(TestCase):
             data_evento=hoje + timedelta(days=15),
             ordem=2,
         )
+        self._abrir_edital()
         prox = self.edital.proxima_etapa
         self.assertIsNotNone(prox)
         self.assertEqual(prox.evento, 'entrevista')
@@ -209,9 +216,106 @@ class CronogramaTests(TestCase):
             data_evento=data_evento,
             ordem=1,
         )
+        self._abrir_edital()
         dias = self.edital.dias_para_proxima_etapa
         self.assertIsNotNone(dias)
         self.assertGreaterEqual(dias, 0)
+
+    def test_prazo_submissao_expirado(self):
+        hoje = timezone.now().date()
+        CronogramaEvento.objects.create(
+            edital=self.edital,
+            evento='inicio_submissao',
+            data_evento=hoje - timedelta(days=30),
+            ordem=1,
+        )
+        CronogramaEvento.objects.create(
+            edital=self.edital,
+            evento='limite_submissao',
+            data_evento=hoje - timedelta(days=1),
+            ordem=2,
+        )
+        self._abrir_edital()
+        self.assertTrue(self.edital.prazo_submissao_expirado)
+
+    def test_processo_em_andamento_apos_fim_submissao(self):
+        hoje = timezone.now().date()
+        CronogramaEvento.objects.create(
+            edital=self.edital,
+            evento='limite_submissao',
+            data_evento=hoje - timedelta(days=1),
+            ordem=1,
+        )
+        CronogramaEvento.objects.create(
+            edital=self.edital,
+            evento='resultado_final',
+            data_evento=hoje + timedelta(days=30),
+            ordem=2,
+        )
+        self._abrir_edital()
+        self.assertTrue(self.edital.prazo_submissao_expirado)
+        self.assertFalse(self.edital.processo_concluido)
+        self.assertEqual(self.edital.nome_proxima_etapa, 'Divulgação do Resultado Final')
+
+    def test_processo_concluido_apos_ultima_etapa(self):
+        hoje = timezone.now().date()
+        CronogramaEvento.objects.create(
+            edital=self.edital,
+            evento='limite_submissao',
+            data_evento=hoje - timedelta(days=30),
+            ordem=1,
+        )
+        CronogramaEvento.objects.create(
+            edital=self.edital,
+            evento='resultado_final',
+            data_evento=hoje - timedelta(days=1),
+            ordem=2,
+        )
+        self._abrir_edital()
+        self.assertTrue(self.edital.processo_concluido)
+
+    def test_fechar_editais_nao_fecha_processo_em_andamento(self):
+        from .tasks import fechar_editais_vencidos
+        hoje = timezone.now().date()
+        CronogramaEvento.objects.create(
+            edital=self.edital,
+            evento='limite_submissao',
+            data_evento=hoje - timedelta(days=1),
+            ordem=1,
+        )
+        CronogramaEvento.objects.create(
+            edital=self.edital,
+            evento='entrevista',
+            data_evento=hoje + timedelta(days=15),
+            ordem=2,
+        )
+        self._abrir_edital()
+        fechados = fechar_editais_vencidos()
+        self.edital.refresh_from_db()
+        self.assertEqual(fechados, 0)
+        self.assertEqual(self.edital.status, 'aberto')
+        self.assertEqual(self.edital.nome_proxima_etapa, 'Entrevista')
+
+    def test_fechar_editais_fecha_processo_concluido(self):
+        from .tasks import fechar_editais_vencidos
+        hoje = timezone.now().date()
+        CronogramaEvento.objects.create(
+            edital=self.edital,
+            evento='limite_submissao',
+            data_evento=hoje - timedelta(days=30),
+            ordem=1,
+        )
+        CronogramaEvento.objects.create(
+            edital=self.edital,
+            evento='resultado_final',
+            data_evento=hoje - timedelta(days=1),
+            ordem=2,
+        )
+        self._abrir_edital()
+        fechados = fechar_editais_vencidos()
+        self.edital.refresh_from_db()
+        self.assertEqual(fechados, 1)
+        self.assertEqual(self.edital.status, 'encerrado')
 
     def test_total_inscritos(self):
         self.assertEqual(self.edital.total_inscritos, 0)

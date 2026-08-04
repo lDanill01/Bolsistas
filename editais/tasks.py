@@ -62,12 +62,10 @@ def analisar_edital_task(self, edital_id, user_id):
 
 @shared_task
 def fechar_editais_vencidos():
-    """Fecha automaticamente editais abertos cujo prazo de submissao expirou."""
-    from django.utils import timezone
-    hoje = timezone.now().date()
+    """Fecha automaticamente editais abertos cuja última etapa do cronograma já passou."""
     fechados = 0
     for edital in EditalProvisorio.objects.filter(status='aberto').prefetch_related('cronograma'):
-        if edital.prazo_submissao_expirado:
+        if edital.processo_concluido:
             edital.status = 'encerrado'
             edital.save(update_fields=['status'])
             fechados += 1

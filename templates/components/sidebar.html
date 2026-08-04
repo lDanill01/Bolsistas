@@ -12,7 +12,7 @@
 
         {% if is_view_user %}
         <div class="sidebar-section">Candidato</div>
-        <a href="{% if has_cadastro %}{% url 'cadastro_detail' %}{% else %}{% url 'cadastro_create' %}{% endif %}" class="sidebar-link">
+        <a href="{% if has_cadastro %}{% url 'cadastro_detail' %}{% else %}{% url 'cadastro_create' %}{% endif %}" class="sidebar-link {% if request.resolver_match.url_name == 'cadastro_detail' or request.resolver_match.url_name == 'cadastro_create' %}active{% endif %}">
             <i class="bi bi-person-lines-fill"></i> Meu Cadastro
         </a>
         {% if has_cadastro %}
@@ -23,7 +23,7 @@
         {% endif %}
 
         <div class="sidebar-section">Bolsas</div>
-        <a href="{% url 'edital_list' %}" class="sidebar-link">
+        <a href="{% url 'edital_list' %}" class="sidebar-link {% if request.resolver_match.url_name == 'edital_list' %}active{% endif %}">
             <i class="bi bi-journal-text"></i> Editais
         </a>
         <a href="{% url 'resultados' %}" class="sidebar-link {% if request.resolver_match.url_name == 'resultados' %}active{% endif %}">
@@ -32,8 +32,8 @@
 
         {% if is_superuser or is_manager or is_execute_user %}
         <div class="sidebar-section">Gestão</div>
-        <a href="{% url 'painel_lista' %}" class="sidebar-link">
-            <i class="bi bi-people-fill"></i> Lista de Bolsistas
+        <a href="{% url 'avaliacao' %}" class="sidebar-link {% if request.resolver_match.url_name == 'avaliacao' %}active{% endif %}">
+            <i class="bi bi-clipboard2-check"></i> Avaliação
         </a>
         <a href="{% url 'painel_trilha' %}" class="sidebar-link {% if request.resolver_match.url_name == 'painel_trilha' %}active{% endif %}">
             <i class="bi bi-signpost-2"></i> Trilha do Bolsista
@@ -41,7 +41,7 @@
         {% endif %}
 
         {% if is_superuser or is_manager %}
-        <a href="{% url 'solicitacao_list' %}" class="sidebar-link">
+        <a href="{% url 'solicitacao_list' %}" class="sidebar-link {% if request.resolver_match.url_name == 'solicitacao_list' %}active{% endif %}">
             <i class="bi bi-list-check"></i> Solicitações
         </a>
         {% endif %}

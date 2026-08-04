@@ -1,0 +1,251 @@
+# ---------------------------------------------------------------------------
+# Pipeline Azure DevOps - Deploy em Azure Container Apps
+# ---------------------------------------------------------------------------
+# Stages:
+#   CI  -> Testes Django + Docker build & push para ACR
+#   CD  -> Deploy de 3 Container Apps (web, celery, celery-beat)
+#
+# Pré-requisitos no Azure DevOps:
+#   1. Repositório conectado a esta pipeline.
+#   2. Service connections:
+#        - $(AZURE_SERVICE_CONNECTION): Azure RM (Contributor no resource group)
+#        - $(ACR_DOCKER_CONNECTION):    Docker Registry apontando para o ACR
+#   3. Variable group "Bolsas-Prod" com as variáveis listadas abaixo.
+#   4. Recursos Azure já criados:
+#        - Resource group
+#        - Azure Container Registry (ACR)
+#        - Container Apps Environment
+#
+# Variable group "Bolsas-Prod" (não-secretas):
+#   AZURE_SERVICE_CONNECTION, ACR_DOCKER_CONNECTION,
+#   ACR_REGISTRY (ex.: bolsasacr.azurecr.io), ACR_REGISTRY_NAME (ex.: bolsasacr),
+#   RESOURCE_GROUP, CONTAINER_APP_ENV,
+#   ALLOWED_HOSTS (ex.: bolsas.example.com,bolsas.xxx.azurecontainerapps.io),
+#   CSRF_TRUSTED_ORIGINS (https://...), DB_NAME, DB_HOST, DB_PORT, DB_USER,
+#   CACHE_URL, CELERY_RESULT_BACKEND, RABBITMQ_USER, RABBITMQ_HOST, RABBITMQ_VHOST,
+#   IA_PROVIDER, GROQ_MODEL, EMAIL_BACKEND, EMAIL_HOST, EMAIL_PORT,
+#   EMAIL_USE_TLS, DEFAULT_FROM_EMAIL, EMAIL_SUBJECT_PREFIX
+#
+# Variable group "Bolsas-Prod" (SECRETAS):
+#   SECRET_KEY, DB_PASSWORD, GROQ_API_KEY, RABBITMQ_PASSWORD, EMAIL_HOST_PASSWORD
+#
+# Observações:
+#   - As migrações e o collectstatic rodam no entrypoint da imagem
+#     (docker/entrypoint.sh) a cada start do container (comportamento herdado
+#     do Docker Swarm). Para um banco já existente, o primeiro start de cada
+#     revisão aplica as migrações.
+#   - Arquivos de media são efêmeros no Container App. Para persistência,
+#     monte um Azure Files share no caminho /app/media.
+#   - O domínio padrão *.azurecontainerapps.io já tem HTTPS automático.
+#     Domínio customizado exige certificado gerenciado (fora do escopo).
+# ---------------------------------------------------------------------------
+
+trigger:
+  branches:
+    include:
+      - main
+  paths:
+    exclude:
+      - '*.md'
+      - 'docs/**'
+
+pr:
+  branches:
+    include:
+      - main
+
+variables:
+  - group: Bolsas-Prod
+  - name: imageRepository
+    value: bolsas
+  - name: imageTag
+    value: $(Build.BuildId)
+
+stages:
+  # ---------------------------------------------------------------------
+  # CI: testes + build/push da imagem
+  # ---------------------------------------------------------------------
+  - stage: CI
+    displayName: Build e push da imagem
+    jobs:
+      - job: Test
+        displayName: Testes Django
+        pool:
+          vmImage: ubuntu-latest
+        steps:
+          - checkout: self
+
+          - task: UsePythonVersion@0
+            inputs:
+              versionSpec: '3.12'
+              addToPath: true
+
+          - script: |
+              python -m pip install --upgrade pip
+              pip install -r requirements.txt
+            displayName: Instalar dependências
+
+          - script: python manage.py test
+            displayName: Rodar testes
+            env:
+              SECRET_KEY: ci-secret-key-nao-para-producao
+
+      - job: Build
+        displayName: Docker build e push (ACR)
+        dependsOn: Test
+        pool:
+          vmImage: ubuntu-latest
+        steps:
+          - checkout: self
+
+          - task: Docker@2
+            displayName: Build e push $(imageRepository):$(imageTag)
+            inputs:
+              containerRegistry: $(ACR_DOCKER_CONNECTION)
+              repository: $(imageRepository)
+              command: buildAndPush
+              Dockerfile: Dockerfile
+              tags: |
+                $(imageTag)
+                latest
+
+  # ---------------------------------------------------------------------
+  # CD: deploy nos Azure Container Apps
+  # ---------------------------------------------------------------------
+  - stage: CD
+    displayName: Deploy Azure Container Apps
+    dependsOn: CI
+    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
+    variables:
+      - group: Bolsas-Prod
+    jobs:
+      - deployment: Deploy
+        displayName: Deploy ACA
+        environment: bolsas-prod
+        pool:
+          vmImage: ubuntu-latest
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - task: AzureCLI@2
+                  displayName: Deploy web / celery / celery-beat
+                  inputs:
+                    azureSubscription: $(AZURE_SERVICE_CONNECTION)
+                    scriptType: bash
+                    scriptLocation: inlineScript
+                    inlineScript: |
+                      set -euo pipefail
+
+                      IMAGE="${ACR_REGISTRY}/${imageRepository}:$(imageTag)"
+                      echo ">>> Imagem: ${IMAGE}"
+
+                      ACR_ID="$(az acr show --name "${ACR_REGISTRY_NAME}" \
+                        --resource-group "${RESOURCE_GROUP}" \
+                        --query id -o tsv || true)"
+
+                      # ---------- envs não-secretas comuns ----------
+                      COMMON_ENVS=(
+                        "DEBUG=False"
+                        "ALLOWED_HOSTS=${ALLOWED_HOSTS}"
+                        "CSRF_TRUSTED_ORIGINS=${CSRF_TRUSTED_ORIGINS}"
+                        "DB_ENGINE=django.db.backends.postgresql"
+                        "DB_NAME=${DB_NAME}"
+                        "DB_HOST=${DB_HOST}"
+                        "DB_PORT=${DB_PORT}"
+                        "DB_USER=${DB_USER}"
+                        "CACHE_URL=${CACHE_URL}"
+                        "CELERY_RESULT_BACKEND=${CELERY_RESULT_BACKEND}"
+                        "RABBITMQ_USER=${RABBITMQ_USER}"
+                        "RABBITMQ_HOST=${RABBITMQ_HOST}"
+                        "RABBITMQ_VHOST=${RABBITMQ_VHOST}"
+                        "IA_PROVIDER=${IA_PROVIDER}"
+                        "GROQ_MODEL=${GROQ_MODEL}"
+                        "IA_ASYNC=True"
+                        "EMAIL_BACKEND=${EMAIL_BACKEND}"
+                        "EMAIL_HOST=${EMAIL_HOST}"
+                        "EMAIL_PORT=${EMAIL_PORT}"
+                        "EMAIL_USE_TLS=${EMAIL_USE_TLS}"
+                        "DEFAULT_FROM_EMAIL=${DEFAULT_FROM_EMAIL}"
+                        "EMAIL_SUBJECT_PREFIX=${EMAIL_SUBJECT_PREFIX}"
+                      )
+
+                      # ---------- segredos (Docker Secret do ACA) ----------
+                      # Valores sensiveis vêm do variable group e são gravados
+                      # como secrets do Container App.
+                      COMMON_SECRETS=(
+                        "SECRET_KEY=${SECRET_KEY}"
+                        "DB_PASSWORD=${DB_PASSWORD}"
+                        "GROQ_API_KEY=${GROQ_API_KEY}"
+                        "RABBITMQ_PASSWORD=${RABBITMQ_PASSWORD}"
+                        "EMAIL_HOST_PASSWORD=${EMAIL_HOST_PASSWORD}"
+                      )
+
+                      # envs que referenciam os secrets acima
+                      SECRET_ENVS=(
+                        "SECRET_KEY=secretref:SECRET_KEY"
+                        "DB_PASSWORD=secretref:DB_PASSWORD"
+                        "GROQ_API_KEY=secretref:GROQ_API_KEY"
+                        "RABBITMQ_PASSWORD=secretref:RABBITMQ_PASSWORD"
+                        "EMAIL_HOST_PASSWORD=secretref:EMAIL_HOST_PASSWORD"
+                      )
+
+                      deploy_app() {
+                        local name="$1"
+                        local ingress="$2"
+                        local target_port="$3"
+                        local replicas="$4"
+                        local start_command="$5"   # vazio = entrypoint da imagem
+                        local start_args="$6"
+
+                        echo ">>> Deploy ${name} (replicas max: ${replicas})"
+
+                        if az containerapp show --name "$name" \
+                          --resource-group "$RESOURCE_GROUP" -o none 2>/dev/null; then
+                          az containerapp update --name "$name" \
+                            --resource-group "$RESOURCE_GROUP" \
+                            --image "$IMAGE" \
+                            --min-replicas 0 --max-replicas "$replicas" \
+                            --env-vars "${COMMON_ENVS[@]}" "${SECRET_ENVS[@]}" \
+                            --secrets "${COMMON_SECRETS[@]}"
+                        else
+                          az containerapp create --name "$name" \
+                            --resource-group "$RESOURCE_GROUP" \
+                            --environment "$CONTAINER_APP_ENV" \
+                            --image "$IMAGE" \
+                            --min-replicas 0 --max-replicas "$replicas" \
+                            --ingress "$ingress" \
+                            --target-port "$target_port" \
+                            --system-assigned \
+                            --registry-server "$ACR_REGISTRY" \
+                            --env-vars "${COMMON_ENVS[@]}" "${SECRET_ENVS[@]}" \
+                            --secrets "${COMMON_SECRETS[@]}" \
+                            ${start_command:+--command "$start_command"} \
+                            ${start_args:+--args "$start_args"}
+                        fi
+
+                        # Concede AcrPull ao identity do app para puxar a imagem
+                        local principal_id
+                        principal_id="$(az containerapp show --name "$name" \
+                          --resource-group "$RESOURCE_GROUP" \
+                          --query identity.principalId -o tsv 2>/dev/null || true)"
+                        if [ -n "$principal_id" ] && [ -n "$ACR_ID" ]; then
+                          az role assignment create \
+                            --assignee "$principal_id" \
+                            --role AcrPull \
+                            --scope "$ACR_ID" -o none 2>/dev/null || true
+                        fi
+                      }
+
+                      # web: entrypoint padrão da imagem (migrate + collectstatic + gunicorn :8000)
+                      deploy_app "bolsas-web" "external" "8000" "2" "" ""
+
+                      # celery worker: migra e roda o worker
+                      deploy_app "bolsas-celery" "disabled" "8000" "2" \
+                        "./docker/entrypoint-celery.sh" "celery -A config worker -l info"
+
+                      # celery-beat: migra e roda o agendador
+                      deploy_app "bolsas-beat" "disabled" "8000" "1" \
+                        "./docker/entrypoint-celery.sh" "celery -A config beat -l info"
+
+                      echo ">>> Deploy concluido."

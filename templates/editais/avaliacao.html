@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+{% block title %}Avaliação - Bolsas SENAI - MS{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-3">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold text-primary mb-0">
+            <i class="bi bi-clipboard2-check me-2"></i>Avaliação
+        </h2>
+    </div>
+
+    <form method="get" class="row g-2 mb-3">
+        <div class="col-md-5">
+            <label for="filtro-edital" class="form-label small fw-semibold mb-1">Edital</label>
+            <select name="edital" id="filtro-edital" class="form-select" onchange="this.form.submit()">
+                <option value="">Selecione um edital...</option>
+                {% for e in editais %}
+                <option value="{{ e.pk }}" {% if edital_atual == e.pk|stringformat:'s' %}selected{% endif %}>
+                    Nº {{ e.numero_serie }} — {{ e.nome_instituto }} ({{ e.get_status_display }}) — {{ e.num_inscritos }} inscrito{{ e.num_inscritos|pluralize }}
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+        {% if edital %}
+        <div class="col-md-3">
+            <label for="filtro-status" class="form-label small fw-semibold mb-1">Status da candidatura</label>
+            <select name="status" id="filtro-status" class="form-select" onchange="this.form.submit()">
+                <option value="">Todos os status</option>
+                {% for key, label in status_choices %}
+                <option value="{{ key }}" {% if status_atual == key %}selected{% endif %}>{{ label }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-2 d-flex align-items-end">
+            <a href="{% url 'avaliacao' %}" class="btn btn-primary w-50">
+                <i class="bi bi-x-circle me-1"></i>Limpar
+            </a>
+        </div>
+        {% endif %}
+    </form>
+
+    {% if edital %}
+    <div class="d-flex flex-wrap gap-2 align-items-center mb-3">
+        <span class="badge bg-dark">Edital Nº {{ edital.numero_serie }}</span>
+        <span class="badge bg-info text-dark">{{ total_candidatos }} candidato{{ total_candidatos|pluralize }}</span>
+    </div>
+
+    <div class="alert alert-light border d-flex flex-wrap gap-4 align-items-center mb-3" role="alert">
+        <div>
+            <span class="text-muted small d-block">Prova teórica</span>
+            <strong>{{ data_prova_teorica|date:'d/m/Y'|default:'—' }}</strong>
+            {% if prova_liberada %}
+            <span class="badge bg-success ms-1">Liberada</span>
+            {% else %}
+            <span class="badge bg-warning text-dark ms-1">Aguardando</span>
+            {% endif %}
+        </div>
+        <div>
+            <span class="text-muted small d-block">Entrevista</span>
+            <strong>{{ data_entrevista|date:'d/m/Y'|default:'—' }}</strong>
+            {% if entrevista_liberada %}
+            <span class="badge bg-success ms-1">Liberada</span>
+            {% else %}
+            <span class="badge bg-warning text-dark ms-1">Aguardando</span>
+            {% endif %}
+        </div>
+    </div>
+
+    {% include 'editais/partials/tabela_avaliacao.html' %}
+
+    {% else %}
+    <div class="card p-5 text-center">
+        <i class="bi bi-clipboard2-check fs-1 text-muted mb-3"></i>
+        <p class="text-muted mb-0">Selecione um edital acima para avaliar os candidatos.</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

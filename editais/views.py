@@ -8,6 +8,8 @@ from django.template.loader import render_to_string
 from django.views.decorators.http import require_POST
 from django.core.cache import cache
 from django.db.models import Count, Q, Prefetch
+from django.core.paginator import Paginator
+from django.utils.http import url_has_allowed_host_and_scheme
 from celery.result import AsyncResult
 import csv
 import json
@@ -28,8 +30,8 @@ from .ai_service import _score_heuristico
 
 
 def _sincronizar_fechamento(edital):
-    """Fecha o edital se o prazo de submissao expirou (fallback defensivo)."""
-    if edital.prazo_submissao_expirado:
+    """Fecha o edital se a última etapa do cronograma já passou (fallback defensivo)."""
+    if edital.processo_concluido:
         edital.status = 'encerrado'
         edital.save(update_fields=['status'])
         return True
@@ -440,10 +442,67 @@ class AplicacaoEditalListView(LoginRequiredMixin, ListView):
         context['entrevista_liberada'] = self.edital.entrevista_liberada
         context['status_choices'] = AplicacaoEdital.STATUS_CHOICES
         context['status_atual'] = self.request.GET.get('status', '')
+        context['success_url'] = reverse('edital_candidatos', kwargs={'edital_pk': self.edital.pk})
         user = self.request.user
         context['is_manager'] = user.is_superuser or user.groups.filter(
             name__in=[GROUP_MANAGER, GROUP_EXECUTE_USER]
         ).exists()
+        return context
+
+
+class AvaliacaoListView(ManagerOrExecuteRequiredMixin, ContextMixin, TemplateView):
+    template_name = 'editais/avaliacao.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        user = self.request.user
+        context['is_superuser'] = user.is_superuser
+        context['is_manager'] = user.is_superuser or user.groups.filter(
+            name__in=[GROUP_MANAGER, GROUP_EXECUTE_USER]
+        ).exists()
+        context['is_execute_user'] = user.groups.filter(name=GROUP_EXECUTE_USER).exists()
+
+        context['editais'] = EditalProvisorio.objects.all().annotate(
+            num_inscritos=Count('aplicacoes')
+        ).order_by('-created_at')
+
+        edital_pk = self.request.GET.get('edital', '')
+        context['edital_atual'] = edital_pk
+        edital = None
+        if edital_pk:
+            edital = EditalProvisorio.objects.filter(
+                pk=edital_pk
+            ).prefetch_related('cronograma').first()
+        context['edital'] = edital
+
+        if edital:
+            status = self.request.GET.get('status', '')
+            aplicacoes = edital.aplicacoes.select_related(
+                'bolsista', 'bolsista__user'
+            ).order_by('-data_aplicacao')
+            if status:
+                aplicacoes = aplicacoes.filter(status=status)
+
+            paginator = Paginator(aplicacoes, 20)
+            page_obj = paginator.get_page(self.request.GET.get('page'))
+
+            context['aplicacoes'] = page_obj.object_list
+            context['page_obj'] = page_obj
+            context['is_paginated'] = page_obj.paginator.num_pages > 1
+            context['total_candidatos'] = paginator.count
+            context['prova_liberada'] = edital.prova_liberada
+            context['entrevista_liberada'] = edital.entrevista_liberada
+            context['resultado_liberado'] = edital.resultado_liberado
+            context['data_prova_teorica'] = edital.data_prova_teorica
+            context['data_entrevista'] = edital.data_entrevista_prevista
+            context['status_choices'] = AplicacaoEdital.STATUS_CHOICES
+            context['status_atual'] = status
+            pagination_param = f'edital={edital.pk}'
+            if status:
+                pagination_param += f'&status={status}'
+            context['pagination_param'] = pagination_param
+            context['success_url'] = reverse('avaliacao') + f'?edital={edital.pk}'
+
         return context
 
 
@@ -707,6 +766,11 @@ class SalvarAvaliacoesLoteView(ManagerOrExecuteRequiredMixin, TemplateView):
         if atualizadas:
             messages.success(request, f'{atualizadas} candidatura(s) atualizada(s) com sucesso.')
 
+        redirect_target = reverse('edital_candidatos', kwargs={'edital_pk': edital.pk})
+        success_url = request.POST.get('success_url', '')
+        if success_url and url_has_allowed_host_and_scheme(success_url, allowed_hosts=None):
+            redirect_target = success_url
+
         is_ajax = (
             request.headers.get('X-Requested-With') == 'XMLHttpRequest'
             or request.POST.get('ajax') == '1'
@@ -716,10 +780,64 @@ class SalvarAvaliacoesLoteView(ManagerOrExecuteRequiredMixin, TemplateView):
                 'sucesso': not erros or atualizadas > 0,
                 'atualizadas': atualizadas,
                 'erros': erros,
-                'redirect_url': reverse('edital_candidatos', kwargs={'edital_pk': edital.pk}),
+                'redirect_url': redirect_target,
             })
 
-        return redirect('edital_candidatos', edital_pk=edital.pk)
+        return redirect(redirect_target)
+
+
+class ExcluirCandidaturaView(ManagerOrExecuteRequiredMixin, View):
+    def post(self, request, *args, **kwargs):
+        aplicacao = get_object_or_404(
+            AplicacaoEdital.objects.select_related('bolsista__user'),
+            pk=kwargs['pk'],
+        )
+        nome = aplicacao.bolsista.user.nome_completo
+        aplicacao.delete()
+        messages.success(request, f'Candidatura de {nome} excluída.')
+
+        redirect_target = reverse(
+            'edital_candidatos', kwargs={'edital_pk': aplicacao.edital_id}
+        )
+        success_url = request.POST.get('success_url', '')
+        if success_url and url_has_allowed_host_and_scheme(success_url, allowed_hosts=None):
+            redirect_target = success_url
+        return redirect(redirect_target)
+
+
+class AnexarDocumentoResultadoView(ManagerOrExecuteRequiredMixin, View):
+    def get(self, request, *args, **kwargs):
+        aplicacao = get_object_or_404(
+            AplicacaoEdital.objects.select_related('bolsista', 'bolsista__user'),
+            pk=kwargs['pk'],
+        )
+        html = render_to_string(
+            'editais/partials/avaliacao_documento_modal.html',
+            {
+                'aplicacao': aplicacao,
+                'success_url': request.GET.get('success_url', ''),
+            },
+            request=request,
+        )
+        return HttpResponse(html)
+
+    def post(self, request, *args, **kwargs):
+        aplicacao = get_object_or_404(AplicacaoEdital, pk=kwargs['pk'])
+        arquivo = request.FILES.get('documento_resultado')
+        if arquivo:
+            aplicacao.documento_resultado = arquivo
+            aplicacao.save(update_fields=['documento_resultado'])
+            messages.success(request, 'Documento anexado com sucesso.')
+        else:
+            messages.error(request, 'Nenhum arquivo enviado.')
+
+        redirect_target = reverse(
+            'edital_candidatos', kwargs={'edital_pk': aplicacao.edital_id}
+        )
+        success_url = request.POST.get('success_url', '')
+        if success_url and url_has_allowed_host_and_scheme(success_url, allowed_hosts=None):
+            redirect_target = success_url
+        return redirect(redirect_target)
 
 
 class EditarAvaliacaoView(ManagerOrExecuteRequiredMixin, View):

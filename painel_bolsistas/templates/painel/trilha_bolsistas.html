@@ -10,9 +10,6 @@
             </h2>
             <p class="text-muted mb-0">Histórico completo de candidaturas, avaliações e pontuações.</p>
         </div>
-        <a href="{% url 'painel_lista' %}" class="btn btn-primary">
-            <i class="bi bi-people me-1"></i>Lista de Bolsistas
-        </a>
     </div>
 
     {% if not bolsistas %}
@@ -55,27 +52,42 @@
                  data-bs-parent="#trilha-accordion">
                 <div class="accordion-body bg-light">
 
+                    {# Ações: resumo por IA e detalhes #}
+                    <div class="d-flex flex-wrap gap-2 align-items-center mb-4">
+                        <button class="btn btn-sm btn-outline-success" title="Resumir com IA"
+                                hx-post="{% url 'painel_resumir_bolsista' bolsista.pk %}"
+                                hx-target="#resumo-ia-{{ bolsista.pk }}"
+                                hx-indicator="#resumo-ia-spinner-{{ bolsista.pk }}"
+                                hx-swap="innerHTML">
+                            <i class="bi bi-magic"></i> Resumir com IA
+                        </button>
+                        <a href="{% url 'painel_detalhe' bolsista.pk %}" class="btn btn-sm btn-outline-primary" title="Ver detalhes">
+                            <i class="bi bi-eye-fill"></i> Ver detalhes
+                        </a>
+                    </div>
+                    <div id="resumo-ia-{{ bolsista.pk }}" class="mb-4">
+                        <div id="resumo-ia-spinner-{{ bolsista.pk }}" class="htmx-indicator text-center py-2">
+                            <div class="spinner-border spinner-border-sm text-success" role="status">
+                                <span class="visually-hidden">Gerando resumo...</span>
+                            </div>
+                            <span class="text-muted small ms-2">Gerando resumo com IA...</span>
+                        </div>
+                        <p class="text-muted small mb-0">Clique em <strong>Resumir com IA</strong> para gerar um resumo objetivo do candidato.</p>
+                    </div>
+
                     {# Resumo do bolsista #}
                     <div class="row g-3 mb-4">
-                        <div class="col-md-4">
+                        <div class="col-md-6">
                             <div class="bg-white rounded p-3 text-center border">
                                 <small class="text-muted d-block">Total de candidaturas</small>
                                 <span class="fw-bold fs-4 text-primary">{{ bolsista.total_aplicacoes }}</span>
                             </div>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-6">
                             <div class="bg-white rounded p-3 text-center border">
                                 <small class="text-muted d-block">Última formação</small>
                                 <span class="fw-bold fs-6">
                                     {{ bolsista.formacao_principal.get_tipo_display|default:'Não informada' }}
-                                </span>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="bg-white rounded p-3 text-center border">
-                                <small class="text-muted d-block">Pontuação total</small>
-                                <span class="fw-bold fs-4 {% if bolsista.pontuacao_total >= 50 %}text-success{% else %}text-warning{% endif %}">
-                                    {{ bolsista.pontuacao_total }}
                                 </span>
                             </div>
                         </div>

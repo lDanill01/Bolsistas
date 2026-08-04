@@ -1,0 +1,41 @@
+<div class="modal fade" id="modalDocumentoResultado" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form method="post" enctype="multipart/form-data" action="{% url 'anexar_documento_resultado' aplicacao.pk %}">
+                {% csrf_token %}
+                <input type="hidden" name="success_url" value="{{ success_url }}">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="bi bi-paperclip me-2"></i>Documento do Resultado</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                </div>
+                <div class="modal-body">
+                    <p class="mb-3">
+                        <strong>{{ aplicacao.bolsista.user.nome_completo }}</strong>
+                        <span class="text-muted"> · Inscrição {{ aplicacao.numero_inscricao|default:'—' }}</span>
+                    </p>
+                    {% if aplicacao.documento_resultado %}
+                    <div class="alert alert-info d-flex align-items-center mb-3">
+                        <i class="bi bi-file-earmark me-2"></i>
+                        <div>
+                            Documento atual:
+                            <a href="{{ aplicacao.documento_resultado.url }}" target="_blank" class="fw-semibold">
+                                {{ aplicacao.documento_resultado.name }}
+                            </a>
+                        </div>
+                    </div>
+                    {% endif %}
+                    <div class="mb-2">
+                        <label class="form-label small fw-semibold">Anexar novo documento</label>
+                        <input type="file" name="documento_resultado" class="form-control"
+                               accept=".pdf,.jpg,.jpeg,.png" required>
+                        <div class="form-text">PDF ou imagem do resultado (diploma, declaração, etc.).</div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary"><i class="bi bi-upload me-1"></i>Enviar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

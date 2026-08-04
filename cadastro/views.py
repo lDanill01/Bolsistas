@@ -377,7 +377,7 @@ class BolsistaCreateForm(forms.ModelForm):
 class BolsistaCreateView(ManagerOrExecuteRequiredMixin, FormView):
     template_name = 'cadastro/bolsista_form.html'
     form_class = CadastroForm
-    success_url = reverse_lazy('painel_lista')
+    success_url = reverse_lazy('painel_trilha')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

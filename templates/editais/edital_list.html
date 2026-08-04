@@ -66,7 +66,9 @@
                             </td>
                             <td class="small">{{ edital.data_final|date:'d/m/Y'|default:'-' }}</td>
                             <td class="small">
-                                {% if edital.status == 'aberto' and edital.dias_para_proxima_etapa is not None %}
+                                {% if edital.prazo_submissao_expirado %}
+                                    <span class="badge bg-secondary">Inscrições Encerradas</span>
+                                {% elif edital.status == 'aberto' and edital.dias_para_proxima_etapa is not None %}
                                     {{ edital.dias_para_proxima_etapa }} dia{{ edital.dias_para_proxima_etapa|pluralize:'s' }}
                                 {% elif edital.status == 'em_analise' %}
                                     <span class="badge bg-warning text-dark">Aguardando</span>

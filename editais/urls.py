@@ -6,6 +6,7 @@ urlpatterns = [
     path('criar/', views.EditalProvisorioCreateView.as_view(), name='edital_create'),
     path('resultados/', views.ResultadosListView.as_view(), name='resultados'),
     path('resultados/<int:edital_pk>/download/', views.ResultadosDownloadView.as_view(), name='resultados_download'),
+    path('avaliacao/', views.AvaliacaoListView.as_view(), name='avaliacao'),
     path('<int:edital_pk>/candidatos/', views.AplicacaoEditalListView.as_view(), name='edital_candidatos'),
     path('<int:pk>/', views.EditalProvisorioDetailView.as_view(), name='edital_detail'),
     path('<int:pk>/pdf/', views.edital_pdf_view, name='edital_pdf'),
@@ -22,4 +23,6 @@ urlpatterns = [
     path('aplicacoes/<int:pk>/status/', views.AlterarStatusAplicacaoView.as_view(), name='alterar_status_aplicacao'),
     path('aplicacoes/salvar-avaliacoes/', views.SalvarAvaliacoesLoteView.as_view(), name='salvar_avaliacoes_lote'),
     path('aplicacoes/<int:pk>/editar-avaliacao/', views.EditarAvaliacaoView.as_view(), name='editar_avaliacao'),
+    path('aplicacoes/<int:pk>/excluir/', views.ExcluirCandidaturaView.as_view(), name='excluir_candidatura'),
+    path('aplicacoes/<int:pk>/anexar-documento/', views.AnexarDocumentoResultadoView.as_view(), name='anexar_documento_resultado'),
 ]

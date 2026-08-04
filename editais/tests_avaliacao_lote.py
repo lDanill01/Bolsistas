@@ -1,13 +1,18 @@
 from datetime import date, timedelta
 from decimal import Decimal
 import json
+import re
 from django.test import TestCase, RequestFactory, override_settings
 from django.contrib.auth.models import Group
+from django.core.files.uploadedfile import SimpleUploadedFile
 from accounts.models import User
 from base.mixins import GROUP_MANAGER
 from cadastro.models import CadastroBolsista
 from editais.models import EditalProvisorio, CronogramaEvento, AplicacaoEdital, AplicacaoEditalLog
-from editais.views import SalvarAvaliacoesLoteView, EditarAvaliacaoView, AplicacaoEditalListView
+from editais.views import (
+    SalvarAvaliacoesLoteView, EditarAvaliacaoView, AplicacaoEditalListView,
+    AvaliacaoListView, ExcluirCandidaturaView, AnexarDocumentoResultadoView,
+)
 
 
 class SalvarAvaliacoesLoteTests(TestCase):
@@ -311,3 +316,182 @@ class SalvarAvaliacoesLoteTests(TestCase):
         self.assertEqual(aplicacao2.nota_entrevista, Decimal('7.0'))
         self.assertEqual(aplicacao2.data_entrevista, date(2026, 8, 15))
         self.assertEqual(aplicacao2.status, 'aprovado')
+
+    def test_salvar_com_success_url_redireciona(self):
+        success_url = f'/editais/avaliacao/?edital={self.edital.pk}'
+        data = {
+            'edital_pk': str(self.edital.pk),
+            'success_url': success_url,
+            f'nota_prova_{self.aplicacao.pk}': '8,5',
+        }
+        req = self._req('post', '/editais/aplicacoes/salvar-avaliacoes/', data)
+        v = SalvarAvaliacoesLoteView.as_view()
+        r = v(req)
+        self.assertEqual(r.status_code, 302)
+        self.assertEqual(r.url, success_url)
+
+    def test_salvar_com_success_url_ajax(self):
+        success_url = f'/editais/avaliacao/?edital={self.edital.pk}'
+        data = {
+            'edital_pk': str(self.edital.pk),
+            'success_url': success_url,
+            f'nota_prova_{self.aplicacao.pk}': '8,5',
+        }
+        req = self._req('post', '/editais/aplicacoes/salvar-avaliacoes/', data)
+        req.headers = {'X-Requested-With': 'XMLHttpRequest'}
+        v = SalvarAvaliacoesLoteView.as_view()
+        r = v(req)
+        self.assertEqual(r.status_code, 200)
+        resposta = json.loads(r.content)
+        self.assertEqual(resposta['redirect_url'], success_url)
+
+
+class AvaliacaoPageTests(TestCase):
+    def setUp(self):
+        self.factory = RequestFactory()
+        self.gestor = User.objects.create_user(
+            email='gestor@teste.com', nome_completo='Gestor', password='senha123')
+        g, _ = Group.objects.get_or_create(name=GROUP_MANAGER)
+        self.gestor.groups.add(g)
+
+        self.bolsista = CadastroBolsista.objects.create(
+            user=User.objects.create_user(
+                email='bol@teste.com', nome_completo='Bolsista', password='senha123'),
+            data_nascimento=date(1990, 1, 1),
+        )
+
+        self.edital = EditalProvisorio.objects.create(
+            nome_edital='Edital Avaliacao Pagina',
+            area_estudo='TI',
+            nome_instituto='isi_biomassa',
+            email_solicitante='gestor@teste.com',
+            telefone='(67) 99999-9999',
+            endereco='Rua X',
+            numero_vagas=5,
+            modalidade_bolsa='nivel_1',
+            valor_total_bolsa=10000,
+            plataforma_tecnologica='Python',
+            qualificacao_minima='Ensino Médio',
+            conteudo_prova_teorica='-',
+            criterios_desempate='-',
+            criado_por=self.gestor,
+        )
+
+        self.aplicacao = AplicacaoEdital.objects.create(
+            bolsista=self.bolsista, edital=self.edital)
+
+    def _criar_cronograma(self, dias):
+        hoje = date.today()
+        for ordem, (evento, d) in enumerate(dias.items()):
+            CronogramaEvento.objects.create(
+                edital=self.edital,
+                evento=evento,
+                data_evento=hoje + timedelta(days=d),
+                ordem=ordem,
+            )
+
+    def _req(self, method, path, data=None):
+        req = getattr(self.factory, method)(path, data=data or {})
+        req.user = self.gestor
+        from django.contrib.messages.storage.fallback import FallbackStorage
+        setattr(req, 'session', 'session')
+        setattr(req, '_messages', FallbackStorage(req))
+        return req
+
+    @override_settings(DEBUG=True)
+    def test_pagina_avaliacao_renderiza_candidatos(self):
+        self._criar_cronograma({'prova_teorica': -1, 'entrevista': -1, 'resultado_final': -1})
+        req = self._req('get', f'/editais/avaliacao/?edital={self.edital.pk}')
+        r = AvaliacaoListView.as_view()(req)
+        self.assertEqual(r.status_code, 200)
+        r.render()
+        html = r.content.decode('utf-8')
+        self.assertIn(self.aplicacao.bolsista.user.nome_completo, html)
+        self.assertIn(f'name="nota_prova_{self.aplicacao.pk}"', html)
+        self.assertIn(f'name="data_entrevista_{self.aplicacao.pk}"', html)
+        self.assertIn(f'name="nota_entrevista_{self.aplicacao.pk}"', html)
+
+    @override_settings(DEBUG=True)
+    def test_etapas_liberadas_campos_nao_disabled(self):
+        self._criar_cronograma({'prova_teorica': -1, 'entrevista': -1, 'resultado_final': -1})
+        req = self._req('get', f'/editais/avaliacao/?edital={self.edital.pk}')
+        r = AvaliacaoListView.as_view()(req)
+        r.render()
+        html = r.content.decode('utf-8')
+        match = re.search(rf'<input[^>]*name="nota_prova_{self.aplicacao.pk}"[^>]*>', html)
+        self.assertIsNotNone(match)
+        self.assertNotIn('disabled', match.group(0))
+
+    @override_settings(DEBUG=True)
+    def test_etapa_nao_liberada_campo_disabled(self):
+        # prova teórica ainda no futuro -> nota da prova bloqueada
+        self._criar_cronograma({'prova_teorica': 5, 'entrevista': 5, 'resultado_final': 5})
+        req = self._req('get', f'/editais/avaliacao/?edital={self.edital.pk}')
+        r = AvaliacaoListView.as_view()(req)
+        r.render()
+        html = r.content.decode('utf-8')
+        match = re.search(rf'<input[^>]*name="nota_prova_{self.aplicacao.pk}"[^>]*>', html)
+        self.assertIsNotNone(match)
+        self.assertIn('disabled', match.group(0))
+
+    @override_settings(DEBUG=True)
+    def test_pagina_sem_edital_nao_quebra(self):
+        req = self._req('get', '/editais/avaliacao/')
+        r = AvaliacaoListView.as_view()(req)
+        self.assertEqual(r.status_code, 200)
+        r.render()
+        self.assertIn('Selecione um edital', r.content.decode('utf-8'))
+
+    @override_settings(DEBUG=True)
+    def test_pagina_exige_gestor(self):
+        view_user = User.objects.create_user(
+            email='view@teste.com', nome_completo='View', password='senha123')
+        req = self._req('get', f'/editais/avaliacao/?edital={self.edital.pk}')
+        req.user = view_user
+        from django.core.exceptions import PermissionDenied
+        with self.assertRaises(PermissionDenied):
+            AvaliacaoListView.as_view()(req)
+
+    @override_settings(DEBUG=True)
+    def test_pagina_exibe_coluna_resultado_e_acoes_de_gestor(self):
+        self._criar_cronograma({'prova_teorica': -1, 'entrevista': -1, 'resultado_final': -1})
+        self.aplicacao.nota = Decimal('8')
+        self.aplicacao.nota_entrevista = Decimal('7')
+        self.aplicacao.save()
+
+        req = self._req('get', f'/editais/avaliacao/?edital={self.edital.pk}')
+        r = AvaliacaoListView.as_view()(req)
+        r.render()
+        html = r.content.decode('utf-8')
+        self.assertIn('Aprovado', html)
+        self.assertIn('btn-excluir-candidatura', html)
+        self.assertIn('btn-upload-resultado', html)
+
+    def test_excluir_candidatura_gestor(self):
+        success_url = f'/editais/avaliacao/?edital={self.edital.pk}'
+        req = self._req('post', f'/editais/aplicacoes/{self.aplicacao.pk}/excluir/',
+                        {'success_url': success_url})
+        r = ExcluirCandidaturaView.as_view()(req, pk=self.aplicacao.pk)
+        self.assertEqual(r.status_code, 302)
+        self.assertEqual(r.url, success_url)
+        self.assertFalse(AplicacaoEdital.objects.filter(pk=self.aplicacao.pk).exists())
+
+    def test_anexar_documento_resultado(self):
+        arquivo = SimpleUploadedFile('resultado.pdf', b'%PDF-1.4 fake', content_type='application/pdf')
+        req = self._req('post', f'/editais/aplicacoes/{self.aplicacao.pk}/anexar-documento/',
+                        {'documento_resultado': arquivo})
+        r = AnexarDocumentoResultadoView.as_view()(req, pk=self.aplicacao.pk)
+        self.assertEqual(r.status_code, 302)
+
+        self.aplicacao.refresh_from_db()
+        self.assertIsNotNone(self.aplicacao.documento_resultado)
+        self.assertTrue(self.aplicacao.documento_resultado.name.startswith('avaliacoes/resultado'))
+
+    @override_settings(DEBUG=True)
+    def test_modal_documento_renderiza(self):
+        req = self._req('get', f'/editais/aplicacoes/{self.aplicacao.pk}/anexar-documento/')
+        r = AnexarDocumentoResultadoView.as_view()(req, pk=self.aplicacao.pk)
+        self.assertEqual(r.status_code, 200)
+        html = r.content.decode('utf-8')
+        self.assertIn('Documento do Resultado', html)
+        self.assertIn(self.aplicacao.bolsista.user.nome_completo, html)
