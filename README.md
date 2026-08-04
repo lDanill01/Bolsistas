@@ -1,17 +1,20 @@
 # Bolsas SENAI-MS
 
-Sistema de gestao de bolsas de estudo para os institutos SENAI de Mato Grosso do Sul. Plataforma completa para criacao de editais, cadastro de candidatos, avaliacao e acompanhamento de bolsistas.
+Sistema de gestao de bolsas de estudo para os institutos SENAI de Mato Grosso do Sul. Plataforma completa para criacao de editais, cadastro de candidatos, avaliacao, classificacao e acompanhamento de bolsistas.
 
 ## Funcionalidades
 
-- **Editais** — Criacao, edicao e publicacao de editais com modalidades (nivel 1 a 4), requisitos de qualificacao e experiencia, valores escalonados e cronograma de etapas
-- **Candidaturas** — Cadastro completo de bolsistas (dados pessoais, formacao, documentos), inscricao em editais e acompanhamento de status
-- **Classificacao** — Criterios de pontuacao customizaveis (publicacoes, eventos, cursos) e avaliacao individual de candidatos
-- **IA** — Analise de editais e compatibilidade de candidatos via IA (Groq / Llama 3.3), com suporte a processamento assincrono (Celery)
-- **Painel** — Dashboard para bolsistas ativos com acompanhamento de etapas
-- **Permissoes** — Controle de acesso por grupos (Manager, ExecuteUser, ViewUser, SuperUser)
-- **PDF** — Geracao de editais em PDF
-- **Notificacoes** — Sistema de notificacoes para usuarios
+- **Editais** — Criacao, edicao, validacao e publicacao de editais com modalidades (nivel 1 a 4), requisitos de qualificacao, valores escalonados e cronograma de etapas (prova, entrevista, resultado)
+- **Candidaturas** — Cadastro completo de bolsistas (dados pessoais, formacao, documentos comprobatorios), inscricao em editais e acompanhamento de status
+- **Avaliacao** — Pagina de avaliacao por edital com nota de prova, data e nota de entrevista, bloqueadas conforme a disponibilidade do cronograma, anexo de documento do resultado e exclusao de candidaturas
+- **Classificacao** — Criterios de pontuacao customizaveis (publicacoes, eventos, cursos) e avaliacao por criterio
+- **IA** — Analise de editais e compatibilidade de candidatos via IA (Groq / Llama 3.3), com processamento assincrono (Celery)
+- **Trilha do Bolsista** — Historico completo de candidaturas, notas, avaliacoes e acoes de IA por candidato
+- **Gestao de Documentos** — Consulta de todos os documentos fornecidos, com filtro por tipo, usuario e data de envio
+- **Resultados** — Listagem e download (CSV) dos resultados por edital
+- **Permissoes** — Controle de acesso por grupos (SuperUser, Manager, ExecuteUser, ViewUser)
+- **PDF** — Geracao de editais em PDF (xhtml2pdf)
+- **Notificacoes** — Notificacoes in-app geradas somente para solicitacoes de edicao de dados de usuarios
 
 ## Stack
 
@@ -22,8 +25,10 @@ Sistema de gestao de bolsas de estudo para os institutos SENAI de Mato Grosso do
 | Cache | Redis |
 | DB | PostgreSQL 16 |
 | IA | Groq API (Llama 3.3 70B, OpenAI-compatible) |
-| Infra | Docker + Docker Compose (dev) / Docker Swarm (prod) |
-| Proxy | Traefik v3 (Let's Encrypt automatico em producao) |
+| Media | FileSystem (dev) / Azure Blob Storage (producao, via django-storages) |
+| Infra (dev) | Docker + Docker Compose |
+| Infra (prod) | Azure Container Apps via Azure DevOps (`azure-pipelines.yml`) |
+| Legado (prod) | Docker Swarm + Traefik (`docker-compose.prod.yml`) |
 
 ## Pre-requisitos
 
@@ -35,49 +40,33 @@ Sistema de gestao de bolsas de estudo para os institutos SENAI de Mato Grosso do
 ## Setup Local (sem Docker)
 
 ```bash
-# Clone o repositorio
 git clone <repo-url>
 cd Fork---Bolsistas
 
-# Crie e ative ambiente virtual
 python -m venv venv
 source venv/bin/activate  # Linux/Mac
 venv\Scripts\activate    # Windows
 
-# Instale dependencias
 pip install -r requirements.txt
 
-# Configure variaveis de ambiente
 cp .env.example .env
 # Edite .env com suas credenciais (SECRET_KEY, DB_*, etc.)
 
-# Execute migracoes
 python manage.py migrate
-
-# Crie superusuario
 python manage.py createsuperuser
-
-# Inicie o servidor
 python manage.py runserver
 ```
 
 ## Setup com Docker (recomendado)
 
 ```bash
-# Clone o repositorio
 git clone <repo-url>
 cd Fork---Bolsistas
 
-# Copie e configure .env
 cp .env.example .env
 
-# Inicie os servicos
 docker compose up -d
-
-# Execute migracoes
 docker compose exec web python manage.py migrate
-
-# Crie superusuario
 docker compose exec web python manage.py createsuperuser
 
 # Acesse http://bolsas.localhost
@@ -112,31 +101,54 @@ docker compose exec web python manage.py createsuperuser
 | `GROQ_API_KEY` | Nao | — | Chave da API Groq para IA |
 | `IA_ASYNC` | Nao | `False` | Processar IA de forma assincrona |
 | `EMAIL_HOST` | Nao | `smtp.gmail.com` | Servidor SMTP |
+| `AZURE_ACCOUNT_NAME` | Nao | — | Conta do Azure Blob Storage (media em producao) |
+| `AZURE_CONTAINER` | Nao | — | Container do Azure Blob Storage |
+| `AZURE_CONNECTION_STRING` | Nao | — | Credencial do storage (ou `AZURE_ACCOUNT_KEY`; se ausentes, usa managed identity) |
+
+Segredos sensiveis podem ser injetados via Docker Secrets usando o sufixo `_FILE` (ex.: `SECRET_KEY_FILE=/run/secrets/secret_key`).
 
 ## Grupos de Usuario
 
 | Grupo | Permissoes |
 |---|---|
-| **SuperUser** | Acesso total: criar/editar/aprovar editais, alterar status, ver informacoes administrativas e IA |
-| **Manager** | Criar/editar editais, ver candidatos, aprovar editais (validar). Nao ve Informacoes administrativas |
-| **ExecuteUser** | Criar/editar editais, ver candidatos e informacoes administrativas. Nao aprova editais |
+| **SuperUser** | Acesso total: admin Django, editais, avaliacao, gestao de documentos, solicitacoes |
+| **Manager** | Criar/editar/validar editais, avaliar candidatos, trilha, gestao de documentos, revisar solicitacoes |
+| **ExecuteUser** | Acesso operacional: avaliacao, trilha, gestao de documentos |
 | **ViewUser** | Visualizar editais, candidatar-se, ver propria compatibilidade via IA |
+
+## Deploy
+
+### Producao (Azure Container Apps)
+
+O pipeline `azure-pipelines.yml` (Azure DevOps) faz CI (testes + build/push para ACR) e CD:
+
+- Job de migracao (`bolsas-migrate`) roda `python manage.py migrate` antes do deploy das apps
+- Deploy de 3 Container Apps: `bolsas-web` (ingress), `bolsas-celery` e `bolsas-beat`
+- Segredos via Key Vault / variable group e `secretref` no Container Apps
+- Media persistida em Azure Blob Storage (role `Storage Blob Data Contributor` na managed identity, ou `AZURE_CONNECTION_STRING`)
+
+### Legado (Docker Swarm)
+
+`docker-compose.prod.yml` + `deploy.sh` / `deploy/` continuam disponiveis para a infraestrutura atual baseada em Swarm/Traefik.
 
 ## Estrutura do Projeto
 
 ```
 .
-├── accounts/          # Model User customizado (email-based auth)
-├── base/              # Mixins, middleware, context processors, utilitarios
-├── cadastro/          # Cadastro de bolsistas (dados pessoais, formacao)
-├── classificacao/     # Criterios de pontuacao e avaliacao
-├── config/            # Settings Django (settings.py, urls.py, wsgi.py)
+├── accounts/          # Model User customizado (email-based auth), Perfil, DocumentoExterno
+├── base/              # Mixins, middleware, context processors, utilitarios, media protegida
+├── cadastro/          # Cadastro de bolsistas, formacoes, experiencias, anexos, solicitacoes, gestao de documentos
+├── classificacao/     # Criterios de pontuacao e avaliacao por criterio
+├── config/            # Settings Django (settings.py, urls.py, wsgi.py, celery.py)
 ├── docker/            # Entrypoints Docker (web + celery)
-├── editais/           # Editais (modelos, formularios, views, migrations)
-├── notifications/     # Sistema de notificacoes
-├── painel_bolsistas/  # Dashboard de bolsistas
+├── editais/           # Editais, cronograma, candidaturas, avaliacao, resultados
+├── notifications/     # Sistema de notificacoes (somente solicitacoes)
+├── painel_bolsistas/  # Trilha do bolsista, detalhe e analise por IA
 ├── static/            # Arquivos estaticos
-├── templates/         # Templates Django
+├── templates/         # Templates Django (componentes de sidebar/paginacao, etc.)
+├── documentacao/      # Documentacao tecnica por modulo
+├── docs/              # Dados de cursos e universidades
+├── azure-pipelines.yml      # Pipeline Azure DevOps (CI/CD Container Apps)
 ├── docker-compose.yml       # Ambiente de desenvolvimento
 ├── docker-compose.prod.yml  # Ambiente de producao (Docker Swarm)
 ├── Dockerfile               # Imagem Docker

@@ -1,20 +1,16 @@
-from django.views.generic import ListView, DetailView, TemplateView
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.generic import ListView, DetailView
 from django.http import HttpResponse
-from django.shortcuts import get_object_or_404, redirect, render
+from django.shortcuts import get_object_or_404, redirect
 from django.template.loader import render_to_string
 from django.views.decorators.http import require_POST
 from django.core.cache import cache
 from celery.result import AsyncResult
-from decimal import Decimal
 import json
 
 from django.conf import settings
 
 from base.mixins import ManagerOrExecuteRequiredMixin, GROUP_MANAGER, GROUP_EXECUTE_USER
-from cadastro.models import CadastroBolsista, FormacaoAcademica
-from classificacao.models import CriterioClassificacao, AvaliacaoBolsista
-from editais.models import EditalProvisorio
+from cadastro.models import CadastroBolsista
 from . import tasks as ia_tasks
 
 
@@ -96,16 +92,6 @@ def _render_bolsista_result(dados, bolsista_id=None):
     if bolsista_id:
         bolsista = get_object_or_404(CadastroBolsista, pk=bolsista_id)
 
-    if 'sugestoes' in dados:
-        return render_to_string('painel/partials/sugestao_avaliacao.html', {
-            'bolsista': bolsista,
-            'resumo': dados.get('resumo', ''),
-            'sugestoes': dados.get('sugestoes', []),
-            'sugestoes_json': json.dumps(dados.get('sugestoes', []), default=str),
-            'total_sugerido': str(sum(s.get('pontos', 0) for s in dados.get('sugestoes', []))),
-            'criterios': list(CriterioClassificacao.objects.filter(ativo=True).order_by('nome')),
-        })
-
     if 'radar' in dados:
         radar = dados.get('radar', [])
         return render_to_string('painel/partials/analise_bolsista.html', {
@@ -181,89 +167,3 @@ def painel_task_status(request, task_id):
 
     html = _render_bolsista_result(dados, bolsista_id)
     return HttpResponse(html, content_type='text/html; charset=utf-8')
-
-
-def avaliar_bolsista(request, pk):
-    if not request.user.is_authenticated:
-        return HttpResponse('Não autorizado', status=401)
-
-    if not (
-        request.user.is_superuser
-        or request.user.groups.filter(name__in=[GROUP_MANAGER, GROUP_EXECUTE_USER]).exists()
-    ):
-        return HttpResponse('Não autorizado', status=401)
-
-    bolsista = get_object_or_404(
-        CadastroBolsista.objects.select_related('user').prefetch_related('formacoes'),
-        pk=pk,
-    )
-
-    criterios = CriterioClassificacao.objects.filter(ativo=True).order_by('nome')
-
-    if request.method == 'POST':
-        total = Decimal('0')
-        for criterio in criterios:
-            pontos_str = request.POST.get(f'criterio_{criterio.pk}', '0')
-            try:
-                pontos = Decimal(pontos_str.replace(',', '.'))
-            except Exception:
-                pontos = Decimal('0')
-
-            pontos = max(Decimal('0'), pontos)
-            if criterio.peso_maximo > 0:
-                pontos = min(pontos, criterio.peso_maximo)
-
-            AvaliacaoBolsista.objects.update_or_create(
-                bolsista=bolsista,
-                criterio=criterio,
-                defaults={
-                    'pontos': pontos,
-                    'avaliado_por': request.user,
-                },
-            )
-            total += pontos
-
-        bolsista.pontuacao_previa = total
-        bolsista.save(update_fields=['pontuacao_previa'])
-
-        return redirect('painel_trilha')
-
-    avaliacoes_existentes = {
-        a.criterio_id: a.pontos
-        for a in AvaliacaoBolsista.objects.filter(bolsista=bolsista)
-    }
-
-    itens = []
-    for criterio in criterios:
-        pontos_default = avaliacoes_existentes.get(criterio.pk)
-        if pontos_default is None:
-            pontos_default = criterio.peso
-        itens.append({
-            'criterio': criterio,
-            'pontos': pontos_default,
-        })
-
-    return render(request, 'painel/avaliar_bolsista.html', {
-        'bolsista': bolsista,
-        'formacoes': bolsista.formacoes.order_by('-ano_conclusao'),
-        'itens': itens,
-    })
-
-
-@require_POST
-def sugerir_avaliacao_bolsista(request, pk):
-    if not _pode_usar_ia(request):
-        return HttpResponse('Não autorizado', status=401)
-
-    get_object_or_404(CadastroBolsista, pk=pk)
-
-    if not settings.IA_ASYNC:
-        dados = ia_tasks.sugerir_avaliacao_task.run(
-            bolsista_id=pk, user_id=request.user.id
-        ) or {}
-        return HttpResponse(_render_bolsista_result(dados, pk), content_type='text/html; charset=utf-8')
-
-    task = ia_tasks.sugerir_avaliacao_task.delay(bolsista_id=pk, user_id=request.user.id)
-    cache.set(f'task_owner:{task.id}', request.user.id, timeout=3600)
-    cache.set(f'task_context:{task.id}', {'bolsista_id': pk}, timeout=3600)
-    return _task_running_partial(request, task.id)

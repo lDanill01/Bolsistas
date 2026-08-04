@@ -5,7 +5,6 @@ from django.contrib.auth import get_user_model
 from django.core.cache import cache
 
 from cadastro.models import CadastroBolsista
-from classificacao.models import CriterioClassificacao
 from editais.models import EditalProvisorio
 
 from . import ai_service
@@ -38,19 +37,4 @@ def analisar_bolsista_task(self, bolsista_id, user_id):
         return resultado
     except Exception as exc:
         logger.exception('Erro na task analisar_bolsista')
-        raise self.retry(exc=exc, countdown=10)
-
-
-@shared_task(bind=True, max_retries=2)
-def sugerir_avaliacao_task(self, bolsista_id, user_id):
-    try:
-        bolsista = CadastroBolsista.objects.select_related('user').prefetch_related(
-            'formacoes', 'experiencias'
-        ).get(pk=bolsista_id)
-        criterios = CriterioClassificacao.objects.filter(ativo=True).order_by('nome')
-        resultado = ai_service.sugerir_avaliacao(bolsista, criterios)
-        cache.set(f'task_result:{self.request.id}', resultado, timeout=3600)
-        return resultado
-    except Exception as exc:
-        logger.exception('Erro na task sugerir_avaliacao')
         raise self.retry(exc=exc, countdown=10)

@@ -67,15 +67,6 @@ Geração de PDF do edital usando xhtml2pdf (pisa).
 ### `AplicarEditalView`
 Candidatura de bolsista a um edital. Dispara classificação automática baseada nos critérios ativos.
 
-### `AplicacaoListView`
-Listagem de candidaturas. Gestores veem todas com filtro por status; bolsistas veem apenas suas próprias.
-
-### `CancelarAplicacaoView`
-Cancelamento de candidatura pendente.
-
-### `AlterarStatusAplicacaoView`
-Alteração de status por gestor. Suporta HTMX para atualização inline.
-
 ## Forms
 
 ### `EditalProvisorioForm`
@@ -103,9 +94,6 @@ Valida que evento e data sejam preenchidos juntos.
 | `<pk>/editar/` | EditalProvisorioUpdateView | `edital_update` |
 | `<pk>/excluir/` | EditalProvisorioDeleteView | `edital_delete` |
 | `<pk>/aplicar/` | AplicarEditalView | `aplicar_edital` |
-| `aplicacoes/` | AplicacaoListView | `aplicacao_list` |
-| `aplicacoes/<pk>/cancelar/` | CancelarAplicacaoView | `cancelar_aplicacao` |
-| `aplicacoes/<pk>/status/` | AlterarStatusAplicacaoView | `alterar_status_aplicacao` |
 
 ## Arquivos Principais
 

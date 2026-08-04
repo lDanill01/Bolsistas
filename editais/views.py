@@ -365,44 +365,6 @@ class AplicarEditalView(ViewUserRequiredMixin, TemplateView):
         return redirect('edital_detail', pk=edital.pk)
 
 
-class AplicacaoListView(LoginRequiredMixin, ListView):
-    model = AplicacaoEdital
-    template_name = 'editais/aplicacao_list.html'
-    context_object_name = 'aplicacoes'
-    paginate_by = 20
-
-    def get_queryset(self):
-        qs = AplicacaoEdital.objects.select_related(
-            'bolsista', 'bolsista__user', 'edital'
-        ).order_by('-data_aplicacao')
-
-        user = self.request.user
-        is_manager = user.is_superuser or user.groups.filter(
-            name__in=[GROUP_MANAGER, GROUP_EXECUTE_USER]
-        ).exists()
-
-        if not is_manager:
-            if hasattr(user, 'cadastro'):
-                qs = qs.filter(bolsista=user.cadastro)
-            else:
-                qs = qs.none()
-
-        status = self.request.GET.get('status', '')
-        if status:
-            qs = qs.filter(status=status)
-
-        return qs
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['status_atual'] = self.request.GET.get('status', '')
-        user = self.request.user
-        context['is_manager'] = user.is_superuser or user.groups.filter(
-            name__in=[GROUP_MANAGER, GROUP_EXECUTE_USER]
-        ).exists()
-        return context
-
-
 class AplicacaoEditalListView(LoginRequiredMixin, ListView):
     model = AplicacaoEdital
     template_name = 'editais/aplicacao_edital_list.html'
@@ -585,46 +547,6 @@ class ResultadosDownloadView(LoginRequiredMixin, View):
             ])
 
         return response
-
-
-class CancelarAplicacaoView(ViewUserRequiredMixin, TemplateView):
-    def post(self, request, *args, **kwargs):
-        if hasattr(request.user, 'cadastro'):
-            aplicacao = get_object_or_404(
-                AplicacaoEdital,
-                pk=kwargs['pk'],
-                bolsista=request.user.cadastro,
-                status='pendente',
-            )
-            aplicacao.delete()
-            messages.success(request, 'Candidatura cancelada com sucesso.')
-        return redirect('aplicacao_list')
-
-
-class AlterarStatusAplicacaoView(ManagerOrExecuteRequiredMixin, TemplateView):
-    def post(self, request, *args, **kwargs):
-        aplicacao = get_object_or_404(AplicacaoEdital, pk=kwargs['pk'])
-        novo_status = request.POST.get('status')
-
-        if novo_status not in dict(AplicacaoEdital.STATUS_CHOICES):
-            messages.error(request, 'Status inválido.')
-            return redirect('aplicacao_list')
-
-        aplicacao.status = novo_status
-        aplicacao.save(update_fields=['status'])
-        messages.success(
-            request,
-            f'Status da candidatura de {aplicacao.bolsista.user.nome_completo} alterado para {aplicacao.get_status_display()}.'
-        )
-
-        if request.headers.get('HX-Request'):
-            html = render_to_string(
-                'editais/partials/aplicacao_row.html',
-                {'a': aplicacao},
-                request=request,
-            )
-            return HttpResponse(html)
-        return redirect('aplicacao_list')
 
 
 def _calcular_status(nota_prova, nota_entrevista):
