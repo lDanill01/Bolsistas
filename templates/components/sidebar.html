@@ -38,6 +38,9 @@
         <a href="{% url 'painel_trilha' %}" class="sidebar-link {% if request.resolver_match.url_name == 'painel_trilha' %}active{% endif %}">
             <i class="bi bi-signpost-2"></i> Trilha do Bolsista
         </a>
+        <a href="{% url 'gestao_documentos' %}" class="sidebar-link {% if request.resolver_match.url_name == 'gestao_documentos' %}active{% endif %}">
+            <i class="bi bi-folder2-open"></i> Gestão de Documentos
+        </a>
         {% endif %}
 
         {% if is_superuser or is_manager %}

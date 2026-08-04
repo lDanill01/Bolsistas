@@ -13,4 +13,5 @@ urlpatterns = [
     path('solicitar/', views.SolicitacaoMultiplaView.as_view(), name='solicitacao_criar'),
     path('solicitacoes/', views.SolicitacaoListView.as_view(), name='solicitacao_list'),
     path('solicitacoes/<int:pk>/revisar/', views.SolicitacaoRevisarView.as_view(), name='solicitacao_revisar'),
+    path('documentos/', views.GestaoDocumentosView.as_view(), name='gestao_documentos'),
 ]

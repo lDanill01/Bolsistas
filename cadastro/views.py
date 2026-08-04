@@ -1,5 +1,6 @@
 from decimal import Decimal
 import json
+from datetime import datetime
 from django.views.generic import CreateView, DetailView, UpdateView, ListView, TemplateView, FormView
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy
@@ -10,6 +11,7 @@ from django.utils import timezone
 from django.http import HttpResponse, HttpResponseForbidden
 from django.template.loader import render_to_string
 from django.db.models import Q
+from django.core.paginator import Paginator
 from django import forms
 
 from base.mixins import (
@@ -24,7 +26,7 @@ from .models import (
 from .utils import calcular_pontuacao_previa
 from .cursos import get_areas, get_todos_cursos, get_cursos_por_area, get_instituicoes
 from classificacao.models import CriterioClassificacao
-from accounts.models import User, Perfil
+from accounts.models import User, Perfil, DocumentoExterno
 
 
 ANEXO_TIPOS = [
@@ -815,3 +817,102 @@ def _check_cadastro_permission(request, pk):
     if not (request.user.is_superuser or _is_manager(request.user) or cadastro.user == request.user):
         return None, HttpResponseForbidden()
     return cadastro, None
+
+
+class GestaoDocumentosView(ManagerOrExecuteRequiredMixin, TemplateView):
+    """Página 'Gestão de Documentos' — consolida todos os documentos fornecidos
+    pelos usuários (anexos comprobatórios, comprovantes de experiência, currículo,
+    foto e documentos externos), com filtros por tipo, usuário e data de envio."""
+    template_name = 'cadastro/gestao_documentos.html'
+    paginate_by = 20
+
+    def _coletar_documentos(self):
+        docs = []
+
+        def add(tipo, usuario, arquivo, enviado_em):
+            if not arquivo:
+                return
+            docs.append({
+                'tipo': tipo,
+                'usuario': usuario,
+                'arquivo': arquivo,
+                'enviado_em': enviado_em,
+                'nome': arquivo.name.rsplit('/', 1)[-1],
+            })
+
+        for an in AnexoComprobatorio.objects.select_related('bolsista__user').order_by('-created_at'):
+            add(an.get_tipo_display(), an.bolsista.user, an.anexo, an.created_at)
+
+        for exp in ExperienciaProfissional.objects.exclude(anexo='').select_related('bolsista__user').order_by('-created_at'):
+            add('Comprovante de Experiência Profissional', exp.bolsista.user, exp.anexo, exp.created_at)
+
+        for b in CadastroBolsista.objects.exclude(curriculo='').select_related('user'):
+            add('Currículo', b.user, b.curriculo, b.created_at)
+
+        for b in CadastroBolsista.objects.exclude(foto='').select_related('user'):
+            add('Foto', b.user, b.foto, b.created_at)
+
+        for d in DocumentoExterno.objects.select_related('user').order_by('-created_at'):
+            add(d.get_tipo_display(), d.user, d.arquivo, d.created_at)
+
+        return docs
+
+    def _filtrar(self, docs, params):
+        tipo = params.get('tipo', '')
+        usuario = params.get('usuario', '')
+        data_inicio = params.get('data_inicio', '')
+        data_fim = params.get('data_fim', '')
+
+        if tipo:
+            docs = [d for d in docs if d['tipo'] == tipo]
+        if usuario:
+            docs = [d for d in docs if str(d['usuario'].pk) == usuario]
+        if data_inicio:
+            try:
+                di = datetime.strptime(data_inicio, '%Y-%m-%d').date()
+                docs = [d for d in docs if d['enviado_em'].date() >= di]
+            except ValueError:
+                pass
+        if data_fim:
+            try:
+                df = datetime.strptime(data_fim, '%Y-%m-%d').date()
+                docs = [d for d in docs if d['enviado_em'].date() <= df]
+            except ValueError:
+                pass
+
+        return docs
+
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+
+        docs = self._coletar_documentos()
+        total_geral = len(docs)
+
+        tipos = sorted({d['tipo'] for d in docs})
+        usuarios = {d['usuario'].pk: d['usuario'] for d in docs}
+        usuarios = sorted(usuarios.values(), key=lambda u: (u.nome_completo or '').lower())
+
+        params = self.request.GET
+        docs = self._filtrar(docs, params)
+        docs.sort(key=lambda d: d['enviado_em'], reverse=True)
+
+        paginator = Paginator(docs, self.paginate_by)
+        page_obj = paginator.get_page(params.get('page'))
+
+        ctx['documentos'] = page_obj.object_list
+        ctx['page_obj'] = page_obj
+        ctx['is_paginated'] = page_obj.paginator.num_pages > 1
+        ctx['total_documentos'] = len(docs)
+        ctx['total_geral'] = total_geral
+
+        ctx['tipos'] = tipos
+        ctx['usuarios'] = usuarios
+        ctx['filtro_tipo'] = params.get('tipo', '')
+        ctx['filtro_usuario'] = params.get('usuario', '')
+        ctx['data_inicio'] = params.get('data_inicio', '')
+        ctx['data_fim'] = params.get('data_fim', '')
+
+        query = f'tipo={ctx["filtro_tipo"]}&usuario={ctx["filtro_usuario"]}&data_inicio={ctx["data_inicio"]}&data_fim={ctx["data_fim"]}'
+        ctx['pagination_param'] = query
+
+        return ctx
