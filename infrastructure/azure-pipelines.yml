@@ -90,7 +90,7 @@ stages:
               pip install -r requirements.txt
             displayName: Instalar dependências
 
-          - script: python back-end/manage.py test
+          - script: python backend/manage.py test
             displayName: Rodar testes
             env:
               SECRET_KEY: ci-secret-key-nao-para-producao
@@ -285,7 +285,7 @@ stages:
                             --env-vars "${COMMON_ENVS[@]}" "${SECRET_ENVS[@]}" \
                             --secrets "${COMMON_SECRETS[@]}" \
                             --command "/bin/sh" \
-                            --args "-c" "python /app/back-end/manage.py migrate --noinput"
+                            --args "-c" "python /app/backend/manage.py migrate --noinput"
                         fi
 
                         local principal_id

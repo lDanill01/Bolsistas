@@ -52,9 +52,9 @@ pip install -r requirements.txt
 cp .env.example .env
 # Edite .env com suas credenciais (SECRET_KEY, DB_*, etc.)
 
-python manage.py migrate
-python manage.py createsuperuser
-python manage.py runserver
+python backend/manage.py migrate
+python backend/manage.py createsuperuser
+python backend/manage.py runserver
 ```
 
 ## Setup com Docker (recomendado)
@@ -66,8 +66,8 @@ cd Fork---Bolsistas
 cp .env.example .env
 
 docker compose up -d
-docker compose exec web python manage.py migrate
-docker compose exec web python manage.py createsuperuser
+docker compose exec web python backend/manage.py migrate
+docker compose exec web python backend/manage.py createsuperuser
 
 # Acesse http://bolsas.localhost
 ```
@@ -120,48 +120,56 @@ Segredos sensiveis podem ser injetados via Docker Secrets usando o sufixo `_FILE
 
 ### Producao (Azure Container Apps)
 
-O pipeline `azure-pipelines.yml` (Azure DevOps) faz CI (testes + build/push para ACR) e CD:
+O pipeline `infrastructure/azure-pipelines.yml` (Azure DevOps) faz CI (testes + build/push para ACR) e CD:
 
-- Job de migracao (`bolsas-migrate`) roda `python manage.py migrate` antes do deploy das apps
+- Job de migracao (`bolsas-migrate`) roda `python backend/manage.py migrate` antes do deploy das apps
 - Deploy de 3 Container Apps: `bolsas-web` (ingress), `bolsas-celery` e `bolsas-beat`
 - Segredos via Key Vault / variable group e `secretref` no Container Apps
 - Media persistida em Azure Blob Storage (role `Storage Blob Data Contributor` na managed identity, ou `AZURE_CONNECTION_STRING`)
 
 ### Legado (Docker Swarm)
 
-`docker-compose.prod.yml` + `deploy.sh` / `deploy/` continuam disponiveis para a infraestrutura atual baseada em Swarm/Traefik.
+`docker-compose.prod.yml` + `infrastructure/deploy.sh` / `infrastructure/deploy/` continuam disponiveis para a infraestrutura atual baseada em Swarm/Traefik.
 
 ## Estrutura do Projeto
 
 ```
 .
-├── accounts/          # Model User customizado (email-based auth), Perfil, DocumentoExterno
-├── base/              # Mixins, middleware, context processors, utilitarios, media protegida
-├── cadastro/          # Cadastro de bolsistas, formacoes, experiencias, anexos, solicitacoes, gestao de documentos
-├── classificacao/     # Criterios de pontuacao e avaliacao por criterio
-├── config/            # Settings Django (settings.py, urls.py, wsgi.py, celery.py)
-├── docker/            # Entrypoints Docker (web + celery)
-├── editais/           # Editais, cronograma, candidaturas, avaliacao, resultados
-├── notifications/     # Sistema de notificacoes (somente solicitacoes)
-├── painel_bolsistas/  # Trilha do bolsista, detalhe e analise por IA
-├── static/            # Arquivos estaticos
-├── templates/         # Templates Django (componentes de sidebar/paginacao, etc.)
-├── documentacao/      # Documentacao tecnica por modulo
-├── docs/              # Dados de cursos e universidades
-├── azure-pipelines.yml      # Pipeline Azure DevOps (CI/CD Container Apps)
-├── docker-compose.yml       # Ambiente de desenvolvimento
-├── docker-compose.prod.yml  # Ambiente de producao (Docker Swarm)
-├── Dockerfile               # Imagem Docker
-├── requirements.txt         # Dependencias Python
-└── manage.py                # CLI Django
+├── backend/                    # Codigo Django (apps, config, manage.py)
+│   ├── accounts/               # Model User customizado (email-based auth)
+│   ├── base/                   # Mixins, middleware, context processors, utilitarios
+│   ├── cadastro/               # Cadastro de bolsistas, formacoes, experiencias, solicitacoes
+│   ├── classificacao/          # Criterios de pontuacao e avaliacao
+│   ├── config/                 # Settings Django (settings.py, urls.py, wsgi.py, celery.py)
+│   ├── editais/                # Editais, cronograma, candidaturas, avaliacao, resultados
+│   ├── notifications/          # Sistema de notificacoes
+│   ├── painel_bolsistas/       # Trilha do bolsista, detalhe e analise por IA
+│   └── manage.py               # CLI Django
+├── frontend/                   # Interface web
+│   ├── templates/              # Templates Django (HTML)
+│   └── static/                 # CSS, JS
+├── infrastructure/             # CI/CD e deploy
+│   ├── azure-pipelines.yml     # Pipeline Azure DevOps (CI/CD Container Apps)
+│   ├── deploy.sh               # Script de deploy Docker Swarm
+│   ├── deploy/                 # Scripts auxiliares de deploy
+│   └── .secrets/               # Docker Secrets (valores reais)
+├── documentation/              # Documentacao e dados
+│   ├── docs/                   # Dados de cursos e universidades
+│   └── documentação/           # Documentacao tecnica por modulo
+├── docker/                     # Entrypoints Docker (web + celery)
+├── Dockerfile                  # Imagem Docker
+├── docker-compose.yml          # Ambiente de desenvolvimento
+├── docker-compose.prod.yml     # Ambiente de producao (Docker Swarm)
+├── requirements.txt            # Dependencias Python
+└── README.md
 ```
 
 ## Comandos Uteis
 
 ```bash
 # Migracoes
-docker compose exec web python manage.py makemigrations
-docker compose exec web python manage.py migrate
+docker compose exec web python backend/manage.py makemigrations
+docker compose exec web python backend/manage.py migrate
 
 # Celery
 docker compose exec celery celery -A config worker -l info
@@ -170,8 +178,8 @@ docker compose exec celery celery -A config worker -l info
 docker compose logs -f web
 
 # Shell Django
-docker compose exec web python manage.py shell
+docker compose exec web python backend/manage.py shell
 
 # Testes
-docker compose exec web python manage.py test
+docker compose exec web python backend/manage.py test
 ```

@@ -55,6 +55,7 @@ services:
       DB_PASSWORD_FILE: /run/secrets/db_password
       GROQ_API_KEY_FILE: /run/secrets/groq_api_key
       RABBITMQ_PASSWORD_FILE: /run/secrets/rabbitmq_password
+      PYTHONPATH: /app/backend
     secrets:
       - secret_key
       - db_password
@@ -95,6 +96,7 @@ services:
       DB_PASSWORD_FILE: /run/secrets/db_password
       GROQ_API_KEY_FILE: /run/secrets/groq_api_key
       RABBITMQ_PASSWORD_FILE: /run/secrets/rabbitmq_password
+      PYTHONPATH: /app/backend
     secrets:
       - secret_key
       - db_password
@@ -195,12 +197,12 @@ volumes:
 
 secrets:
   secret_key:
-    file: .secrets/secret_key.txt
+    file: infrastructure/.secrets/secret_key.txt
   db_password:
-    file: .secrets/db_password.txt
+    file: infrastructure/.secrets/db_password.txt
   groq_api_key:
-    file: .secrets/groq_api_key.txt
+    file: infrastructure/.secrets/groq_api_key.txt
   rabbitmq_password:
-    file: .secrets/rabbitmq_password.txt
+    file: infrastructure/.secrets/rabbitmq_password.txt
   cf_dns_api_token:
-    file: .secrets/cf_dns_api_token.txt
+    file: infrastructure/.secrets/cf_dns_api_token.txt

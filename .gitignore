@@ -11,7 +11,7 @@ staticfiles/
 Tree.md
 
 # Docker / deploy
-.secrets/
+infrastructure/.secrets/
 letsencrypt/
 acme.json
 

@@ -42,7 +42,7 @@ services:
 
   web:
     build: .
-    command: ["python", "back-end/manage.py", "runserver", "0.0.0.0:8000"]
+    command: ["python", "backend/manage.py", "runserver", "0.0.0.0:8000"]
     ports:
       - "8000:8000"
     env_file:
@@ -62,7 +62,7 @@ services:
       ALLOWED_HOSTS: localhost,127.0.0.1,bolsas.localhost
       CSRF_TRUSTED_ORIGINS: http://localhost,http://127.0.0.1,http://bolsas.localhost
       IA_ASYNC: "False"
-      PYTHONPATH: /app/back-end
+      PYTHONPATH: /app/backend
     volumes:
       - .:/app
       - staticfiles_data:/app/staticfiles
@@ -101,7 +101,7 @@ services:
       ALLOWED_HOSTS: localhost,127.0.0.1,bolsas.localhost
       CSRF_TRUSTED_ORIGINS: http://localhost,http://127.0.0.1,http://bolsas.localhost
       IA_ASYNC: "False"
-      PYTHONPATH: /app/back-end
+      PYTHONPATH: /app/backend
     volumes:
       - .:/app
       - staticfiles_data:/app/staticfiles
@@ -135,7 +135,7 @@ services:
       ALLOWED_HOSTS: localhost,127.0.0.1,bolsas.localhost
       CSRF_TRUSTED_ORIGINS: http://localhost,http://127.0.0.1,http://bolsas.localhost
       IA_ASYNC: "False"
-      PYTHONPATH: /app/back-end
+      PYTHONPATH: /app/backend
     volumes:
       - .:/app
       - staticfiles_data:/app/staticfiles

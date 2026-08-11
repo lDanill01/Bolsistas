@@ -15,30 +15,30 @@ Rules:
 
 ## Stack
 
-- Single Django 6 project (`back-end/config/`), apps in `back-end/`: `accounts`, `base`, `cadastro`, `classificacao`, `editais`, `notifications`, `painel_bolsistas`. Custom `accounts.User` uses email login (`USERNAME_FIELD='email'`).
-- Templates are in `front-end/templates/`, static assets in `front-end/static/`.
+- Single Django 6 project (`backend/config/`), apps in `backend/`: `accounts`, `base`, `cadastro`, `classificacao`, `editais`, `notifications`, `painel_bolsistas`. Custom `accounts.User` uses email login (`USERNAME_FIELD='email'`).
+- Templates are in `frontend/templates/`, static assets in `frontend/static/`.
 - Permissions via `base/mixins.py` group mixins; group constants: `GROUP_MANAGER='Manager'`, `GROUP_EXECUTE_USER='ExecuteUser'`, `GROUP_VIEW_USER='ViewUser'`. Templates get `is_manager`/`is_execute_user`/`is_view_user` from `base/context_processors.perfil_context`.
-- Celery autodiscovers tasks in `back-end/editais/tasks.py` and `back-end/painel_bolsistas/tasks.py`; beat schedule is in `back-end/config/settings.py` (`CELERY_BEAT_SCHEDULE`).
+- Celery autodiscovers tasks in `backend/editais/tasks.py` and `backend/painel_bolsistas/tasks.py`; beat schedule is in `backend/config/settings.py` (`CELERY_BEAT_SCHEDULE`).
 - Media: `FileSystemStorage` by default; switches to Azure Blob only when `AZURE_ACCOUNT_NAME` + `AZURE_CONTAINER` are set (config/settings.py). `base/views.py:media_protegida` uses `default_storage` (works for both).
 - Notifications are generated ONLY for `SolicitacaoEdicao` (`notifications/signals.py`). Do not re-add notifications for cadastro, avaliação, or AI-summary completion — that was intentionally removed.
 
 ## Commands
 
-- Tests use Django's runner (`python back-end/manage.py test ...`); there is no pytest/tox. **You must override DB/cache env vars** because `back-end/config/settings.py` reads `.env` (which points to Postgres at host `db`):
-  - PowerShell: `$env:SECRET_KEY='x'; $env:DB_ENGINE='django.db.backends.sqlite3'; $env:DB_NAME='db.sqlite3'; $env:DB_HOST=''; $env:CACHE_URL='dummycache://'; $env:CELERY_BROKER_URL='memory://'; python back-end/manage.py test <label>`
-  - Linux/macOS: `SECRET_KEY=x DB_ENGINE=django.db.backends.sqlite3 DB_NAME=db.sqlite3 DB_HOST='' CACHE_URL=dummycache:// CELERY_BROKER_URL=memory:// python back-end/manage.py test <label>`
+- Tests use Django's runner (`python backend/manage.py test ...`); there is no pytest/tox. **You must override DB/cache env vars** because `backend/config/settings.py` reads `.env` (which points to Postgres at host `db`):
+  - PowerShell: `$env:SECRET_KEY='x'; $env:DB_ENGINE='django.db.backends.sqlite3'; $env:DB_NAME='db.sqlite3'; $env:DB_HOST=''; $env:CACHE_URL='dummycache://'; $env:CELERY_BROKER_URL='memory://'; python backend/manage.py test <label>`
+  - Linux/macOS: `SECRET_KEY=x DB_ENGINE=django.db.backends.sqlite3 DB_NAME=db.sqlite3 DB_HOST='' CACHE_URL=dummycache:// CELERY_BROKER_URL=memory:// python backend/manage.py test <label>`
 - `base.tests.DiasUteisTests` has 3 pre-existing failures (holiday/date-dependent); they are NOT regressions from your changes. The rest of the suite should pass.
-- Follow the existing test pattern: `RequestFactory` + `View.as_view()(req)` + `r.render()` (see `back-end/editais/tests_avaliacao_lote.py`). Avoid the test `Client` locally — it hits a Django 4.2 `Context.__copy__` bug on this machine.
+- Follow the existing test pattern: `RequestFactory` + `View.as_view()(req)` + `r.render()` (see `backend/editais/tests_avaliacao_lote.py`). Avoid the test `Client` locally — it hits a Django 4.2 `Context.__copy__` bug on this machine.
 - Docker dev: `docker compose up -d`. The web entrypoint (`docker/entrypoint.sh`) runs `migrate` + `collectstatic` on start.
 - After code edits, stale bytecode in the dev container can cause confusing errors (e.g. `AttributeError`/missing column that exists). Clear it and restart: `docker compose exec web python -c "import shutil,pathlib;[shutil.rmtree(p,ignore_errors=True) for p in pathlib.Path('/app').rglob('__pycache__')]"` then `docker compose restart web`.
-- Use full `python back-end/manage.py migrate` (not per-app) — `editais` migrations depend on `accounts`/`cadastro` state.
+- Use full `python backend/manage.py migrate` (not per-app) — `editais` migrations depend on `accounts`/`cadastro` state.
 - `makemigrations` can bundle a spurious `AlterField status` on `editalprovisorio` (pre-existing label drift `Fechado` vs `Encerrado` in migration 0001). Inspect generated migrations and drop unrelated ops before committing them.
 
 ## Conventions / gotchas
 
 - UI text is PT-BR; README/docs are mostly ASCII (no accents).
-- Shared layout: `front-end/templates/base.html` includes `front-end/templates/components/sidebar.html`. Sidebar links are group-gated and get `active` via `request.resolver_match.url_name` — match that pattern for new pages.
-- htmx 2 is loaded in `base.html`; per-page JS goes in `{% block extra_js %}` or inside partials. The batch evaluation form (`front-end/templates/editais/partials/tabela_avaliacao.html`) is a single `<form>` — do not nest another `<form>` inside it (use buttons + fetch).
+- Shared layout: `frontend/templates/base.html` includes `frontend/templates/components/sidebar.html`. Sidebar links are group-gated and get `active` via `request.resolver_match.url_name` — match that pattern for new pages.
+- htmx 2 is loaded in `base.html`; per-page JS goes in `{% block extra_js %}` or inside partials. The batch evaluation form (`frontend/templates/editais/partials/tabela_avaliacao.html`) is a single `<form>` — do not nest another `<form>` inside it (use buttons + fetch).
 - New management pages: gate with `ManagerOrExecuteRequiredMixin` (solicitações uses `ManagerRequiredMixin`) and add the sidebar link under the "Gestão" section.
 - Many model files end with a trailing blank line that must be preserved (a previous edit removed one and broke the file).
 
@@ -46,7 +46,7 @@ Rules:
 
 ```
 Bolsistas/
-├── back-end/               # Django apps, config, manage.py
+├── backend/               # Django apps, config, manage.py
 │   ├── accounts/
 │   ├── base/
 │   ├── cadastro/
@@ -56,7 +56,7 @@ Bolsistas/
 │   ├── notifications/
 │   ├── painel_bolsistas/
 │   └── manage.py
-├── front-end/              # Templates, CSS, JS
+├── frontend/              # Templates, CSS, JS
 │   ├── templates/
 │   └── static/
 ├── infrastructure/         # CI/CD, Docker Swarm, secrets

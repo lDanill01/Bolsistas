@@ -18,8 +18,8 @@ TAG="${1:-latest}"
 REGISTRY="${REGISTRY:-localhost:5000}"
 IMAGE="${REGISTRY}/bolsas:${TAG}"
 STACK="bolsas"
-COMPOSE_FILE="docker-compose.yml"
-PROD_FILE="docker-compose.prod.yml"
+COMPOSE_FILE="../docker-compose.yml"
+PROD_FILE="../docker-compose.prod.yml"
 
 echo ">>> Buildando imagem ${IMAGE}..."
 docker build -t "${IMAGE}" .

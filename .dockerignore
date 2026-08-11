@@ -17,4 +17,5 @@ graphify-out/
 .opencode/
 .vscode/
 .idea/
-documentação/
+documentation/documentação/
+.secrets/
