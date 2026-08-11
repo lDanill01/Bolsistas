@@ -1,8 +1,8 @@
 import json
 from pathlib import Path
 
-_CURSOS_JSON = Path(__file__).resolve().parent.parent / 'docs' / 'lista_cursos.json'
-_INSTITUICOES_DIR = Path(__file__).resolve().parent.parent / 'docs' / 'universidades'
+_CURSOS_JSON = Path(__file__).resolve().parent.parent.parent / 'documentation' / 'docs' / 'lista_cursos.json'
+_INSTITUICOES_DIR = Path(__file__).resolve().parent.parent.parent / 'documentation' / 'docs' / 'universidades'
 
 _cache = None
 _instituicoes_cache = None

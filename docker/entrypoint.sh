@@ -1,7 +1,8 @@
 #!/bin/sh
 set -e
 
-python manage.py migrate --noinput
-python manage.py collectstatic --noinput --clear
+export PYTHONPATH="/app/back-end:$PYTHONPATH"
+python /app/back-end/manage.py migrate --noinput
+python /app/back-end/manage.py collectstatic --noinput --clear
 
 exec "$@"
