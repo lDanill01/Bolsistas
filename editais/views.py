@@ -10,6 +10,7 @@ from django.core.cache import cache
 from django.db.models import Count, Q, Prefetch
 from django.core.paginator import Paginator
 from django.utils.http import url_has_allowed_host_and_scheme
+from django.utils import timezone
 from celery.result import AsyncResult
 import csv
 import json
@@ -200,7 +201,7 @@ class EditalProvisorioDetailView(LoginRequiredMixin, ContextMixin, DetailView):
         return super().dispatch(request, *args, **kwargs)
 
     def get_queryset(self):
-        return EditalProvisorio.objects.all().select_related('criado_por')
+        return EditalProvisorio.objects.with_deleted().select_related('criado_por')
 
     def _montar_cores_cronograma(self, cronograma):
         cores = {}
@@ -287,14 +288,41 @@ class EditalProvisorioDetailView(LoginRequiredMixin, ContextMixin, DetailView):
 class EditalProvisorioDeleteView(UserPassesTestMixin, ContextMixin, DeleteView):
     model = EditalProvisorio
     template_name = 'editais/edital_confirm_delete.html'
+    context_object_name = 'edital'
     success_url = reverse_lazy('edital_list')
 
     def test_func(self):
         return self.request.user.is_superuser
 
     def form_valid(self, form):
+        self.object.deleted_at = timezone.now()
+        self.object.save()
         messages.success(self.request, 'Edital removido com sucesso!')
-        return super().form_valid(form)
+        return redirect(self.success_url)
+
+
+class EditalProvisorioExcluidosListView(ManagerOrExecuteRequiredMixin, ContextMixin, ListView):
+    model = EditalProvisorio
+    template_name = 'editais/edital_excluidos_list.html'
+    context_object_name = 'editais'
+    paginate_by = 10
+
+    def get_queryset(self):
+        return EditalProvisorio.objects.with_deleted().filter(
+            deleted_at__isnull=False
+        ).select_related('criado_por').order_by('-deleted_at')
+
+
+def restaurar_edital(request, pk):
+    if not request.user.is_superuser and not request.user.groups.filter(name=GROUP_MANAGER).exists():
+        messages.error(request, 'Você não tem permissão para restaurar editais.')
+        return redirect('edital_excluidos')
+
+    edital = get_object_or_404(EditalProvisorio.objects.with_deleted(), pk=pk, deleted_at__isnull=False)
+    edital.deleted_at = None
+    edital.save()
+    messages.success(request, f'Edital "{edital}" restaurado com sucesso!')
+    return redirect('edital_excluidos')
 
 
 def validar_edital(request, pk):

@@ -13,6 +13,11 @@
                 <i class="bi bi-plus-lg me-1"></i>Novo Edital
             </a>
             {% endif %}
+            {% if is_superuser or is_manager %}
+            <a href="{% url 'edital_excluidos' %}" class="btn btn-danger">
+                <i class="bi bi-trash me-1"></i>Excluídos
+            </a>
+            {% endif %}
         </div>
     </div>
 

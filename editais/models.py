@@ -72,6 +72,14 @@ NIVEL_BOLSA_CONFIG = {
 }
 
 
+class EditalProvisorioManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().filter(deleted_at__isnull=True)
+
+    def with_deleted(self):
+        return super().get_queryset()
+
+
 class EditalProvisorio(DataModel):
     STATUS_CHOICES = [
         ('em_analise', 'Em Análise'),
@@ -153,6 +161,9 @@ class EditalProvisorio(DataModel):
     status                          = models.CharField('Status', max_length=20, choices=STATUS_CHOICES, default='em_analise')
     criado_por                      = models.ForeignKey(User, on_delete=models.CASCADE, related_name='editais_criados')
     responsavel                     = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='editais_responsavel', verbose_name='Responsável')
+    deleted_at                      = models.DateTimeField('Excluído em', null=True, blank=True, default=None)
+
+    objects = EditalProvisorioManager()
 
     class Meta:
         verbose_name = 'Edital'

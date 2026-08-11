@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% block title %}Editais Excluídos - Bolsas SENAI - MS{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-3">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold text-primary mb-0">
+            <i class="bi bi-trash me-2"></i>Editais Excluídos
+        </h2>
+        <a href="{% url 'edital_list' %}" class="btn btn-secondary">
+            <i class="bi bi-arrow-left me-1"></i>Voltar para Editais
+        </a>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-hover align-middle">
+            <thead class="table-light">
+                <tr>
+                    <th>Edital</th>
+                    <th>Instituto</th>
+                    <th>Vagas</th>
+                    <th>Status</th>
+                    <th>Excluído em</th>
+                    <th class="text-end">Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for edital in editais %}
+                <tr>
+                    <td class="fw-medium">{{ edital.nome_edital|default:'-' }}</td>
+                    <td class="fw-medium">{{ edital.get_nome_instituto_display }}</td>
+                    <td>{{ edital.numero_vagas }}</td>
+                    <td>
+                        <span class="badge {% if edital.status == 'aberto' %}bg-success{% elif edital.status == 'cancelado' %}bg-danger{% elif edital.status == 'encerrado' %}bg-secondary{% else %}bg-warning text-dark{% endif %}">
+                            {{ edital.get_status_display }}
+                        </span>
+                    </td>
+                    <td class="small">{{ edital.deleted_at|date:'d/m/Y H:i' }}</td>
+                    <td class="text-end">
+                        <a href="{% url 'edital_detail' edital.pk %}" class="btn btn-sm btn-primary" title="Ver detalhes">
+                            <i class="bi bi-eye"></i>
+                        </a>
+                        <a href="{% url 'edital_restaurar' edital.pk %}" class="btn btn-sm btn-success" title="Restaurar edital">
+                            <i class="bi bi-arrow-counterclockwise"></i>
+                        </a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6" class="text-center text-muted py-5">
+                        <i class="bi bi-archive fs-3 d-block mb-2"></i>
+                        Nenhum edital excluído.
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    {% if page_obj.paginator.num_pages > 1 %}
+    {% include 'components/pagination.html' %}
+    {% endif %}
+</div>
+{% endblock %}
