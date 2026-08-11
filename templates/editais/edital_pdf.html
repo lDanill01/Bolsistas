@@ -146,7 +146,7 @@
     <h1>{{ edital.nome_edital|default:'EDITAL PROVISORIO - BOLSAS SENAI - MS' }}</h1>
     <h2>{{ edital.get_nome_instituto_display }}</h2>
     <p>Area de Estudo: {{ edital.area_estudo }} | Modalidade: {{ edital.get_modalidade_bolsa_display }} | Status:
-        <span class="badge {% if edital.status == 'aberto' %}badge-success{% elif edital.status == 'cancelado' %}badge-danger{% elif edital.status == 'encerrado' %}badge-secondary{% else %}badge-warning{% endif %}">
+        <span class="badge {% if edital.status == 'aberto' %}badge-success{% elif edital.status == 'cancelado' %}badge-danger{% elif edital.status == 'encerrado' %}badge-secondary{% elif edital.status == 'excluido' %}badge-dark{% else %}badge-warning{% endif %}">
             {{ edital.get_status_display }}
         </span>
         {% if edital.numero_serie %}| Nº Serie: {{ edital.numero_serie }}{% endif %}

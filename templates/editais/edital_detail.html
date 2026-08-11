@@ -26,12 +26,14 @@
             </a>
             {% endif %}
             {% if edital.status != 'encerrado' or is_superuser %}
+            {% if is_superuser and edital.status != 'excluido' %}
             <a href="{% url 'edital_update' edital.pk %}" class="btn btn-secondary">
                 <i class="bi bi-pencil-square me-1"></i>Editar
             </a>
             {% endif %}
             {% endif %}
-            {% if is_superuser %}
+            {% endif %}
+            {% if is_superuser and edital.status != 'excluido' %}
             <a href="{% url 'edital_delete' edital.pk %}" class="btn btn-danger">
                 <i class="bi bi-trash me-1"></i>Excluir
             </a>
@@ -284,7 +286,7 @@
                     <i class="bi bi-info-circle me-2 text-primary"></i>Informações
                 </h5>
                 <div class="text-right mb-3">
-                    <span class="badge fs-6 {% if edital.status == 'aberto' %}bg-success{% elif edital.status == 'cancelado' %}bg-danger{% elif edital.status == 'encerrado' %}bg-secondary{% else %}bg-warning text-dark{% endif %}">
+                    <span class="badge fs-6 {% if edital.status == 'aberto' %}bg-success{% elif edital.status == 'cancelado' %}bg-danger{% elif edital.status == 'encerrado' %}bg-secondary{% elif edital.status == 'excluido' %}bg-dark{% else %}bg-warning text-dark{% endif %}">
                         {{ edital.get_status_display }}
                     </span>
                 </div>

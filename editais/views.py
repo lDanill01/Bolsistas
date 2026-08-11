@@ -291,12 +291,35 @@ class EditalProvisorioDeleteView(UserPassesTestMixin, ContextMixin, DeleteView):
     context_object_name = 'edital'
     success_url = reverse_lazy('edital_list')
 
+    def get_queryset(self):
+        return EditalProvisorio.objects.with_deleted()
+
     def test_func(self):
         return self.request.user.is_superuser
 
+    def dispatch(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        if self.object.deleted_at is not None:
+            messages.warning(request, 'Este edital já foi excluído.')
+            return redirect('edital_list')
+        return super().dispatch(request, *args, **kwargs)
+
     def form_valid(self, form):
         self.object.deleted_at = timezone.now()
+        self.object.status = 'excluido'
         self.object.save()
+
+        aplicacoes = AplicacaoEdital.objects.filter(edital=self.object).select_related('bolsista__user')
+        usuarios = {a.bolsista.user for a in aplicacoes if a.bolsista and a.bolsista.user}
+        for user in usuarios:
+            from notifications.models import Notificacao
+            Notificacao.objects.create(
+                destinatario=user,
+                titulo='Edital excluído',
+                mensagem=f'O edital "{self.object}" foi excluído.',
+                tipo='sistema',
+            )
+
         messages.success(self.request, 'Edital removido com sucesso!')
         return redirect(self.success_url)
 
@@ -318,9 +341,14 @@ def restaurar_edital(request, pk):
         messages.error(request, 'Você não tem permissão para restaurar editais.')
         return redirect('edital_excluidos')
 
+    from base.utils import gerar_numero_serie
+
     edital = get_object_or_404(EditalProvisorio.objects.with_deleted(), pk=pk, deleted_at__isnull=False)
     edital.deleted_at = None
+    edital.status = 'aberto'
+    edital.numero_serie = gerar_numero_serie(EditalProvisorio)
     edital.save()
+    edital.calcular_cronograma()
     messages.success(request, f'Edital "{edital}" restaurado com sucesso!')
     return redirect('edital_excluidos')
 
@@ -400,7 +428,7 @@ class AplicacaoEditalListView(LoginRequiredMixin, ListView):
     paginate_by = 20
 
     def dispatch(self, request, *args, **kwargs):
-        self.edital = get_object_or_404(EditalProvisorio, pk=kwargs['edital_pk'])
+        self.edital = get_object_or_404(EditalProvisorio.objects.with_deleted(), pk=kwargs['edital_pk'])
         return super().dispatch(request, *args, **kwargs)
 
     def get_queryset(self):

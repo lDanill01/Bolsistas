@@ -86,6 +86,7 @@ class EditalProvisorio(DataModel):
         ('aberto', 'Aberto'),
         ('encerrado', 'Fechado'),
         ('cancelado', 'Cancelado'),
+        ('excluido', 'Excluído'),
     ]
 
     MODALIDADE_CHOICES = [

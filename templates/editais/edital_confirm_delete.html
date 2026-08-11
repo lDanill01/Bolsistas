@@ -22,7 +22,7 @@
                         <div>
                             <small class="text-muted">Status:</small>
                             <p class="fw-medium mb-0">
-                                <span class="badge {% if edital.status == 'aberto' %}bg-success{% elif edital.status == 'cancelado' %}bg-danger{% elif edital.status == 'encerrado' %}bg-secondary{% else %}bg-warning text-dark{% endif %}">
+                                <span class="badge {% if edital.status == 'aberto' %}bg-success{% elif edital.status == 'cancelado' %}bg-danger{% elif edital.status == 'encerrado' %}bg-secondary{% elif edital.status == 'excluido' %}bg-dark{% else %}bg-warning text-dark{% endif %}">
                                     {{ edital.get_status_display }}
                                 </span>
                             </p>
