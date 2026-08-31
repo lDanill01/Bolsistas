@@ -31,6 +31,7 @@
     overflow-y: auto;
     overflow-x: hidden;
     border-right: 1px solid var(--sidebar-border);
+    box-shadow: none;
 }
 #sidebar.collapsed { margin-left: -268px; }
 
@@ -140,7 +141,7 @@
     background: var(--topbar-bg);
     border-bottom: 1px solid var(--topbar-border);
     padding: 0.55rem 1.25rem;
-    box-shadow: 0 1px 3px rgba(19,28,46,.04);
+    box-shadow: 0 1px 3px rgba(14,44,99,.04);
     position: sticky;
     top:0;
     z-index: 1020;

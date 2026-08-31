@@ -24,6 +24,9 @@
 
     /* DS shadows/radius já vem de fonts-senai.css — re-expor para compat */
     --radius: 8px;
+    --shadow-soft: 0 1px 2px rgba(14,44,99,.04), 0 4px 12px rgba(14,44,99,.06);
+    --shadow-soft-hover: 0 4px 16px rgba(14,44,99,.08), 0 2px 8px rgba(14,44,99,.06);
+    --shadow-menu: 0 8px 24px rgba(14,44,99,.10), 0 2px 8px rgba(14,44,99,.06);
 }
 
 /* ---- RESET / BASE ---- */
@@ -80,11 +83,11 @@ h4, h5, h6, .h4, .h5, .h6 {
     background-color: var(--bg-card);
     border: 1px solid var(--border-color);
     border-radius: 12px;
-    box-shadow: var(--shadow-sm);
-    transition: box-shadow 0.15s ease;
+    box-shadow: var(--shadow-soft);
+    transition: box-shadow .18s ease, transform .18s ease;
     overflow: hidden;
 }
-.card:hover { box-shadow: var(--shadow-sm); }
+.card:hover { box-shadow: var(--shadow-soft-hover); transform: translateY(-1px); }
 .card-header { background-color: transparent; border-bottom: 1px solid var(--border-color); border-radius: 12px 12px 0 0 !important; padding: 1rem 1.25rem; }
 .card-body { padding: 1.25rem; }
 .card-footer { background-color: transparent; border-top: 1px solid var(--border-color); }
@@ -92,8 +95,8 @@ h4, h5, h6, .h4, .h5, .h6 {
 .card-dark .text-muted { color: rgba(255,255,255,.75) !important; }
 
 /* Cards DS extras — flat */
-.card-curso { width: 100%; background:#fff; border:1px solid var(--n-200); border-radius:12px; overflow:hidden; box-shadow:var(--shadow-sm); }
-.card-curso:hover{ box-shadow:var(--shadow-sm); transform:none; }
+.card-curso { width: 100%; background:#fff; border:1px solid var(--n-200); border-radius:12px; overflow:hidden; box-shadow:var(--shadow-soft); transition: box-shadow .18s ease, transform .18s ease; }
+.card-curso:hover{ box-shadow:var(--shadow-soft-hover); transform: translateY(-1px); }
 .card-curso .thumb{ height:140px; background:var(--blue-100); position:relative; }
 .card-curso .thumb .tag-pill{ position:absolute; top:12px; left:12px; }
 
@@ -251,7 +254,7 @@ a:hover { color: var(--blue-800); }
 .pagination .page-item.active .page-link { background-color: var(--blue-700); border-color: var(--blue-700); color:#fff; }
 
 /* ---- DROPDOWNS ---- */
-.dropdown-menu { border: 1px solid var(--n-200); border-radius: 12px; box-shadow: var(--shadow-md); padding: 6px; }
+.dropdown-menu { border: 1px solid #E6EAF0; border-radius: 12px; box-shadow: var(--shadow-menu); padding: 6px; backdrop-filter: blur(8px); }
 .dropdown-item { color: var(--n-800); border-radius: 6px; font-size: .9rem; padding: .45rem .85rem; }
 .dropdown-item:hover { background-color: var(--blue-50); color: var(--blue-700); }
 .dropdown-divider { border-color: var(--n-200) !important; }
