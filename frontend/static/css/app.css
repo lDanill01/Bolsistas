@@ -81,25 +81,20 @@ h4, h5, h6, .h4, .h5, .h6 {
     border: 1px solid var(--border-color);
     border-radius: var(--radius-lg);
     box-shadow: var(--shadow-sm);
-    transition: box-shadow 0.2s ease, transform 0.2s ease;
+    transition: box-shadow 0.15s ease;
     overflow: hidden;
 }
-.card:hover { box-shadow: var(--shadow-md); }
-.card-header {
-    background-color: transparent;
-    border-bottom: 1px solid var(--border-color);
-    border-radius: var(--radius-lg) var(--radius-lg) 0 0 !important;
-    padding: 1rem 1.25rem;
-}
+.card:hover { box-shadow: var(--shadow-sm); }
+.card-header { background-color: transparent; border-bottom: 1px solid var(--border-color); border-radius: var(--radius-lg) var(--radius-lg) 0 0 !important; padding: 1rem 1.25rem; }
 .card-body { padding: 1.25rem; }
 .card-footer { background-color: transparent; border-top: 1px solid var(--border-color); }
-.card-dark { background: linear-gradient(135deg, var(--blue-900) 0%, var(--blue-700) 100%); color: #fff; border: none; }
+.card-dark { background: #0E2C63; color: #fff; border: none; }
 .card-dark .text-muted { color: rgba(255,255,255,.75) !important; }
 
-/* Cards DS extras (curso/noticia/unidade) — prontos para uso */
-.card-curso { width: 100%; background:#fff; border:1px solid var(--n-200); border-radius:var(--radius-lg); overflow:hidden; box-shadow:var(--shadow-sm); transition:box-shadow .18s, transform .18s; }
-.card-curso:hover{ box-shadow:var(--shadow-md); transform:translateY(-2px); }
-.card-curso .thumb{ height:140px; background:linear-gradient(135deg,var(--blue-700),var(--blue-500)); position:relative; }
+/* Cards DS extras — flat */
+.card-curso { width: 100%; background:#fff; border:1px solid var(--n-200); border-radius:var(--radius-lg); overflow:hidden; box-shadow:var(--shadow-sm); }
+.card-curso:hover{ box-shadow:var(--shadow-sm); transform:none; }
+.card-curso .thumb{ height:140px; background:var(--blue-100); position:relative; }
 .card-curso .thumb .tag-pill{ position:absolute; top:12px; left:12px; }
 
 /* ---- BUTTONS (DS hierarquia) ---- */
