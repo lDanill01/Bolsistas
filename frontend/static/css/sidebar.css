@@ -150,8 +150,7 @@
     position:absolute;
     top:0; left:0; right:0;
     height:3px;
-    background: linear-gradient(90deg, var(--blue-500) 0 25%, var(--sesi-green, #52AE32) 25% 50%, var(--orange-500) 50% 75%, var(--iel-teal, #6CC2BA) 75% 100%);
-    /* fallback simples laranja se verdes não definidos */
+    background: var(--orange-500);
 }
 .top-navbar .navbar-toggler-sidebar {
     border: none;
