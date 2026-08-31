@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Preview — 3 Abordagens de Ajuste</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',Arial,sans-serif;background:#F7F9FB;color:#131C2E;padding:32px}
+h1{font-size:28px;margin-bottom:6px}
+.sub{color:#5A667D;margin-bottom:28px}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.card{border-radius:14px;overflow:hidden;border:1px solid #E3E7ED;background:#fff;box-shadow:0 1px 2px rgba(19,28,46,.06)}
+.card .head{padding:14px 18px;border-bottom:1px solid #E3E7ED}
+.card .head h2{font-size:15px}
+.card .head p{font-size:12px;color:#5A667D;margin-top:4px}
+.badge{display:inline-block;font-size:11px;font-weight:700;padding:4px 10px;border-radius:999px;margin-bottom:8px}
+.mock{padding:0}
+.sidebar{height:280px;display:flex;flex-direction:column;color:rgba(255,255,255,.9);position:relative}
+.sidebar .brand{display:flex;align-items:center;gap:10px;padding:14px 16px;border-bottom:1px solid rgba(255,255,255,.12);font-weight:800}
+.sidebar .brand img{object-fit:contain;display:block}
+.sidebar .nav{padding:12px 8px;flex:1}
+.sidebar .section{font-size:9px;letter-spacing:.12em;text-transform:uppercase;opacity:.55;padding:8px 10px 4px;font-weight:700}
+.sidebar .link{display:flex;align-items:center;gap:8px;padding:7px 10px;margin:3px 4px;border-radius:8px;font-size:12px}
+.sidebar .link.active{font-weight:700}
+.topbar{height:36px;background:#fff;border-bottom:1px solid #E3E7ED;display:flex;align-items:center;justify-content:space-between;padding:0 12px;font-size:11px;position:relative}
+.topbar::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
+.btn{border:none;padding:7px 14px;border-radius:4px;font-weight:700;font-size:12px;color:#fff;cursor:pointer}
+.content{padding:14px;background:#F7F9FB;display:flex;flex-direction:column;gap:10px}
+.mini-card{background:#fff;border:1px solid #E3E7ED;border-radius:10px;padding:12px;box-shadow:0 1px 2px rgba(0,0,0,.06)}
+.legend{margin-top:14px;padding:12px;background:#fff;border:1px dashed #CBD2DC;border-radius:8px;font-size:12px;line-height:1.6}
+.legend b{color:#0E2C63}
+/* A — SóBrio Flat */
+.A .sidebar{background:#0E2C63}
+.A .sidebar .brand img{height:22px;background:none;padding:0;box-shadow:none;border-radius:0}
+.A .sidebar .link.active{background:#164194;border-left:3px solid #E84910}
+.A .topbar::before{background:#E84910}
+.A .btn-primary{background:#E84910}
+.A .btn-secondary{background:#164194}
+.A .card-dark{background:#0E2C63;color:#fff}
+/* B — Suave */
+.B .sidebar{background:linear-gradient(180deg,#0E2C63 0%,#14346F 100%)}
+.B .sidebar .brand img{height:22px;background:none;padding:0;box-shadow:none;border-radius:0}
+.B .sidebar .link.active{background:rgba(22,65,148,.9);border-left:3px solid #D6450F}
+.B .topbar::before{background:linear-gradient(90deg,#0E2C63,#D6450F)}
+.B .btn-primary{background:#D6450F;box-shadow:0 1px 0 #B6390C}
+.B .btn-secondary{background:#14346F}
+.B .card-dark{background:linear-gradient(135deg,#0E2C63,#14346F);color:#fff}
+/* C — Minimal */
+.C .sidebar{background:#F7F9FB;color:#3B475F;border-right:1px solid #E3E7ED}
+.C .sidebar .brand{color:#0E2C63;border-color:#E3E7ED}
+.C .sidebar .brand img{height:20px;background:none;padding:0;box-shadow:none}
+.C .sidebar .section{color:#7C879C}
+.C .sidebar .link{color:#3B475F}
+.C .sidebar .link.active{background:#E4EFFB;color:#0E2C63;border-left:3px solid #E84910}
+.C .topbar::before{background:#E84910}
+.C .btn-primary{background:#E84910}
+.C .btn-secondary{background:#fff;color:#164194 !important;border:1px solid #164194}
+.C .card-dark{background:#fff;color:#131C2E;border:1px solid #E3E7ED}
+@media(max-width:900px){.grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<h1>Preview — Ajuste de Cores, Gradientes e Ícone</h1>
+<p class="sub">Situação atual: laranja #E84910 muito saturado + sidebar com gradiente pesado (1755×485 PNG com caixa branca). Escolha A/B/C abaixo — aprovado vira spec.</p>
+
+<div class="grid">
+  <!-- A -->
+  <div class="card A">
+    <div class="head"><span class="badge" style="background:#E4EFFB;color:#164194">A — Sóbrio Flat ★ recomendado</span><h2>Flat sólido, acento pontual</h2><p>Sidebar sólida #0E2C63, sem gradiente. Logo 22px sem caixa branca. Topbar faixa única laranja 3px.</p></div>
+    <div class="mock">
+      <div class="sidebar">
+        <div class="brand"><img src="../frontend/static/img/logo-senai.png" alt="SENAI"><span>Bolsas <small style="display:block;font-size:8px;letter-spacing:.08em;font-weight:700;opacity:.8">SENAI · SISTEMA FIEMS</small></span></div>
+        <div class="nav"><div class="section">Principal</div><div class="link active">● Dashboard</div><div class="link">○ Editais</div><div class="link">○ Resultados</div></div>
+      </div>
+      <div class="topbar"><span>☰</span><span>🔔 · Usuário</span></div>
+      <div class="content">
+        <button class="btn btn-primary">Ação primária (laranja só aqui)</button>
+        <button class="btn btn-secondary">Secundário azul</button>
+        <div class="mini-card">Card branco • borda #E3E7ED • shadow-sm</div>
+        <div class="mini-card card-dark">Card-dark sólido #0E2C63</div>
+      </div>
+    </div>
+    <div class="legend"><b>Prós:</b> profissional, menos fadiga, fiel ao DS “laranja = menor área”.<br><b>Contras:</b> menos “vivo”. <br><b>Mudanças:</b> remove <code>linear-gradient</code> sidebar/thumb, remove <code>box-shadow laranja</code>.</div>
+  </div>
+
+  <!-- B -->
+  <div class="card B">
+    <div class="head"><span class="badge" style="background:#FEF1EA;color:#B6390C">B — Suave com micro-gradientes</span><h2>Gradiente sutil dessaturado</h2><p>Sidebar #0E2C63→#14346F (4% diff). Laranja dessaturado #D6450F. Topbar degradê leve.</p></div>
+    <div class="mock">
+      <div class="sidebar">
+        <div class="brand"><img src="../frontend/static/img/logo-senai.png" alt="SENAI"><span>Bolsas <small style="display:block;font-size:8px;letter-spacing:.08em;font-weight:700;opacity:.8">SENAI · SISTEMA FIEMS</small></span></div>
+        <div class="nav"><div class="section">Principal</div><div class="link active">● Dashboard</div><div class="link">○ Editais</div></div>
+      </div>
+      <div class="topbar"><span>☰</span><span>🔔 · Usuário</span></div>
+      <div class="content">
+        <button class="btn btn-primary">Ação #D6450F dessaturado</button>
+        <button class="btn btn-secondary">Secundário #14346F</button>
+        <div class="mini-card">Card branco</div>
+        <div class="mini-card card-dark">Card degradê sutil</div>
+      </div>
+    </div>
+    <div class="legend"><b>Prós:</b> mantém “premium”.<br><b>Contras:</b> ainda exige tuning fino.<br><b>Mudanças:</b> gradientes 4% + paleta levemente dessaturada.</div>
+  </div>
+
+  <!-- C -->
+  <div class="card C">
+    <div class="head"><span class="badge" style="background:#F7F9FB;color:#3B475F;border:1px solid #E3E7ED">C — Minimal neutro</span><h2>Neutro quase todo, laranja só no CTA</h2><p>Sidebar clara #F7F9FB, base neutra, tipografia azul só em títulos. Extremamente clean.</p></div>
+    <div class="mock">
+      <div class="sidebar">
+        <div class="brand"><img src="../frontend/static/img/logo-senai.png" alt="SENAI"><span>Bolsas <small style="display:block;font-size:8px;letter-spacing:.08em;font-weight:700;opacity:.8">SENAI · SISTEMA FIEMS</small></span></div>
+        <div class="nav"><div class="section">Principal</div><div class="link active">● Dashboard</div><div class="link">○ Editais</div></div>
+      </div>
+      <div class="topbar"><span>☰</span><span>🔔 · Usuário</span></div>
+      <div class="content">
+        <button class="btn btn-primary">Único laranja da tela</button>
+        <button class="btn btn-secondary">Secundário outline</button>
+        <div class="mini-card">Card branco</div>
+        <div class="mini-card card-dark" style="background:#fff">Card claro</div>
+      </div>
+    </div>
+    <div class="legend"><b>Prós:</b> máximo sóbrio, ótimo para sistema interno.<br><b>Contras:</b> pode ficar apagado.<br><b>Mudanças:</b> sidebar clara, tudo flat.</div>
+  </div>
+</div>
+
+<p style="margin-top:24px;color:#5A667D;font-size:13px">Abra este arquivo em <code>design/preview-abordagens.html</code> no navegador. Me diga <b>A, B ou C</b> (ou “A com detalhe X de B”). O ícone em todas já está corrigido: <b>22px/20px sem caixa branca</b>, gap 10px, sem esticar.</p>
+</body>
+</html>
