@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load static %}
 {% block title %}Entrar - Bolsas SENAI - MS{% endblock %}
 
 {% block public_content %}
@@ -7,8 +8,8 @@
         <div class="col-md-5 col-lg-4">
             <div class="card p-4">
                 <div class="text-center mb-4">
-                    <i class="bi bi-lightbulb-fill text-primary fs-1"></i>
-                    <h3 class="fw-bold mt-2">Entrar</h3>
+                    <img src="{% static 'img/logo-senai.png' %}" alt="SENAI Sistema FIEMS" height="36" class="mb-3">
+                    <h3 class="fw-bold mt-1" style="font-family:var(--font-display);">Entrar</h3>
                     <p class="text-muted">Acesse sua conta no portal</p>
                 </div>
 

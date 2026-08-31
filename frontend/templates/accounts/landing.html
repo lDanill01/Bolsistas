@@ -3,12 +3,23 @@
 {% block title %}Bem-vindo ao Bolsas SENAI - MS{% endblock %}
 
 {% block public_content %}
-<div class="bg-primary bg-gradient text-white">
-    <div class="container py-5">
+<div class="text-white position-relative overflow-hidden" style="background:linear-gradient(150deg, var(--blue-900) 0%, var(--blue-700) 52%, var(--blue-600) 100%);padding:72px 0 56px;">
+    <div class="position-absolute top-0 start-0 bottom-0 d-flex flex-column" style="width:10px;">
+        <div style="flex:1;background:var(--blue-500)"></div>
+        <div style="flex:1;background:var(--sesi-green)"></div>
+        <div style="flex:1;background:var(--orange-500)"></div>
+        <div style="flex:1;background:var(--iel-teal)"></div>
+    </div>
+    <div class="position-absolute" style="inset:0;background:radial-gradient(circle at 82% 18%, rgba(232,73,16,.22), transparent 42%), radial-gradient(circle at 8% 92%, rgba(0,139,210,.18), transparent 45%);pointer-events:none;"></div>
+    <div class="container py-2 position-relative">
+        <div class="d-inline-flex align-items-center gap-2 mb-3" style="font-size:12.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--orange-400);">
+            <span style="width:22px;height:2px;background:var(--orange-500);display:inline-block;"></span>
+            Sistema FIEMS · ms.senai.br
+        </div>
         <div class="row align-items-center">
             <div class="col-lg-6 mb-4 mb-lg-0">
-                <h1 class="display-4 fw-bold mb-3 text-white">
-                    <i class="bi bi-lightbulb-fill me-2"></i>Bolsas SENAI - MS
+                <h1 class="mb-3 text-white" style="font-family:var(--font-display);font-weight:900;font-style:italic;font-size:clamp(32px,5vw,52px);line-height:1.02;">
+                    Bolsas <em style="color:var(--orange-400);">SENAI - MS</em>
                 </h1>
                 <p class="fs-5 text-white-50 mb-4">
                     Plataforma inteligente para gestao de bolsistas, editais e classificacao de candidatos.

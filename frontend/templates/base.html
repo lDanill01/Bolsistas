@@ -9,6 +9,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
     <script src="https://unpkg.com/htmx.org@2.0.4"></script>
     <meta name="csrf-token" content="{{ csrf_token }}">
+    <link rel="icon" type="image/png" href="{% static 'img/logo-senai.png' %}">
     <link rel="stylesheet" href="{% static 'css/app.css' %}">
     {% if user.is_authenticated %}
     <link rel="stylesheet" href="{% static 'css/sidebar.css' %}">
@@ -77,9 +78,13 @@
             {% block content %}{% endblock %}
         </main>
 
-        <footer class="bg-white border-top py-3 mt-4">
-            <div class="container text-center text-muted small">
-                &copy; {% now "Y" %} Bolsas SENAI - MS. Todos os direitos reservados.
+        <footer class="footer-senai py-4 mt-4">
+            <div class="container d-flex flex-column flex-md-row justify-content-between align-items-center gap-3">
+                <div class="d-flex align-items-center gap-3">
+                    <img src="{% static 'img/logo-senai.png' %}" alt="SENAI Sistema FIEMS" height="28" style="background:#fff;border-radius:6px;padding:4px 8px;">
+                    <span class="small" style="color:var(--blue-100);opacity:.9;">&copy; {% now "Y" %} SENAI MS — Sistema FIEMS. Bolsas SENAI - MS.</span>
+                </div>
+                <span class="small" style="color:var(--orange-400);font-weight:700;letter-spacing:.04em;">ms.senai.br</span>
             </div>
         </footer>
     </div>
@@ -87,6 +92,18 @@
 
 {% else %}
 {# ---- Páginas públicas (landing / login / registro) ---- #}
+<div class="public-topbar"><div style="background:var(--blue-500)"></div><div style="background:var(--sesi-green)"></div><div style="background:var(--orange-500)"></div><div style="background:var(--iel-teal)"></div></div>
+<nav class="bg-white border-bottom">
+    <div class="container d-flex align-items-center justify-content-between py-2">
+        <a href="{% url 'home' %}" class="d-flex align-items-center gap-2 text-decoration-none">
+            <img src="{% static 'img/logo-senai.png' %}" alt="SENAI Sistema FIEMS" height="32">
+        </a>
+        <div class="d-flex gap-2">
+            <a href="{% url 'login' %}" class="btn btn-sm btn-outline-primary">Entrar</a>
+            <a href="{% url 'registro' %}" class="btn btn-sm btn-primary">Criar conta</a>
+        </div>
+    </div>
+</nav>
 <main class="flex-grow-1">
     {% if messages %}
     <div class="container mt-3">
@@ -100,6 +117,15 @@
     {% endif %}
     {% block public_content %}{% endblock %}
 </main>
+<footer class="footer-senai py-4 mt-auto">
+    <div class="container d-flex flex-column flex-md-row justify-content-between align-items-center gap-3">
+        <div class="d-flex align-items-center gap-3">
+            <img src="{% static 'img/logo-senai.png' %}" alt="SENAI Sistema FIEMS" height="28" style="background:#fff;border-radius:6px;padding:4px 8px;">
+            <span class="small" style="color:var(--blue-100);opacity:.9;">&copy; {% now "Y" %} SENAI MS — Sistema FIEMS.</span>
+        </div>
+        <span class="small" style="color:var(--orange-400);font-weight:700;letter-spacing:.04em;">ms.senai.br</span>
+    </div>
+</footer>
 {% endif %}
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
