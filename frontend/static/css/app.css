@@ -15,12 +15,12 @@
     --bs-light: #F7F9FB;
     --bs-dark: #131C2E;
 
-    --bg-body: #F7F9FB;
+    --bg-body: #F2F4F8;
     --bg-card: #FFFFFF;
     --bg-sidebar: #0E2C63;
-    --text-main: #131C2E;
+    --text-main: #232E45;
     --text-muted: #5A667D;
-    --border-color: #E3E7ED;
+    --border-color: #E6EAF0;
 
     /* DS shadows/radius já vem de fonts-senai.css — re-expor para compat */
     --radius: 8px;
