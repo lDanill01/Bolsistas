@@ -79,20 +79,20 @@ h4, h5, h6, .h4, .h5, .h6 {
 .card {
     background-color: var(--bg-card);
     border: 1px solid var(--border-color);
-    border-radius: var(--radius-lg);
+    border-radius: 12px;
     box-shadow: var(--shadow-sm);
     transition: box-shadow 0.15s ease;
     overflow: hidden;
 }
 .card:hover { box-shadow: var(--shadow-sm); }
-.card-header { background-color: transparent; border-bottom: 1px solid var(--border-color); border-radius: var(--radius-lg) var(--radius-lg) 0 0 !important; padding: 1rem 1.25rem; }
+.card-header { background-color: transparent; border-bottom: 1px solid var(--border-color); border-radius: 12px 12px 0 0 !important; padding: 1rem 1.25rem; }
 .card-body { padding: 1.25rem; }
 .card-footer { background-color: transparent; border-top: 1px solid var(--border-color); }
 .card-dark { background: #0E2C63; color: #fff; border: none; }
 .card-dark .text-muted { color: rgba(255,255,255,.75) !important; }
 
 /* Cards DS extras — flat */
-.card-curso { width: 100%; background:#fff; border:1px solid var(--n-200); border-radius:var(--radius-lg); overflow:hidden; box-shadow:var(--shadow-sm); }
+.card-curso { width: 100%; background:#fff; border:1px solid var(--n-200); border-radius:12px; overflow:hidden; box-shadow:var(--shadow-sm); }
 .card-curso:hover{ box-shadow:var(--shadow-sm); transform:none; }
 .card-curso .thumb{ height:140px; background:var(--blue-100); position:relative; }
 .card-curso .thumb .tag-pill{ position:absolute; top:12px; left:12px; }
@@ -100,7 +100,7 @@ h4, h5, h6, .h4, .h5, .h6 {
 /* ---- BUTTONS (DS hierarquia) ---- */
 .btn {
     display: inline-flex; align-items: center; gap: 8px;
-    border-radius: 4px;
+    border-radius: 8px;
     font-weight: 700;
     font-size: 14.5px;
     padding: 11px 22px;
@@ -204,7 +204,7 @@ a:hover { color: var(--blue-800); }
 /* ---- FORMS (DS) ---- */
 .form-control, .form-select {
     border: 1.5px solid var(--n-300);
-    border-radius: 4px;
+    border-radius: 8px;
     color: var(--n-900);
     font-size: 0.92rem;
     padding: 0.6rem 0.9rem;
@@ -224,7 +224,7 @@ a:hover { color: var(--blue-800); }
 .invalid-feedback { color: var(--danger); font-size: 12px; }
 
 /* ---- BADGES (status) ---- */
-.badge { font-weight: 700; padding: 0.4em 0.65em; border-radius: 6px; letter-spacing:.02em; font-size: .75rem; }
+.badge { font-weight: 700; padding: 0.4em 0.65em; border-radius: 8px; letter-spacing:.02em; font-size: .75rem; }
 .badge.bg-primary { background-color: var(--blue-700) !important; }
 .badge.bg-success { background-color: var(--success) !important; }
 .badge.bg-danger { background-color: var(--danger) !important; }
@@ -251,13 +251,13 @@ a:hover { color: var(--blue-800); }
 .pagination .page-item.active .page-link { background-color: var(--blue-700); border-color: var(--blue-700); color:#fff; }
 
 /* ---- DROPDOWNS ---- */
-.dropdown-menu { border: 1px solid var(--n-200); border-radius: 8px; box-shadow: var(--shadow-md); padding: 6px; }
+.dropdown-menu { border: 1px solid var(--n-200); border-radius: 12px; box-shadow: var(--shadow-md); padding: 6px; }
 .dropdown-item { color: var(--n-800); border-radius: 6px; font-size: .9rem; padding: .45rem .85rem; }
 .dropdown-item:hover { background-color: var(--blue-50); color: var(--blue-700); }
 .dropdown-divider { border-color: var(--n-200) !important; }
 
 /* ---- ALERTS (semânticas DS) ---- */
-.alert { border: 1px solid transparent; border-radius: 8px; font-size: .92rem; }
+.alert { border: 1px solid transparent; border-radius: 10px; font-size: .92rem; }
 .alert-primary { background-color: var(--blue-50); color: var(--blue-800); border-color: var(--blue-100); }
 .alert-success { background-color: var(--success-bg); color: var(--success); border-color: #c8e9d2; }
 .alert-danger  { background-color: var(--danger-bg); color: var(--danger); border-color: #f5c2c2; }
