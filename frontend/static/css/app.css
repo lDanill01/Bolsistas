@@ -109,34 +109,32 @@ h4, h5, h6, .h4, .h5, .h6 {
     font-weight: 700;
     font-size: 14.5px;
     padding: 11px 22px;
-    transition: transform .12s ease, box-shadow .12s ease, background .15s, border-color .15s, color .15s;
+    transition: background .15s, border-color .15s, color .15s;
     border: 2px solid transparent;
     line-height: 1.2;
 }
-.btn:active { transform: translateY(1px); }
+.btn:active { transform: none; }
 .btn-sm { padding: 8px 16px; font-size: 13px; }
 .btn-lg { padding: 14px 28px; font-size: 15.5px; }
 
-/* Primário = laranja SENAI (única CTA por tela) */
 .btn-primary {
     background-color: var(--orange-500) !important;
     border-color: var(--orange-500) !important;
     color: #fff !important;
-    box-shadow: 0 2px 0 var(--orange-700);
+    box-shadow: none !important;
 }
 .btn-primary:hover, .btn-primary:focus {
     background-color: var(--orange-600) !important;
     border-color: var(--orange-600) !important;
     color: #fff !important;
-    box-shadow: 0 2px 0 var(--orange-700), 0 4px 10px rgba(232,73,16,.25);
+    box-shadow: none !important;
 }
 
-/* Secundário = azul institucional */
 .btn-secondary {
     background-color: var(--blue-700) !important;
     border-color: var(--blue-700) !important;
     color: #fff !important;
-    box-shadow: 0 2px 0 var(--blue-900);
+    box-shadow: none !important;
 }
 .btn-secondary:hover, .btn-secondary:focus {
     background-color: var(--blue-800) !important;
