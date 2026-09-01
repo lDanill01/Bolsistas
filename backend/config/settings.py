@@ -275,7 +275,7 @@ LOGGING = {
 # Integracao com IA (GROQ - Llama 3.3 70B)
 # A GROQ expoe uma API compativel com o SDK openai, reaproveitado aqui via base_url.
 GROQ_API_KEY = read_secret('GROQ_API_KEY')
-GROQ_MODEL = env('GROQ_MODEL', default='llama-3.3-70b-versatile')
+GROQ_MODEL = env('GROQ_MODEL', default='qwen/qwen3.6-27b')
 GROQ_BASE_URL = env('GROQ_BASE_URL', default='https://api.groq.com/openai/v1')
 
 # Provedor de IA: 'groq' (unico suportado). Por padrao, ativa se a chave existir.

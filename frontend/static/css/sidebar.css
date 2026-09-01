@@ -1,13 +1,13 @@
 /* Sidebar — Design System SENAI MS */
 :root {
-    --sidebar-bg: #F7F9FB; /* C minimal — clara */
-    --sidebar-bg-hover: #EFF2F6; /* n-100 */
-    --sidebar-bg-active: #E4EFFB; /* blue-100 */
-    --sidebar-text: #3B475F; /* n-700 */
-    --sidebar-text-active: #0E2C63; /* blue-900 */
-    --sidebar-border: #E6EAF0; /* suavizado */
-    --sidebar-section: #7C879C; /* n-500 */
-    --sidebar-active-indicator: #E84910;
+    --sidebar-bg: #0E2C63; /* blue-900 */
+    --sidebar-bg-hover: #16386F; /* blue-800 */
+    --sidebar-bg-active: #1D4796; /* blue-700 */
+    --sidebar-text: #FFFFFF;
+    --sidebar-text-active: #FFFFFF;
+    --sidebar-border: rgba(255,255,255,0.14);
+    --sidebar-section: rgba(255,255,255,0.65);
+    --sidebar-active-indicator: #FFFFFF;
     --topbar-bg: #ffffff;
     --topbar-border: #E6EAF0;
     --topbar-text: #232E45;
@@ -120,7 +120,7 @@
     font-size: 1.05rem;
     width: 1.35rem;
     text-align: center;
-    opacity:.9;
+    opacity:1;
 }
 #sidebar .sidebar-link.active i { opacity:1; }
 

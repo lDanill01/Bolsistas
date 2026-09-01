@@ -14,13 +14,13 @@ Sistema de gestao de bolsas de estudo para os institutos SENAI de Mato Grosso do
 - **Resultados** — Listagem e download (CSV) dos resultados por edital
 - **Permissoes** — Controle de acesso por grupos (SuperUser, Manager, ExecuteUser, ViewUser)
 - **PDF** — Geracao de editais em PDF (xhtml2pdf)
-- **Notificacoes** — Notificacoes in-app geradas somente para solicitacoes de edicao de dados de usuarios
+- **Notificacoes** — Notificacoes in-app geradas somente para solicitacoes de edicao de dados de usuarios (`notifications/signals.py`)
 
 ## Stack
 
 | Camada | Tecnologia |
 |---|---|
-| Web | Django 6.0 + HTMX + Bootstrap 5 |
+| Web | Django 6.0 + HTMX 2 + Bootstrap 5 |
 | Tarefas | Celery + RabbitMQ |
 | Cache | Redis |
 | DB | PostgreSQL 16 |
@@ -116,6 +116,54 @@ Segredos sensiveis podem ser injetados via Docker Secrets usando o sufixo `_FILE
 | **ExecuteUser** | Acesso operacional: avaliacao, trilha, gestao de documentos |
 | **ViewUser** | Visualizar editais, candidatar-se, ver propria compatibilidade via IA |
 
+Constantes de grupo (`base/mixins.py`): `GROUP_MANAGER='Manager'`, `GROUP_EXECUTE_USER='ExecuteUser'`, `GROUP_VIEW_USER='ViewUser'`. Os templates recebem `is_manager` / `is_execute_user` / `is_view_user` via `base/context_processors.perfil_context`.
+
+## Design System / Frontend
+
+- **Templates** em `frontend/templates/`; assets estaticos em `frontend/static/` (`app.css`, `sidebar.css`).
+- **htmx 2** e Bootstrap 5 sao carregados em `base.html`; JS por pagina vai em `{% block extra_js %}` ou dentro de partials.
+- **Layout compartilhado**: `base.html` inclui `frontend/templates/components/sidebar.html`. Os links da sidebar sao agrupados por permissao e recebem `active` via `request.resolver_match.url_name`.
+- **Sidebar**: usa variaveis CSS em `:root` (ex.: `--sidebar-bg`, `--sidebar-text`). Fundo azul (`--sidebar-bg: #0E2C63`) com texto/icones brancos; itens ativos com indicador branco.
+- **Footer**: fixo no rodape via `body` flex column (`min-height:100vh`) + `mt-auto` no `<footer>`, funcionando nos layouts autenticado e publico.
+- **Media protegida**: `base/views.py:media_protegida` usa `default_storage` (FileSystem em dev, Azure Blob em prod quando `AZURE_ACCOUNT_NAME` + `AZURE_CONTAINER` estiverem definidos).
+- **Texto de UI** em PT-BR; documentacao/README em ASCII (sem acentos).
+
+## Knowledge Graph (graphify)
+
+O projeto mantem um knowledge graph em `graphify-out/` com god nodes, estrutura de comunidades e relacoes entre arquivos.
+
+- `graphify query "<pergunta>"` — subgrafo focado (mais leve que ler o repo inteiro)
+- `graphify path "<A>" "<B>"` — relacao entre dois arquivos/conceitos
+- `graphify explain "<conceito>"` — conceito isolado
+- `graphify update .` — atualiza o grafo apos editar codigo (AST-only, sem custo de API)
+
+Use `/graphify` para invocar o fluxo completo. Arquivos de grafo "sujos" apos hooks sao esperados e nao impedem o uso.
+
+## Convencoes de Desenvolvimento
+
+- **Testes**: usam o runner do Django (`python backend/manage.py test ...`) — nao ha pytest/tox. E necessario sobrescrever as env vars de DB/cache porque `settings.py` le `.env` (Postgres no host `db`):
+
+  PowerShell:
+  ```powershell
+  $env:SECRET_KEY='x'; $env:DB_ENGINE='django.db.backends.sqlite3'; $env:DB_NAME='db.sqlite3'; $env:DB_HOST=''; $env:CACHE_URL='dummycache://'; $env:CELERY_BROKER_URL='memory://'
+  python backend/manage.py test <label>
+  ```
+  Linux/macOS:
+  ```bash
+  SECRET_KEY=x DB_ENGINE=django.db.backends.sqlite3 DB_NAME=db.sqlite3 DB_HOST='' CACHE_URL=dummycache:// CELERY_BROKER_URL=memory:// python backend/manage.py test <label>
+  ```
+
+  - `base.tests.DiasUteisTests` tem 3 falhas pre-existentes (dependem de feriado/data) — nao sao regressoes.
+  - Padrao de teste: `RequestFactory` + `View.as_view()(req)` + `r.render()`. Evite `Client` localmente (bug de `Context.__copy__` no Django 4.2 desta maquina).
+- **Migracoes**: rode `python backend/manage.py migrate` completo (as migrations de `editais` dependem de estado de `accounts`/`cadastro`). `makemigrations` pode agrupar um `AlterField status` espurio em `editalprovisorio` (deriva de label `Fechado` vs `Encerrado` na migration 0001) — inspecione e remova ops nao relacionadas antes de commitar.
+- **Dev container**: o entrypoint (`docker/entrypoint.sh`) roda `migrate` + `collectstatic` na subida. Apos editar codigo, bytecode stale pode causar erros confusos — limpe e reinicie:
+  ```bash
+  docker compose exec web python -c "import shutil,pathlib;[shutil.rmtree(p,ignore_errors=True) for p in pathlib.Path('/app').rglob('__pycache__')]"
+  docker compose restart web
+  ```
+- **Notificacoes**: geradas ONLY para `SolicitacaoEdicao`. Nao re-adicione notificacoes para cadastro, avaliacao ou conclusao de resumo de IA (removido intencionalmente).
+- **Arquivos de modelo**: muitos terminam com linha em branco final que deve ser preservada.
+
 ## Deploy
 
 ### Producao (Azure Container Apps)
@@ -156,6 +204,7 @@ O pipeline `infrastructure/azure-pipelines.yml` (Azure DevOps) faz CI (testes + 
 ├── documentation/              # Documentacao e dados
 │   ├── docs/                   # Dados de cursos e universidades
 │   └── documentação/           # Documentacao tecnica por modulo
+├── graphify-out/               # Knowledge graph (graphify)
 ├── docker/                     # Entrypoints Docker (web + celery)
 ├── Dockerfile                  # Imagem Docker
 ├── docker-compose.yml          # Ambiente de desenvolvimento
@@ -171,6 +220,10 @@ O pipeline `infrastructure/azure-pipelines.yml` (Azure DevOps) faz CI (testes + 
 docker compose exec web python backend/manage.py makemigrations
 docker compose exec web python backend/manage.py migrate
 
+# Collectstatic (apos editar CSS/JS)
+docker compose exec web python backend/manage.py collectstatic --noinput
+docker compose restart web
+
 # Celery
 docker compose exec celery celery -A config worker -l info
 
@@ -180,6 +233,9 @@ docker compose logs -f web
 # Shell Django
 docker compose exec web python backend/manage.py shell
 
-# Testes
+# Testes (requer override de env vars — ver secao Convencoes de Desenvolvimento)
 docker compose exec web python backend/manage.py test
+
+# Knowledge graph
+graphify update .
 ```
