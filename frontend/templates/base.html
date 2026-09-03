@@ -80,7 +80,7 @@
 
         <footer class="footer-senai py-4 mt-auto">
             <div class="container text-center">
-                <span class="small">&copy; {% now "Y" %} SENAI MS — Sistema FIEMS. Bolsas SENAI - MS.</span>
+                <img src="{% static 'img/logo-senai.png' %}" alt="SENAI Sistema FIEMS" height="28">
             </div>
         </footer>
     </div>
@@ -89,13 +89,6 @@
 {% else %}
 {# ---- Páginas públicas (landing / login / registro) ---- #}
 <div class="public-topbar"><div style="background:var(--blue-500)"></div><div style="background:var(--sesi-green)"></div><div style="background:var(--orange-500)"></div><div style="background:var(--iel-teal)"></div></div>
-<nav class="bg-white border-bottom">
-    <div class="container d-flex align-items-center justify-content-center py-2">
-        <a href="{% url 'home' %}" class="d-flex align-items-center gap-2 text-decoration-none">
-            <img src="{% static 'img/logo-senai.png' %}" alt="SENAI Sistema FIEMS" height="32">
-        </a>
-    </div>
-</nav>
 <main class="flex-grow-1">
     {% if messages %}
     <div class="container mt-3">
@@ -111,7 +104,7 @@
 </main>
 <footer class="footer-senai py-4 mt-auto">
     <div class="container text-center">
-        <span class="small">&copy; {% now "Y" %} SENAI MS — Sistema FIEMS.</span>
+        <img src="{% static 'img/logo-senai.png' %}" alt="SENAI Sistema FIEMS" height="28">
     </div>
 </footer>
 {% endif %}

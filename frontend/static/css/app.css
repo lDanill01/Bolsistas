@@ -337,12 +337,11 @@ a:hover { color: var(--blue-800); }
 /* ---- FOOTER ---- */
 footer { margin-top: auto; }
 .footer-senai {
-    background: var(--blue-900);
-    color: var(--blue-100);
-    border-top: 4px solid var(--orange-500);
+    background: #fff;
+    color: var(--text-muted);
+    border-top: 1px solid var(--border-color);
 }
-.footer-senai a { color: var(--blue-100); opacity:.9; }
-.footer-senai a:hover { color:#fff; opacity:1; }
+.footer-senai img { display: inline-block; opacity: .9; }
 
 /* ---- HTMX ---- */
 .htmx-indicator { opacity: 0; transition: opacity 200ms ease-in; }
