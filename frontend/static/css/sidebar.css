@@ -1,12 +1,12 @@
 /* Sidebar — Design System SENAI MS + estilo colapsável (design/model_sidebar.html) */
 :root {
-    --sidebar-bg: #0E2C63; /* blue-900 */
-    --sidebar-bg-hover: #16386F; /* blue-800 */
-    --sidebar-bg-active: #1D4796; /* blue-700 */
-    --sidebar-text: #FFFFFF;
+    --sidebar-bg: #FFFFFF;
+    --sidebar-bg-hover: #EEF4FC;
+    --sidebar-bg-active: #D96B45;
+    --sidebar-text: #315A8C;
     --sidebar-text-active: #FFFFFF;
-    --sidebar-text-muted: rgba(255,255,255,0.65);
-    --sidebar-section: rgba(255,255,255,0.65);
+    --sidebar-text-muted: #6B82A3;
+    --sidebar-section: #7890AF;
     --sidebar-width: 268px;
     --sidebar-collapsed: 60px;
     --transition-speed: 0.2s;
