@@ -105,8 +105,8 @@
 .mc-btn { font-size: 14px; font-weight: 500; padding: 9px 16px; border-radius: 8px; display: inline-flex; align-items: center; gap: 7px; cursor: pointer; border: 1px solid transparent; text-decoration: none; }
 .mc-btn-primary { background: #2A4B8D; color: #fff; border-color: #2A4B8D; }
 .mc-btn-primary:hover { background: #1C3566; color: #fff; }
-.mc-btn-ghost { background: transparent; color: #667085; border-color: #E4E7EC; }
-.mc-btn-ghost:hover { background: #F4F5F7; color: #16202E; }
+.mc-btn-ghost { background: #EDF0F4; color: #5A667D; border-color: transparent; }
+.mc-btn-ghost:hover { background: #E0E5EB; color: #3A4456; }
 
 @media (max-width: 767.98px) {
   .mc-grid, .mc-grid-2, .mc-chips, .mc-chip-toggle-grid { grid-template-columns: 1fr; }
