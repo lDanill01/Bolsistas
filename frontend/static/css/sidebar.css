@@ -189,6 +189,7 @@
     top:0;
     z-index: 1020;
 }
+.top-navbar > .d-flex { margin-left: auto; }
 .top-navbar::before{
     content:'';
     position:absolute;
