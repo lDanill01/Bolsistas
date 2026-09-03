@@ -125,7 +125,7 @@
 }
 #sidebar .sidebar-link:hover {
     background: var(--sidebar-bg-hover);
-    color: var(--sidebar-text-active);
+    color: var(--sidebar-text);
 }
 #sidebar li.active > .sidebar-link,
 #sidebar .sidebar-link.active {

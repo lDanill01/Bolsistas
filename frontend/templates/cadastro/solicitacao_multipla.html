@@ -169,7 +169,7 @@
         </div>
 
         <div class="mc-card">
-            <h2 class="mc-card-title"><i class="ri-bar-chart-line"></i>Critérios e pontuação</h2>
+            <h2 class="mc-card-title"><i class="ri-bar-chart-line"></i>Demais Competências</h2>
             <div class="mc-chip-toggle-grid">
                 <div class="mc-chip-toggle">
                     <span class="label">Projetos/pesquisa (anos)</span>
@@ -225,7 +225,11 @@
                             {{ ef.area_atuacao }}
                         </div>
                         <div class="mc-field">
-                            <label class="mc-edit-label">Anos de experiência<span class="req">*</span></label>
+                            <label class="mc-edit-label">Cargo</label>
+                            {{ ef.cargo }}
+                        </div>
+                        <div class="mc-field">
+                            <label class="mc-edit-label">Anos<span class="req">*</span></label>
                             {{ ef.anos_experiencia }}
                         </div>
                         <div class="mc-field">
@@ -248,7 +252,8 @@
                     {{ experiencia_formset.empty_form.id }}
                     <div class="mc-grid">
                         <div class="mc-field"><label class="mc-edit-label">Área de atuação<span class="req">*</span></label>{{ experiencia_formset.empty_form.area_atuacao }}</div>
-                        <div class="mc-field"><label class="mc-edit-label">Anos de experiência<span class="req">*</span></label>{{ experiencia_formset.empty_form.anos_experiencia }}</div>
+                        <div class="mc-field"><label class="mc-edit-label">Cargo</label>{{ experiencia_formset.empty_form.cargo }}</div>
+                        <div class="mc-field"><label class="mc-edit-label">Anos<span class="req">*</span></label>{{ experiencia_formset.empty_form.anos_experiencia }}</div>
                         <div class="mc-field"><label class="mc-edit-label">Comprovante</label>{{ experiencia_formset.empty_form.anexo }}</div>
                     </div>
                     <div class="form-check mt-2">

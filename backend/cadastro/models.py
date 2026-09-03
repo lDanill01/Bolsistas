@@ -138,6 +138,7 @@ class ExperienciaProfissional(DataModel):
         CadastroBolsista, on_delete=models.CASCADE, related_name='experiencias'
     )
     area_atuacao = models.CharField('Área de Atuação', max_length=255, blank=True)
+    cargo = models.CharField('Cargo', max_length=255, blank=True, default='')
     anos_experiencia = models.PositiveIntegerField('Anos de Experiência', default=0)
     anexo = models.FileField('Comprovante (PDF)', upload_to='experiencias/', blank=True)
 

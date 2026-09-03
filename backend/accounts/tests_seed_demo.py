@@ -16,6 +16,7 @@ class SeedDemoCommandTests(TestCase):
         self.assertEqual(CadastroBolsista.objects.count(), 2)
         self.assertEqual(FormacaoAcademica.objects.count(), 4)
         self.assertEqual(ExperienciaProfissional.objects.count(), 2)
+        self.assertTrue(ExperienciaProfissional.objects.filter(cargo='Analista de Dados').exists())
         self.assertEqual(EditalProvisorio.objects.count(), 3)
         self.assertEqual(sum(e.cronograma.count() for e in EditalProvisorio.objects.all()), 21)
         self.assertEqual(AplicacaoEdital.objects.count(), 4)

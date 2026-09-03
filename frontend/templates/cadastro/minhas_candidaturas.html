@@ -39,12 +39,7 @@
 
             {% for app in aplicacoes %}
             {% with status=app.status %}
-            <div class="card mb-3 border-start border-4
-                {% if status == 'aprovado' %}border-success
-                {% elif status == 'rejeitado' %}border-danger
-                {% elif status == 'em_analise' %}border-info
-                {% elif status == 'cancelado' %}border-secondary
-                {% else %}border-warning{% endif %}">
+            <div class="card candidatura-group mb-3">
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-start flex-wrap gap-2">
                         <div>
@@ -56,9 +51,13 @@
                             <div class="text-muted small">
                                 <i class="ri-building-line me-1"></i>{{ app.edital.get_nome_instituto_display }}
                                 &bull;
-                                <i class="bi bi-book me-1"></i>{{ app.edital.area_estudo|default:"Não informada" }}
+                                <i class="ri-book-open-line me-1"></i>{{ app.edital.area_estudo|default:"Não informada" }}
                             </div>
                         </div>
+                        <div class="d-flex align-items-center gap-2">
+                        <a href="{% url 'edital_detail' app.edital.pk %}" class="btn btn-outline-primary btn-sm">
+                            <i class="ri-eye-line me-1"></i>Visualizar edital
+                        </a>
                         <span class="badge rounded-pill
                             {% if status == 'aprovado' %}bg-success
                             {% elif status == 'rejeitado' %}bg-danger
@@ -66,19 +65,20 @@
                             {% elif status == 'cancelado' %}bg-secondary
                             {% else %}bg-warning text-dark{% endif %} fs-6 px-3 py-2">
                             {% if status == 'pendente' %}
-                                <i class="bi bi-hourglass-split me-1"></i>Pendente
+                                <i class="ri-time-line me-1"></i>Pendente
                             {% elif status == 'em_analise' %}
                                 <i class="ri-search-line me-1"></i>Em Análise
                             {% elif status == 'aprovado' %}
                                 <i class="ri-checkbox-circle-line me-1"></i>Aprovado
                             {% elif status == 'rejeitado' %}
-                                <i class="bi bi-x-circle me-1"></i>Rejeitado
+                                <i class="ri-close-circle-line me-1"></i>Rejeitado
                             {% elif status == 'cancelado' %}
-                                <i class="bi bi-slash-circle me-1"></i>Cancelado
+                                <i class="ri-forbid-2-line me-1"></i>Cancelado
                             {% else %}
                                 {{ app.get_status_display }}
                             {% endif %}
                         </span>
+                        </div>
                     </div>
 
                     {# Detalhes adicionais #}
@@ -130,7 +130,7 @@
                     {% if pontuacao_previa %}
                     <div class="mt-2">
                         <span class="badge bg-light text-dark border">
-                            <i class="bi bi-calculator me-1"></i>Prévia: {{ pontuacao_previa }} pts
+                            <i class="ri-calculator-line me-1"></i>Prévia: {{ pontuacao_previa }} pts
                         </span>
                     </div>
                     {% endif %}
@@ -188,7 +188,7 @@
                                 {% if bolsista.pontuacao_previa %}
                                     <i class="ri-checkbox-circle-line text-success me-1"></i>Completo
                                 {% else %}
-                                    <i class="bi bi-exclamation-circle text-warning me-1"></i>Incompleto
+                                    <i class="ri-error-warning-line text-warning me-1"></i>Incompleto
                                 {% endif %}
                             </span>
                         </div>

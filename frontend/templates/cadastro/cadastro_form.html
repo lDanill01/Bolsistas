@@ -169,8 +169,8 @@
                     {{ ef.id }}
                     <div class="mc-grid">
                         <div class="mc-field"><label class="mc-edit-label">Área de Atuação</label>{{ ef.area_atuacao }}</div>
-                        <div class="mc-field"><label class="mc-edit-label">Anos de Experiência</label>{{ ef.anos_experiencia }}</div>
-                        <div class="mc-field"><label class="mc-edit-label">Comprovante (PDF)</label>{{ ef.anexo }}</div>
+                        <div class="mc-field"><label class="mc-edit-label">Cargo</label>{{ ef.cargo }}</div>
+                        <div class="mc-field"><label class="mc-edit-label">Anos</label>{{ ef.anos_experiencia }}</div>
                     </div>
                     {% if experiencia_formset.can_delete %}
                     <div class="form-check mt-2">{{ ef.DELETE }}<label class="form-check-label small text-danger">Remover</label></div>
@@ -183,8 +183,8 @@
                     {{ experiencia_formset.empty_form.id }}
                     <div class="mc-grid">
                         <div class="mc-field"><label class="mc-edit-label">Área de Atuação</label>{{ experiencia_formset.empty_form.area_atuacao }}</div>
-                        <div class="mc-field"><label class="mc-edit-label">Anos de Experiência</label>{{ experiencia_formset.empty_form.anos_experiencia }}</div>
-                        <div class="mc-field"><label class="mc-edit-label">Comprovante (PDF)</label>{{ experiencia_formset.empty_form.anexo }}</div>
+                        <div class="mc-field"><label class="mc-edit-label">Cargo</label>{{ experiencia_formset.empty_form.cargo }}</div>
+                        <div class="mc-field"><label class="mc-edit-label">Anos</label>{{ experiencia_formset.empty_form.anos_experiencia }}</div>
                     </div>
                     <div class="form-check mt-2">{{ experiencia_formset.empty_form.DELETE }}<label class="form-check-label small text-danger">Remover</label></div>
                 </div>
@@ -196,7 +196,7 @@
         </div>
 
         <div class="mc-card">
-            <h2 class="mc-card-title"><i class="ri-bar-chart-line"></i>Critérios e pontuação</h2>
+            <h2 class="mc-card-title"><i class="ri-bar-chart-line"></i>Demais Competências</h2>
             <p class="mc-hint" style="margin-bottom:1rem;">Marque as opções aplicáveis. Ao marcar, será exibido um campo para anexar comprovantes em PDF.</p>
             <div class="mc-chip-toggle-grid">
                 <div class="mc-chip-toggle demais-item">
@@ -273,6 +273,12 @@
                     <small class="text-muted">Anexe comprovantes em PDF</small>
                     {% if object %}{% for an in object.anexos.all %}{% if an.tipo == 'treinamento' %}<a href="{% url 'protected_media' an.anexo.name %}" class="d-block" target="_blank"><i class="ri-file-pdf-2-line"></i> {{ an.anexo.name|cut:'anexos/' }}</a>{% endif %}{% endfor %}{% endif %}
                 </div></div>
+            </div>
+            <div class="mc-card mt-3">
+                <h2 class="mc-card-title"><i class="ri-attachment-2"></i>Anexos</h2>
+                {% for ef in experiencia_formset %}
+                <div class="mc-field mb-3"><label class="mc-edit-label">Comprovante — {{ ef.instance.area_atuacao|default:'Experiência' }}</label>{{ ef.anexo }}</div>
+                {% endfor %}
             </div>
             <div class="mc-footer-bar">
                 <a href="{% url 'cadastro_detail' %}" class="mc-btn mc-btn-ghost"><i class="ri-close-line"></i>Cancelar</a>

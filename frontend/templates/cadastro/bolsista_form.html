@@ -220,7 +220,11 @@
                                 {{ ef.area_atuacao }}
                             </div>
                             <div class="col-md-3">
-                                <label class="form-label small">Anos de Experiência</label>
+                                <label class="form-label small">Cargo</label>
+                                {{ ef.cargo }}
+                            </div>
+                            <div class="col-md-2">
+                                <label class="form-label small">Anos</label>
                                 {{ ef.anos_experiencia }}
                             </div>
                             <div class="col-md-3">
@@ -248,7 +252,11 @@
                                 {{ experiencia_formset.empty_form.area_atuacao }}
                             </div>
                             <div class="col-md-3">
-                                <label class="form-label small">Anos de Experiência</label>
+                                <label class="form-label small">Cargo</label>
+                                {{ experiencia_formset.empty_form.cargo }}
+                            </div>
+                            <div class="col-md-2">
+                                <label class="form-label small">Anos</label>
                                 {{ experiencia_formset.empty_form.anos_experiencia }}
                             </div>
                             <div class="col-md-3">
@@ -274,7 +282,7 @@
 
                 <hr class="my-3">
 
-                <h6 class="fw-bold text-secondary mb-2"><i class="bi bi-card-checklist me-2"></i>Demais Informações</h6>
+                <h6 class="fw-bold text-secondary mb-2"><i class="ri-list-check-3 me-2"></i>Demais Competências</h6>
                 <p class="text-muted small mb-3">Marque as opções aplicáveis. Ao marcar, será exibido um campo para anexar comprovantes em PDF.</p>
 
                 <div class="mb-4">

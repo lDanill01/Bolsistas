@@ -58,7 +58,7 @@
     </div>
 
     <div class="mc-card">
-        <h2 class="mc-card-title"><i class="ri-bar-chart-line"></i>Critérios e pontuação</h2>
+        <h2 class="mc-card-title"><i class="ri-bar-chart-line"></i>Demais Competências</h2>
         <div class="mc-chips">
             <div class="mc-chip"><span class="label">Projetos/pesquisa</span><span class="num">{{ cadastro.participacao_projetos_anos|default:'0' }} ano(s)</span></div>
             <div class="mc-chip"><span class="label">Participação em congressos</span>{% if cadastro.participacao_congressos %}<span class="yes"><i class="ri-check-line"></i>Sim</span>{% else %}<span class="no"><i class="ri-close-line"></i>Não</span>{% endif %}</div>
@@ -76,19 +76,13 @@
         <h2 class="mc-card-title"><i class="ri-briefcase-4-line"></i>Experiência profissional</h2>
         {% if cadastro.experiencias.exists %}
         <table class="mc-table">
-            <thead><tr><th>Área de atuação</th><th>Anos</th><th>Comprovante</th></tr></thead>
+            <thead><tr><th>Área de atuação</th><th>Cargo</th><th>Anos</th></tr></thead>
             <tbody>
                 {% for exp in cadastro.experiencias.all %}
                 <tr>
                     <td><span class="mc-tag-area">{{ exp.area_atuacao|default:'-' }}</span></td>
+                    <td>{{ exp.cargo|default:'-' }}</td>
                     <td>{{ exp.anos_experiencia }} ano(s)</td>
-                    <td>
-                        {% if exp.anexo %}
-                        <a href="{% url 'protected_media' exp.anexo.name %}" target="_blank" class="mc-btn mc-btn-ghost" style="padding:4px 10px;font-size:12.5px;">
-                            <i class="ri-file-pdf-2-line"></i>Ver PDF
-                        </a>
-                        {% else %}<span class="text-muted" style="color:#98A2B3 !important;">Não enviado</span>{% endif %}
-                    </td>
                 </tr>
                 {% endfor %}
             </tbody>
@@ -106,6 +100,12 @@
             <a href="{% url 'protected_media' cadastro.curriculo.name %}" target="_blank" class="mc-btn mc-btn-ghost" style="padding:4px 10px;font-size:12.5px;">Ver</a>
         </div>
         {% endif %}
+        {% for exp in cadastro.experiencias.all %}
+        <div class="mc-anexo-row">
+            <span><i class="ri-file-pdf-2-line me-1"></i>Comprovante — {{ exp.cargo|default:exp.area_atuacao }}</span>
+            {% if exp.anexo %}<a href="{% url 'protected_media' exp.anexo.name %}" target="_blank" class="mc-btn mc-btn-ghost" style="padding:4px 10px;font-size:12.5px;">Ver</a>{% else %}<span class="text-muted">Não enviado</span>{% endif %}
+        </div>
+        {% endfor %}
         {% if cadastro.anexos.exists %}
             {% for an in cadastro.anexos.all %}
             <div class="mc-anexo-row">

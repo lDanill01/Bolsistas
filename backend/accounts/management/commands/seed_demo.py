@@ -44,11 +44,11 @@ class Command(BaseCommand):
 
     def _create_bolsistas(self, users):
         data = [
-            (users['bolsista.ana@example.com'], date(1998, 4, 12), 'CG', 'MS', 'Tecnologia'),
-            (users['bolsista.carlos@example.com'], date(1995, 9, 23), 'Dourados', 'MS', 'Engenharia'),
+            (users['bolsista.ana@example.com'], date(1998, 4, 12), 'CG', 'MS', 'Tecnologia', 'Analista de Dados'),
+            (users['bolsista.carlos@example.com'], date(1995, 9, 23), 'Dourados', 'MS', 'Engenharia', 'Engenheiro de Projetos'),
         ]
         result = []
-        for user, nascimento, cidade, estado, area in data:
+        for user, nascimento, cidade, estado, area, cargo in data:
             cadastro, _ = CadastroBolsista.objects.update_or_create(
                 user=user,
                 defaults={
@@ -71,7 +71,7 @@ class Command(BaseCommand):
             )
             ExperienciaProfissional.objects.update_or_create(
                 bolsista=cadastro, area_atuacao=area,
-                defaults={'anos_experiencia': 3},
+                defaults={'cargo': cargo, 'anos_experiencia': 3},
             )
             result.append(cadastro)
         return result

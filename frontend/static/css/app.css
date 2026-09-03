@@ -392,6 +392,14 @@ footer { margin-top: auto; }
 .landing-step-icon span { position: absolute; top: -8px; right: -8px; display: grid; place-items: center; width: 28px; height: 28px; border-radius: 50%; color: #fff; background: #d96b45; font-size: .68rem; font-weight: 800; }
 .landing-step-card h5 { color: #29466f; }
 .landing-step-card p { max-width: 255px; margin: 0 auto; }
+
+.candidatura-group {
+    background: #fff;
+    border: 0;
+    border-radius: 14px;
+    box-shadow: 0 4px 16px rgba(35,52,82,.045);
+}
+.candidatura-group .card-body { padding: 1.35rem; }
 @media (max-width: 767.98px) { .main-content { padding: 1rem 0.75rem; } }
 
 /* ---- PUBLIC PAGES (login/landing) header accent ---- */

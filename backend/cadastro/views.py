@@ -83,9 +83,10 @@ class FormacaoAcademicaForm(forms.ModelForm):
 class ExperienciaProfissionalForm(forms.ModelForm):
     class Meta:
         model = ExperienciaProfissional
-        fields = ['area_atuacao', 'anos_experiencia', 'anexo']
+        fields = ['area_atuacao', 'cargo', 'anos_experiencia', 'anexo']
         widgets = {
             'area_atuacao': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Ex: Engenharia de Produção'}),
+            'cargo': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Ex: Analista de Dados'}),
             'anos_experiencia': forms.NumberInput(attrs={'class': 'form-control', 'min': 0, 'placeholder': '0'}),
             'anexo': forms.FileInput(attrs={'class': 'form-control', 'accept': '.pdf'}),
         }
