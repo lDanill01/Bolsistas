@@ -5,11 +5,11 @@
 <div class="container-fluid py-3">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2 class="fw-bold text-primary mb-0">
-            <i class="bi bi-people me-2"></i>Candidatos — {{ edital.nome_edital }}
+            <i class="ri-team-line me-2"></i>Candidatos — {{ edital.nome_edital }}
         </h2>
         <div>
             <a href="{% url 'edital_detail' edital.pk %}" class="btn btn-warning id="btnVoltarEdital">
-                <i class="bi bi-arrow-left me-1"></i>Voltar ao Edital
+                <i class="ri-arrow-left-line me-1"></i>Voltar ao Edital
             </a>
         </div>
     </div>
@@ -17,13 +17,13 @@
     <div class="row g-2 mb-3">
         <div class="col-md-4">
             <div class="input-group">
-                <span class="input-group-text"><i class="bi bi-hash"></i></span>
+                <span class="input-group-text"><i class="ri-hashtag"></i></span>
                 <input type="text" class="form-control" readonly value="Edital Nº {{ edital.numero_serie }}">
             </div>
         </div>
         <div class="col-md-4">
             <div class="input-group">
-                <span class="input-group-text"><i class="bi bi-people-fill"></i></span>
+                <span class="input-group-text"><i class="ri-team-line-fill"></i></span>
                 <input type="text" class="form-control" readonly value="{{ page_obj.paginator.count }} candidato{{ page_obj.paginator.count|pluralize }}">
             </div>
         </div>
@@ -42,7 +42,7 @@
 
     {% if aplicacoes %}
     <div class="alert alert-info d-flex align-items-center mb-3" role="alert">
-        <i class="bi bi-info-circle-fill me-2"></i>
+        <i class="ri-information-line-fill me-2"></i>
         <div>
             <strong>Lembrete:</strong> salve as alterações de cada candidato individualmente antes de passar para o próximo.
         </div>
@@ -52,7 +52,7 @@
 
     {% else %}
     <div class="card p-5 text-center">
-        <i class="bi bi-people fs-1 text-muted mb-3"></i>
+        <i class="ri-team-line fs-1 text-muted mb-3"></i>
         <p class="text-muted mb-0">Nenhum candidato encontrado.</p>
     </div>
     {% endif %}

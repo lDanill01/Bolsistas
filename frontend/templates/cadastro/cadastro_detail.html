@@ -8,22 +8,22 @@
 
 {% block content %}
 <div class="mc-page">
-    <div class="mc-breadcrumb"><a href="{% url 'home' %}">Bolsistas</a><i class="bi bi-chevron-right" style="font-size:11px"></i><span class="current">Meu cadastro</span></div>
+    <div class="mc-breadcrumb"><a href="{% url 'home' %}">Bolsistas</a><i class="ri-arrow-right-s-line" style="font-size:11px"></i><span class="current">Meu cadastro</span></div>
 
     <div class="mc-pagehead">
         <h1><i class="bi bi-person-square"></i>Meu cadastro</h1>
         <div class="mc-actions">
             {% if is_superuser or is_manager %}
             <a href="{% url 'cadastro_update_pk' cadastro.pk %}" class="mc-btn mc-btn-ghost">
-                <i class="bi bi-pencil-square"></i>Editar (Admin)
+                <i class="ri-edit-2-line"></i>Editar (Admin)
             </a>
             {% elif is_view_user %}
             <a href="{% url 'solicitacao_criar' %}" class="mc-btn mc-btn-primary">
-                <i class="bi bi-pencil"></i>Editar dados
+                <i class="ri-pencil-line"></i>Editar dados
             </a>
             {% endif %}
             <a href="{% url 'home' %}" class="mc-btn mc-btn-ghost">
-                <i class="bi bi-arrow-left"></i>Voltar
+                <i class="ri-arrow-left-line"></i>Voltar
             </a>
         </div>
     </div>
@@ -40,7 +40,7 @@
     </div>
 
     <div class="mc-card">
-        <h2 class="mc-card-title"><i class="bi bi-geo-alt"></i>Endereço</h2>
+        <h2 class="mc-card-title"><i class="ri-map-pin-line"></i>Endereço</h2>
         <div class="mc-grid">
             <div class="mc-field"><span class="mc-label">Rua</span><div class="mc-val">{{ cadastro.rua|default:'-' }}</div></div>
             <div class="mc-field"><span class="mc-label">Número</span><div class="mc-val">{{ cadastro.numero|default:'-' }}</div></div>
@@ -51,29 +51,29 @@
     </div>
 
     <div class="mc-card">
-        <h2 class="mc-card-title"><i class="bi bi-mortarboard"></i>Dados acadêmicos</h2>
+        <h2 class="mc-card-title"><i class="ri-graduation-cap-line"></i>Dados acadêmicos</h2>
         <div id="formacao-section">
             {% include 'cadastro/partials/formacao_section.html' %}
         </div>
     </div>
 
     <div class="mc-card">
-        <h2 class="mc-card-title"><i class="bi bi-bar-chart"></i>Critérios e pontuação</h2>
+        <h2 class="mc-card-title"><i class="ri-bar-chart-line"></i>Critérios e pontuação</h2>
         <div class="mc-chips">
             <div class="mc-chip"><span class="label">Projetos/pesquisa</span><span class="num">{{ cadastro.participacao_projetos_anos|default:'0' }} ano(s)</span></div>
-            <div class="mc-chip"><span class="label">Participação em congressos</span>{% if cadastro.participacao_congressos %}<span class="yes"><i class="bi bi-check-lg"></i>Sim</span>{% else %}<span class="no"><i class="bi bi-x-lg"></i>Não</span>{% endif %}</div>
-            <div class="mc-chip"><span class="label">Resumo em anais</span>{% if cadastro.resumo_anais %}<span class="yes"><i class="bi bi-check-lg"></i>Sim</span>{% else %}<span class="no"><i class="bi bi-x-lg"></i>Não</span>{% endif %}</div>
-            <div class="mc-chip"><span class="label">Artigo completo em anais</span>{% if cadastro.artigo_completo_anais %}<span class="yes"><i class="bi bi-check-lg"></i>Sim</span>{% else %}<span class="no"><i class="bi bi-x-lg"></i>Não</span>{% endif %}</div>
-            <div class="mc-chip"><span class="label">Artigo científico nacional</span>{% if cadastro.artigo_cientifico_nacional %}<span class="yes"><i class="bi bi-check-lg"></i>Sim</span>{% else %}<span class="no"><i class="bi bi-x-lg"></i>Não</span>{% endif %}</div>
-            <div class="mc-chip"><span class="label">Artigo científico internacional</span>{% if cadastro.artigo_cientifico_internacional %}<span class="yes"><i class="bi bi-check-lg"></i>Sim</span>{% else %}<span class="no"><i class="bi bi-x-lg"></i>Não</span>{% endif %}</div>
-            <div class="mc-chip"><span class="label">Livro/patente</span>{% if cadastro.livro_patente %}<span class="yes"><i class="bi bi-check-lg"></i>Sim</span>{% else %}<span class="no"><i class="bi bi-x-lg"></i>Não</span>{% endif %}</div>
-            <div class="mc-chip"><span class="label">Minicurso</span>{% if cadastro.participacao_minicurso %}<span class="yes"><i class="bi bi-check-lg"></i>Sim</span>{% else %}<span class="no"><i class="bi bi-x-lg"></i>Não</span>{% endif %}</div>
-            <div class="mc-chip"><span class="label">Treinamento</span>{% if cadastro.treinamento %}<span class="yes"><i class="bi bi-check-lg"></i>Sim</span>{% else %}<span class="no"><i class="bi bi-x-lg"></i>Não</span>{% endif %}</div>
+            <div class="mc-chip"><span class="label">Participação em congressos</span>{% if cadastro.participacao_congressos %}<span class="yes"><i class="ri-check-line"></i>Sim</span>{% else %}<span class="no"><i class="ri-close-line"></i>Não</span>{% endif %}</div>
+            <div class="mc-chip"><span class="label">Resumo em anais</span>{% if cadastro.resumo_anais %}<span class="yes"><i class="ri-check-line"></i>Sim</span>{% else %}<span class="no"><i class="ri-close-line"></i>Não</span>{% endif %}</div>
+            <div class="mc-chip"><span class="label">Artigo completo em anais</span>{% if cadastro.artigo_completo_anais %}<span class="yes"><i class="ri-check-line"></i>Sim</span>{% else %}<span class="no"><i class="ri-close-line"></i>Não</span>{% endif %}</div>
+            <div class="mc-chip"><span class="label">Artigo científico nacional</span>{% if cadastro.artigo_cientifico_nacional %}<span class="yes"><i class="ri-check-line"></i>Sim</span>{% else %}<span class="no"><i class="ri-close-line"></i>Não</span>{% endif %}</div>
+            <div class="mc-chip"><span class="label">Artigo científico internacional</span>{% if cadastro.artigo_cientifico_internacional %}<span class="yes"><i class="ri-check-line"></i>Sim</span>{% else %}<span class="no"><i class="ri-close-line"></i>Não</span>{% endif %}</div>
+            <div class="mc-chip"><span class="label">Livro/patente</span>{% if cadastro.livro_patente %}<span class="yes"><i class="ri-check-line"></i>Sim</span>{% else %}<span class="no"><i class="ri-close-line"></i>Não</span>{% endif %}</div>
+            <div class="mc-chip"><span class="label">Minicurso</span>{% if cadastro.participacao_minicurso %}<span class="yes"><i class="ri-check-line"></i>Sim</span>{% else %}<span class="no"><i class="ri-close-line"></i>Não</span>{% endif %}</div>
+            <div class="mc-chip"><span class="label">Treinamento</span>{% if cadastro.treinamento %}<span class="yes"><i class="ri-check-line"></i>Sim</span>{% else %}<span class="no"><i class="ri-close-line"></i>Não</span>{% endif %}</div>
         </div>
     </div>
 
     <div class="mc-card">
-        <h2 class="mc-card-title"><i class="bi bi-briefcase"></i>Experiência profissional</h2>
+        <h2 class="mc-card-title"><i class="ri-briefcase-4-line"></i>Experiência profissional</h2>
         {% if cadastro.experiencias.exists %}
         <table class="mc-table">
             <thead><tr><th>Área de atuação</th><th>Anos</th><th>Comprovante</th></tr></thead>
@@ -85,7 +85,7 @@
                     <td>
                         {% if exp.anexo %}
                         <a href="{% url 'protected_media' exp.anexo.name %}" target="_blank" class="mc-btn mc-btn-ghost" style="padding:4px 10px;font-size:12.5px;">
-                            <i class="bi bi-file-earmark-pdf"></i>Ver PDF
+                            <i class="ri-file-pdf-2-line"></i>Ver PDF
                         </a>
                         {% else %}<span class="text-muted" style="color:#98A2B3 !important;">Não enviado</span>{% endif %}
                     </td>
@@ -94,27 +94,27 @@
             </tbody>
         </table>
         {% else %}
-        <div class="mc-empty"><i class="bi bi-briefcase"></i>Nenhuma experiência profissional registrada.</div>
+        <div class="mc-empty"><i class="ri-briefcase-4-line"></i>Nenhuma experiência profissional registrada.</div>
         {% endif %}
     </div>
 
     <div class="mc-card">
-        <h2 class="mc-card-title"><i class="bi bi-paperclip"></i>Anexos comprobatórios</h2>
+        <h2 class="mc-card-title"><i class="ri-attachment-2"></i>Anexos comprobatórios</h2>
         {% if cadastro.curriculo %}
         <div class="mc-anexo-row">
-            <span><i class="bi bi-file-earmark-pdf me-1" style="color:#C0393E;"></i>Currículo</span>
+            <span><i class="ri-file-pdf-2-line me-1" style="color:#C0393E;"></i>Currículo</span>
             <a href="{% url 'protected_media' cadastro.curriculo.name %}" target="_blank" class="mc-btn mc-btn-ghost" style="padding:4px 10px;font-size:12.5px;">Ver</a>
         </div>
         {% endif %}
         {% if cadastro.anexos.exists %}
             {% for an in cadastro.anexos.all %}
             <div class="mc-anexo-row">
-                <span><i class="bi bi-file-earmark-pdf me-1" style="color:#C0393E;"></i>{{ an.get_tipo_display }}</span>
+                <span><i class="ri-file-pdf-2-line me-1" style="color:#C0393E;"></i>{{ an.get_tipo_display }}</span>
                 <a href="{% url 'protected_media' an.anexo.name %}" target="_blank" class="mc-btn mc-btn-ghost" style="padding:4px 10px;font-size:12.5px;">Ver</a>
             </div>
             {% endfor %}
         {% elif not cadastro.curriculo %}
-        <div class="mc-empty"><i class="bi bi-file-earmark-x"></i>Nenhum anexo enviado.</div>
+        <div class="mc-empty"><i class="ri-file-line-x"></i>Nenhum anexo enviado.</div>
         {% endif %}
     </div>
 </div>

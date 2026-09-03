@@ -3,15 +3,15 @@
 /* ========== Design System SENAI MS — mapeamento para Bootstrap + app ========== */
 :root {
     /* Compat Bootstrap overrides a partir dos tokens DS (já definidos em fonts-senai.css) */
-    --bs-primary: #E84910;
-    --bs-primary-rgb: 232, 73, 16;
-    --bs-primary-dark: #CF4110;
-    --bs-secondary: #164194;
+    --bs-primary: #D96B45;
+    --bs-primary-rgb: 217, 107, 69;
+    --bs-primary-dark: #B85A3B;
+    --bs-secondary: #496A9D;
     --bs-secondary-rgb: 22, 65, 148;
-    --bs-success: #2E8B4F;
-    --bs-danger: #C22B2B;
-    --bs-warning: #C9820A;
-    --bs-info: #008BD2;
+    --bs-success: #5E9872;
+    --bs-danger: #B96B6B;
+    --bs-warning: #B99A58;
+    --bs-info: #6A9FBC;
     --bs-light: #F7F9FB;
     --bs-dark: #131C2E;
 
@@ -121,14 +121,14 @@ h4, h5, h6, .h4, .h5, .h6 {
 .btn-lg { padding: 14px 28px; font-size: 15.5px; }
 
 .btn-primary {
-    background-color: var(--orange-500) !important;
-    border-color: var(--orange-500) !important;
+    background-color: #D96B45 !important;
+    border-color: #D96B45 !important;
     color: #fff !important;
     box-shadow: none !important;
 }
 .btn-primary:hover, .btn-primary:focus {
-    background-color: var(--orange-600) !important;
-    border-color: var(--orange-600) !important;
+    background-color: #C45F3D !important;
+    border-color: #C45F3D !important;
     color: #fff !important;
     box-shadow: none !important;
 }

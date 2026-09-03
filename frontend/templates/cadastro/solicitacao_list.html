@@ -4,11 +4,11 @@
 {% block content %}
 <div class="container-fluid py-3">
     <h2 class="fw-bold text-primary mb-4">
-        <i class="bi bi-list-check me-2"></i>Solicitacoes de Edicao Pendentes
+        <i class="ri-list-check-3 me-2"></i>Solicitacoes de Edicao Pendentes
     </h2>
 
     <span id="spinner-solicitacao" class="htmx-indicator text-primary">
-        <i class="bi bi-arrow-repeat spin me-1"></i>Atualizando...
+        <i class="ri-refresh-line spin me-1"></i>Atualizando...
     </span>
 
     {% if solicitacoes %}
@@ -38,10 +38,10 @@
                               hx-indicator="#spinner-solicitacao">
                             {% csrf_token %}
                             <button name="acao" value="aprovar" class="btn btn-success btn-sm me-1">
-                                <i class="bi bi-check-lg"></i> Aprovar
+                                <i class="ri-check-line"></i> Aprovar
                             </button>
                             <button name="acao" value="rejeitar" class="btn btn-outline-danger btn-sm">
-                                <i class="bi bi-x-lg"></i> Rejeitar
+                                <i class="ri-close-line"></i> Rejeitar
                             </button>
                         </form>
                     </td>

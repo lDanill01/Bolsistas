@@ -6,7 +6,7 @@
 
     {% if not prova_liberada or not entrevista_liberada %}
     <div class="alert alert-warning d-flex align-items-center mb-3" role="alert">
-        <i class="bi bi-calendar-event me-2"></i>
+        <i class="ri-calendar-schedule-line me-2"></i>
         <div>
             As notas e datas só poderão ser atribuídas após as respectivas datas do cronograma.
             Etapas ainda indisponíveis ficam bloqueadas.
@@ -84,33 +84,33 @@
                         </td>
                         <td class="text-end">
                             <a href="{% url 'cadastro_detail_pk' a.bolsista.pk %}" class="btn btn-outline-primary btn-sm" title="Ver cadastro">
-                                <i class="bi bi-person-lines-fill"></i>
+                                <i class="ri-user-settings-line"></i>
                             </a>
                             <button type="button"
                                     class="btn btn-warning btn-sm btn-salvar-etapa"
                                     data-pk="{{ a.pk }}"
                                     title="Salvar etapa atual deste candidato">
-                                <i class="bi bi-floppy"></i>
+                                <i class="ri-save-3-line"></i>
                             </button>
                             <button type="button"
                                     class="btn btn-outline-dark btn-sm btn-editar-avaliacao"
                                     data-url="{% url 'editar_avaliacao' a.pk %}"
                                     title="Editar informações">
-                                <i class="bi bi-pencil-square"></i>
+                                <i class="ri-edit-2-line"></i>
                             </button>
                             {% if is_manager %}
                             <button type="button"
                                     class="btn btn-outline-info btn-sm btn-upload-resultado"
                                     data-url="{% url 'anexar_documento_resultado' a.pk %}?success_url={{ success_url|urlencode }}"
                                     title="Anexar documento do resultado">
-                                <i class="bi bi-paperclip"></i>
+                                <i class="ri-attachment-2"></i>
                             </button>
                             <button type="button"
                                     class="btn btn-outline-danger btn-sm btn-excluir-candidatura"
                                     data-url="{% url 'excluir_candidatura' a.pk %}"
                                     data-nome="{{ a.bolsista.user.nome_completo|escapejs }}"
                                     title="Excluir candidatura">
-                                <i class="bi bi-trash"></i>
+                                <i class="ri-delete-bin-6-line"></i>
                             </button>
                             {% endif %}
                         </td>
@@ -132,7 +132,7 @@
 
 {% else %}
 <div class="card p-5 text-center">
-    <i class="bi bi-people fs-1 text-muted mb-3"></i>
+    <i class="ri-team-line fs-1 text-muted mb-3"></i>
     <p class="text-muted mb-0">Nenhum candidato encontrado.</p>
 </div>
 {% endif %}

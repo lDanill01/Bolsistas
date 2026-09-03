@@ -6,7 +6,7 @@
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
             <h2 class="fw-bold text-primary mb-1">
-                <i class="bi bi-folder2-open me-2"></i>Gestão de Documentos
+                <i class="ri-folder-open-line me-2"></i>Gestão de Documentos
             </h2>
             <p class="text-muted mb-0">
                 {{ total_geral }} documento{{ total_geral|pluralize }} fornecidos
@@ -76,7 +76,7 @@
                         </td>
                         <td>
                             <a href="{% url 'protected_media' d.arquivo.name %}" target="_blank" class="btn btn-sm btn-outline-primary">
-                                <i class="bi bi-file-earmark-arrow-down me-1"></i>{{ d.nome }}
+                                <i class="ri-file-line-arrow-down me-1"></i>{{ d.nome }}
                             </a>
                         </td>
                         <td class="text-muted small">{{ d.enviado_em|date:'d/m/Y H:i' }}</td>
@@ -95,7 +95,7 @@
 
     {% else %}
     <div class="card p-5 text-center">
-        <i class="bi bi-folder2-open fs-1 text-muted mb-3"></i>
+        <i class="ri-folder-open-line fs-1 text-muted mb-3"></i>
         <p class="text-muted mb-0">Nenhum documento encontrado com os filtros aplicados.</p>
     </div>
     {% endif %}

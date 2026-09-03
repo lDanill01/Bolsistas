@@ -5,7 +5,7 @@
                 {% csrf_token %}
                 <input type="hidden" name="success_url" value="{{ success_url }}">
                 <div class="modal-header">
-                    <h5 class="modal-title"><i class="bi bi-paperclip me-2"></i>Documento do Resultado</h5>
+                    <h5 class="modal-title"><i class="ri-attachment-2 me-2"></i>Documento do Resultado</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
                 </div>
                 <div class="modal-body">
@@ -15,7 +15,7 @@
                     </p>
                     {% if aplicacao.documento_resultado %}
                     <div class="alert alert-info d-flex align-items-center mb-3">
-                        <i class="bi bi-file-earmark me-2"></i>
+                        <i class="ri-file-line me-2"></i>
                         <div>
                             Documento atual:
                             <a href="{{ aplicacao.documento_resultado.url }}" target="_blank" class="fw-semibold">
@@ -33,7 +33,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="submit" class="btn btn-primary"><i class="bi bi-upload me-1"></i>Enviar</button>
+                    <button type="submit" class="btn btn-primary"><i class="ri-upload-2-line me-1"></i>Enviar</button>
                 </div>
             </form>
         </div>

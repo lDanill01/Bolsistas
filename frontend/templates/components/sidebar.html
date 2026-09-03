@@ -1,7 +1,7 @@
 {% load static %}
 <nav id="sidebar" class="shadow-sm" aria-label="Navegação principal">
     <button class="toggle-btn" id="btn-toggle" type="button" title="Expandir/fixar menu">
-        <i class="bi bi-chevron-right" id="btn-toggle-icon"></i>
+        <i class="ri-arrow-right-s-line" id="btn-toggle-icon"></i>
     </button>
 
     <a href="{% url 'home' %}" class="sidebar-brand" title="Bolsas SENAI">
@@ -13,7 +13,7 @@
             <li class="sidebar-section"><span class="nav-text">Principal</span></li>
             <li class="{% if request.resolver_match.url_name == 'home' %}active{% endif %}">
                 <a href="{% url 'home' %}" class="sidebar-link {% if request.resolver_match.url_name == 'home' %}active{% endif %}" title="Dashboard">
-                    <span class="nav-icon"><i class="bi bi-grid-fill"></i></span>
+                    <span class="nav-icon"><i class="ri-dashboard-3-line"></i></span>
                     <span class="nav-text">Dashboard</span>
                 </a>
             </li>
@@ -22,14 +22,14 @@
             <li class="sidebar-section"><span class="nav-text">Candidato</span></li>
             <li class="{% if request.resolver_match.url_name == 'cadastro_detail' or request.resolver_match.url_name == 'cadastro_create' %}active{% endif %}">
                 <a href="{% if has_cadastro %}{% url 'cadastro_detail' %}{% else %}{% url 'cadastro_create' %}{% endif %}" class="sidebar-link {% if request.resolver_match.url_name == 'cadastro_detail' or request.resolver_match.url_name == 'cadastro_create' %}active{% endif %}" title="Meu Cadastro">
-                    <span class="nav-icon"><i class="bi bi-person-lines-fill"></i></span>
+                    <span class="nav-icon"><i class="ri-user-settings-line"></i></span>
                     <span class="nav-text">Meu Cadastro</span>
                 </a>
             </li>
             {% if has_cadastro %}
             <li class="{% if request.resolver_match.url_name == 'minhas_candidaturas' %}active{% endif %}">
                 <a href="{% url 'minhas_candidaturas' %}" class="sidebar-link {% if request.resolver_match.url_name == 'minhas_candidaturas' %}active{% endif %}" title="Minhas Candidaturas">
-                    <span class="nav-icon"><i class="bi bi-clipboard-check"></i></span>
+                    <span class="nav-icon"><i class="ri-file-list-3-line"></i></span>
                     <span class="nav-text">Minhas Candidaturas</span>
                 </a>
             </li>
@@ -39,13 +39,13 @@
             <li class="sidebar-section"><span class="nav-text">Bolsas</span></li>
             <li class="{% if request.resolver_match.url_name == 'edital_list' %}active{% endif %}">
                 <a href="{% url 'edital_list' %}" class="sidebar-link {% if request.resolver_match.url_name == 'edital_list' %}active{% endif %}" title="Editais">
-                    <span class="nav-icon"><i class="bi bi-journal-text"></i></span>
+                    <span class="nav-icon"><i class="ri-file-text-line"></i></span>
                     <span class="nav-text">Editais</span>
                 </a>
             </li>
             <li class="{% if request.resolver_match.url_name == 'resultados' %}active{% endif %}">
                 <a href="{% url 'resultados' %}" class="sidebar-link {% if request.resolver_match.url_name == 'resultados' %}active{% endif %}" title="Resultados">
-                    <span class="nav-icon"><i class="bi bi-trophy"></i></span>
+                    <span class="nav-icon"><i class="ri-trophy-line"></i></span>
                     <span class="nav-text">Resultados</span>
                 </a>
             </li>
@@ -54,19 +54,19 @@
             <li class="sidebar-section"><span class="nav-text">Gestão</span></li>
             <li class="{% if request.resolver_match.url_name == 'avaliacao' %}active{% endif %}">
                 <a href="{% url 'avaliacao' %}" class="sidebar-link {% if request.resolver_match.url_name == 'avaliacao' %}active{% endif %}" title="Avaliação">
-                    <span class="nav-icon"><i class="bi bi-clipboard2-check"></i></span>
+                    <span class="nav-icon"><i class="ri-task-line"></i></span>
                     <span class="nav-text">Avaliação</span>
                 </a>
             </li>
             <li class="{% if request.resolver_match.url_name == 'painel_trilha' %}active{% endif %}">
                 <a href="{% url 'painel_trilha' %}" class="sidebar-link {% if request.resolver_match.url_name == 'painel_trilha' %}active{% endif %}" title="Trilha do Bolsista">
-                    <span class="nav-icon"><i class="bi bi-signpost-2"></i></span>
+                    <span class="nav-icon"><i class="ri-route-line"></i></span>
                     <span class="nav-text">Trilha do Bolsista</span>
                 </a>
             </li>
             <li class="{% if request.resolver_match.url_name == 'gestao_documentos' %}active{% endif %}">
                 <a href="{% url 'gestao_documentos' %}" class="sidebar-link {% if request.resolver_match.url_name == 'gestao_documentos' %}active{% endif %}" title="Gestão de Documentos">
-                    <span class="nav-icon"><i class="bi bi-folder2-open"></i></span>
+                    <span class="nav-icon"><i class="ri-folder-open-line"></i></span>
                     <span class="nav-text">Gestão de Documentos</span>
                 </a>
             </li>
@@ -75,7 +75,7 @@
             {% if is_superuser or is_manager %}
             <li class="{% if request.resolver_match.url_name == 'solicitacao_list' %}active{% endif %}">
                 <a href="{% url 'solicitacao_list' %}" class="sidebar-link {% if request.resolver_match.url_name == 'solicitacao_list' %}active{% endif %}" title="Solicitações">
-                    <span class="nav-icon"><i class="bi bi-list-check"></i></span>
+                    <span class="nav-icon"><i class="ri-list-check-3"></i></span>
                     <span class="nav-text">Solicitações</span>
                 </a>
             </li>
@@ -84,7 +84,7 @@
             {% if is_superuser %}
             <li>
                 <a href="{% url 'admin:index' %}" class="sidebar-link" title="Painel Admin">
-                    <span class="nav-icon"><i class="bi bi-speedometer2"></i></span>
+                    <span class="nav-icon"><i class="ri-dashboard-line"></i></span>
                     <span class="nav-text">Painel Admin</span>
                 </a>
             </li>
@@ -96,7 +96,7 @@
                 <form method="post" action="{% url 'logout' %}" class="m-0">
                     {% csrf_token %}
                     <button type="submit" class="sidebar-link sidebar-logout" title="Sair">
-                        <span class="nav-icon"><i class="bi bi-power"></i></span>
+                        <span class="nav-icon"><i class="ri-logout-box-r-line"></i></span>
                         <span class="nav-text">Sair</span>
                     </button>
                 </form>

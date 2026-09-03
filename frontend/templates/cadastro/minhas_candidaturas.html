@@ -6,7 +6,7 @@
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
             <h2 class="fw-bold text-primary mb-1">
-                <i class="bi bi-clipboard-check me-2"></i>Minhas Candidaturas
+                <i class="ri-file-list-3-line me-2"></i>Minhas Candidaturas
             </h2>
             <p class="text-muted mb-0">
                 {{ bolsista.user.nome_completo }} &mdash;
@@ -14,18 +14,18 @@
             </p>
         </div>
         <a href="{% url 'edital_list' %}" class="btn btn-outline-primary btn-sm">
-            <i class="bi bi-search me-1"></i>Buscar editais
+            <i class="ri-search-line me-1"></i>Buscar editais
         </a>
     </div>
 
     {% if not total_aplicacoes %}
     {# ---- Estado vazio ---- #}
     <div class="text-center py-5">
-        <i class="bi bi-inbox text-muted" style="font-size: 4rem;"></i>
+        <i class="ri-inbox-line text-muted" style="font-size: 4rem;"></i>
         <h5 class="text-muted mt-3">Nenhuma candidatura encontrada</h5>
         <p class="text-muted">Você ainda não se candidatou a nenhum edital.</p>
         <a href="{% url 'edital_list' %}" class="btn btn-primary mt-2">
-            <i class="bi bi-journal-text me-1"></i>Ver editais disponíveis
+            <i class="ri-file-text-line me-1"></i>Ver editais disponíveis
         </a>
     </div>
     {% else %}
@@ -34,7 +34,7 @@
         {# ---- Coluna esquerda: Trilha de candidaturas ---- #}
         <div class="col-lg-8">
             <h5 class="fw-semibold text-secondary mb-3">
-                <i class="bi bi-arrow-repeat me-1"></i>Trilha das candidaturas
+                <i class="ri-refresh-line me-1"></i>Trilha das candidaturas
             </h5>
 
             {% for app in aplicacoes %}
@@ -54,7 +54,7 @@
                                 </a>
                             </h6>
                             <div class="text-muted small">
-                                <i class="bi bi-building me-1"></i>{{ app.edital.get_nome_instituto_display }}
+                                <i class="ri-building-line me-1"></i>{{ app.edital.get_nome_instituto_display }}
                                 &bull;
                                 <i class="bi bi-book me-1"></i>{{ app.edital.area_estudo|default:"Não informada" }}
                             </div>
@@ -68,9 +68,9 @@
                             {% if status == 'pendente' %}
                                 <i class="bi bi-hourglass-split me-1"></i>Pendente
                             {% elif status == 'em_analise' %}
-                                <i class="bi bi-search me-1"></i>Em Análise
+                                <i class="ri-search-line me-1"></i>Em Análise
                             {% elif status == 'aprovado' %}
-                                <i class="bi bi-check-circle me-1"></i>Aprovado
+                                <i class="ri-checkbox-circle-line me-1"></i>Aprovado
                             {% elif status == 'rejeitado' %}
                                 <i class="bi bi-x-circle me-1"></i>Rejeitado
                             {% elif status == 'cancelado' %}
@@ -106,7 +106,7 @@
                     {% if app.data_entrevista %}
                     <div class="mt-2">
                         <span class="badge bg-light text-dark border">
-                            <i class="bi bi-calendar-event me-1"></i>
+                            <i class="ri-calendar-schedule-line me-1"></i>
                             Entrevista: {{ app.data_entrevista|date:"d/m/Y" }}
                         </span>
                     </div>
@@ -142,7 +142,7 @@
             <div class="card">
                 <div class="card-header bg-white">
                     <h6 class="fw-semibold mb-0">
-                        <i class="bi bi-clipboard-data me-1"></i>Avaliações por critério
+                        <i class="ri-file-chart-line me-1"></i>Avaliações por critério
                     </h6>
                 </div>
                 <ul class="list-group list-group-flush">
@@ -171,7 +171,7 @@
             {% else %}
             <div class="card">
                 <div class="card-body text-center text-muted py-4">
-                    <i class="bi bi-clipboard-x fs-3 mb-2 d-block"></i>
+                    <i class="ri-file-close-line fs-3 mb-2 d-block"></i>
                     <small>Nenhuma avaliação registrada ainda.</small>
                     <p class="small mt-1 mb-0">Suas candidaturas serão avaliadas pelos gestores.</p>
                 </div>
@@ -186,14 +186,14 @@
                             <small class="text-muted d-block">Status do cadastro</small>
                             <span class="fw-medium small">
                                 {% if bolsista.pontuacao_previa %}
-                                    <i class="bi bi-check-circle text-success me-1"></i>Completo
+                                    <i class="ri-checkbox-circle-line text-success me-1"></i>Completo
                                 {% else %}
                                     <i class="bi bi-exclamation-circle text-warning me-1"></i>Incompleto
                                 {% endif %}
                             </span>
                         </div>
                         <a href="{% url 'cadastro_detail' %}" class="btn btn-outline-secondary btn-sm">
-                            <i class="bi bi-pencil me-1"></i>Editar
+                            <i class="ri-pencil-line me-1"></i>Editar
                         </a>
                     </div>
                 </div>

@@ -8,17 +8,17 @@
 
         <div class="d-flex justify-content-between align-items-center mb-5 flex-wrap gap-2">
             <h2 class="fw-bold text-primary mb-0">
-                <i class="bi bi-journal-plus me-2"></i>
+                <i class="ri-file-add-line me-2"></i>
                 {% if object %}Editar{% else %}Novo{% endif %} Edital
             </h2>
             <div class="d-flex gap-2 flex-wrap">
                 {% if not object %}
                 <button type="button" class="btn btn-warning" onclick="limparDados()">
-                    <i class="bi bi-eraser me-1"></i>Limpar Dados
+                    <i class="ri-eraser-line me-1"></i>Limpar Dados
                 </button>
                 {% endif %}
                 <a href="{% url 'edital_list' %}" class="btn btn-primary btn-sm d-inline-flex align-items-center">
-                    <i class="bi bi-arrow-left me-2"></i>Voltar
+                    <i class="ri-arrow-left-line me-2"></i>Voltar
                 </a>
             </div>
         </div>
@@ -49,7 +49,7 @@
             {% endif %}
 
             <h5 class="fw-semibold mb-3">
-                <i class="bi bi-building me-2 text-primary"></i>Dados do Instituto
+                <i class="ri-building-line me-2 text-primary"></i>Dados do Instituto
             </h5>
 
             <div class="row g-3 mb-4">
@@ -73,7 +73,7 @@
                     {% if object and object.documento_anexo %}
                     <div class="mt-1">
                         <a href="{% url 'protected_media' object.documento_anexo.name %}" class="btn btn-outline-info btn-sm" target="_blank">
-                            <i class="bi bi-file-earmark-pdf me-1"></i>Visualizar documento atual
+                            <i class="ri-file-pdf-2-line me-1"></i>Visualizar documento atual
                         </a>
                     </div>
                     {% endif %}
@@ -86,7 +86,7 @@
                         <hr class="my-4">
 
                         <h5 class="fw-semibold mb-3">
-                            <i class="bi bi-file-earmark-text me-2 text-primary"></i>Dados do Edital
+                            <i class="ri-file-line-text me-2 text-primary"></i>Dados do Edital
                         </h5>
                         <div class="row g-3 mb-4">
                             <div class="col-md-6">
@@ -211,7 +211,7 @@
             <hr class="my-4">
 
                         <h5 class="fw-semibold mb-3">
-                            <i class="bi bi-file-text me-2 text-primary"></i>Detalhes Adicionais
+                            <i class="ri-file-text-line me-2 text-primary"></i>Detalhes Adicionais
                         </h5>
                         <div class="row g-3 mb-4">
                             <div class="col-md-6">
@@ -240,9 +240,9 @@
                         </div>
 
                         <h5 class="fw-semibold mb-3">
-                            <i class="bi bi-calendar-event me-2 text-primary"></i>Cronograma
+                            <i class="ri-calendar-schedule-line me-2 text-primary"></i>Cronograma
                         </h5>
-                        <p class="text-muted small mb-3">Preencha as etapas e datas do cronograma. Ao final, clique em <i class="bi bi-magic"></i> <strong>Calcular</strong> para verificar e ajustar as datas conforme as regras de dias úteis.</p>
+                        <p class="text-muted small mb-3">Preencha as etapas e datas do cronograma. Ao final, clique em <i class="ri-magic-line"></i> <strong>Calcular</strong> para verificar e ajustar as datas conforme as regras de dias úteis.</p>
 
                         {{ cronograma_formset.management_form }}
 
@@ -281,12 +281,12 @@
                                         </td>
                                         <td class="text-center align-middle">
                                             <button type="button" class="btn btn-outline-info btn-sm regra-btn" data-bs-toggle="tooltip" title="">
-                                                <i class="bi bi-info-circle"></i>
+                                                <i class="ri-information-line"></i>
                                             </button>
                                         </td>
                                         <td class="text-center align-middle">
                                             <button type="button" class="btn btn-outline-danger btn-sm remover-etapa" title="Remover etapa">
-                                                <i class="bi bi-trash"></i>
+                                                <i class="ri-delete-bin-6-line"></i>
                                             </button>
                                         </td>
                                     </tr>
@@ -297,10 +297,10 @@
 
                         <div class="d-flex flex-wrap gap-2 align-items-start mb-3">
                             <button type="button" class="btn btn-success btn-sm" id="adicionar-etapa">
-                                <i class="bi bi-plus-circle me-1"></i>Adicionar Etapa
+                                <i class="ri-add-circle-line me-1"></i>Adicionar Etapa
                             </button>
                             <button type="button" class="btn btn-primary btn-sm" id="calcular-cronograma">
-                                <i class="bi bi-magic me-1"></i>Calcular
+                                <i class="ri-magic-line me-1"></i>Calcular
                             </button>
                         </div>
                         <div id="cronograma-check-feedback" class="small mb-4" style="display:none;"></div>
@@ -366,15 +366,15 @@
 
             <div class="d-flex gap-2 flex-wrap">
                 <button type="submit" class="btn btn-success px-4">
-                    <i class="bi bi-check-lg me-1"></i>{% if object %}Atualizar{% else %}Salvar{% endif %}
+                    <i class="ri-check-line me-1"></i>{% if object %}Atualizar{% else %}Salvar{% endif %}
                 </button>
                 {% if not object %}
                 <button type="button" class="btn btn-warning px-4" onclick="limparDados()">
-                    <i class="bi bi-eraser me-1"></i>Limpar Dados
+                    <i class="ri-eraser-line me-1"></i>Limpar Dados
                 </button>
                 {% endif %}
                 <a href="{% url 'edital_list' %}" class="btn btn-primary btn-sm d-inline-flex align-items-center">
-                    <i class="bi bi-arrow-left me-1"></i>Voltar
+                    <i class="ri-arrow-left-line me-1"></i>Voltar
                 </a>
             </div>
         </div>
@@ -689,11 +689,11 @@
         if (feedbackEl) {
             if (ajustes.length > 0) {
                 feedbackEl.className = 'small mb-4 text-success';
-                feedbackEl.innerHTML = '<i class="bi bi-check-circle me-1"></i><strong>Cronograma verificado.</strong> Ajustes realizados:<ul class="mb-0 mt-1 ps-3">' +
+                feedbackEl.innerHTML = '<i class="ri-checkbox-circle-line me-1"></i><strong>Cronograma verificado.</strong> Ajustes realizados:<ul class="mb-0 mt-1 ps-3">' +
                     ajustes.map(function(a) { return '<li>' + a + '</li>'; }).join('') + '</ul>';
             } else {
                 feedbackEl.className = 'small mb-4 text-success';
-                feedbackEl.innerHTML = '<i class="bi bi-check-circle me-1"></i><strong>Cronograma verificado.</strong> Todas as datas já estão de acordo com as regras.';
+                feedbackEl.innerHTML = '<i class="ri-checkbox-circle-line me-1"></i><strong>Cronograma verificado.</strong> Todas as datas já estão de acordo com as regras.';
             }
             feedbackEl.style.display = 'block';
         }

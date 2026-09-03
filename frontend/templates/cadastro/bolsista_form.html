@@ -6,7 +6,7 @@
     <div class="card shadow-sm">
         <div class="card-header bg-primary text-white py-3">
             <h4 class="fw-bold mb-0">
-                <i class="bi bi-person-plus me-2"></i>Novo Bolsista
+                <i class="ri-user-add-line me-2"></i>Novo Bolsista
             </h4>
         </div>
         <div class="card-body p-4">
@@ -58,7 +58,7 @@
                     <div class="col-md-4">
                         <label class="form-label fw-semibold">{{ user_form.unidade.label }}</label>
                         <div class="input-group">
-                            <span class="input-group-text"><i class="bi bi-building"></i></span>
+                            <span class="input-group-text"><i class="ri-building-line"></i></span>
                             {{ user_form.unidade }}
                         </div>
                     </div>
@@ -67,14 +67,14 @@
                 <hr class="my-4">
 
                 <h5 class="fw-semibold mb-3">
-                    <i class="bi bi-geo-alt me-2 text-primary"></i>Endereço
+                    <i class="ri-map-pin-line me-2 text-primary"></i>Endereço
                 </h5>
 
                 <div class="row g-3 mb-4">
                     <div class="col-md-8">
                         <label class="form-label fw-semibold">{{ form.rua.label }}</label>
                         <div class="input-group">
-                            <span class="input-group-text"><i class="bi bi-signpost-2"></i></span>
+                            <span class="input-group-text"><i class="ri-route-line"></i></span>
                             {{ form.rua }}
                         </div>
                     </div>
@@ -88,14 +88,14 @@
                     <div class="col-md-4">
                         <label class="form-label fw-semibold">{{ form.bairro.label }}</label>
                         <div class="input-group">
-                            <span class="input-group-text"><i class="bi bi-geo-alt"></i></span>
+                            <span class="input-group-text"><i class="ri-map-pin-line"></i></span>
                             {{ form.bairro }}
                         </div>
                     </div>
                     <div class="col-md-5">
                         <label class="form-label fw-semibold">{{ form.cidade.label }}</label>
                         <div class="input-group">
-                            <span class="input-group-text"><i class="bi bi-building"></i></span>
+                            <span class="input-group-text"><i class="ri-building-line"></i></span>
                             {{ form.cidade }}
                         </div>
                     </div>
@@ -108,7 +108,7 @@
                 <hr class="my-4">
 
                 <h5 class="fw-semibold mb-3">
-                    <i class="bi bi-mortarboard me-2 text-primary"></i>Dados Acadêmicos
+                    <i class="ri-graduation-cap-line me-2 text-primary"></i>Dados Acadêmicos
                 </h5>
 
                 {% if formacao_formset %}
@@ -120,14 +120,14 @@
                             <div class="col-md-3">
                                 <label class="form-label small">Formação</label>
                                 <div class="input-group input-group-sm">
-                                    <span class="input-group-text"><i class="bi bi-mortarboard"></i></span>
+                                    <span class="input-group-text"><i class="ri-graduation-cap-line"></i></span>
                                     {{ fm.tipo }}
                                 </div>
                             </div>
                             <div class="col-md-2">
                                 <label class="form-label small">Status</label>
                                 <div class="input-group input-group-sm">
-                                    <span class="input-group-text"><i class="bi bi-info-circle"></i></span>
+                                    <span class="input-group-text"><i class="ri-information-line"></i></span>
                                     {{ fm.status }}
                                 </div>
                             </div>
@@ -162,14 +162,14 @@
                             <div class="col-md-3">
                                 <label class="form-label small">Formação</label>
                                 <div class="input-group input-group-sm">
-                                    <span class="input-group-text"><i class="bi bi-mortarboard"></i></span>
+                                    <span class="input-group-text"><i class="ri-graduation-cap-line"></i></span>
                                     {{ formacao_formset.empty_form.tipo }}
                                 </div>
                             </div>
                             <div class="col-md-2">
                                 <label class="form-label small">Status</label>
                                 <div class="input-group input-group-sm">
-                                    <span class="input-group-text"><i class="bi bi-info-circle"></i></span>
+                                    <span class="input-group-text"><i class="ri-information-line"></i></span>
                                     {{ formacao_formset.empty_form.status }}
                                 </div>
                             </div>
@@ -197,7 +197,7 @@
                 </div>
                 <div class="mb-3">
                     <button type="button" class="btn btn-outline-primary btn-sm" onclick="addFormset('formacoes', 'formacoes-container', 'formacoes-empty')">
-                        <i class="bi bi-plus-lg me-1"></i>Adicionar Formação
+                        <i class="ri-add-line me-1"></i>Adicionar Formação
                     </button>
                 </div>
                 {% endif %}
@@ -205,10 +205,10 @@
                 <hr class="my-4">
 
                 <h5 class="fw-semibold mb-3">
-                    <i class="bi bi-list-check me-2 text-primary"></i>Outras Informações
+                    <i class="ri-list-check-3 me-2 text-primary"></i>Outras Informações
                 </h5>
 
-                <h6 class="fw-bold text-secondary mb-2"><i class="bi bi-briefcase me-2"></i>Experiência Profissional</h6>
+                <h6 class="fw-bold text-secondary mb-2"><i class="ri-briefcase-4-line me-2"></i>Experiência Profissional</h6>
                 {% if experiencia_formset %}
                 <div id="experiencias-container">
                     {{ experiencia_formset.management_form }}
@@ -267,7 +267,7 @@
                 </div>
                 <div class="mb-3">
                     <button type="button" class="btn btn-outline-info btn-sm" onclick="addFormset('experiencias', 'experiencias-container', 'experiencias-empty')">
-                        <i class="bi bi-plus-lg me-1"></i>Adicionar Experiência
+                        <i class="ri-add-line me-1"></i>Adicionar Experiência
                     </button>
                 </div>
                 {% endif %}
@@ -363,7 +363,7 @@
                     </div>
 
                 <div class="alert alert-info d-flex align-items-center" role="alert">
-                    <i class="bi bi-info-circle-fill me-2"></i>
+                    <i class="ri-information-line-fill me-2"></i>
                     <div>
                         Uma senha aleatória será gerada automaticamente. O bolsista poderá redefinir sua senha posteriormente.
                     </div>
@@ -371,10 +371,10 @@
 
                 <div class="d-flex gap-2">
                     <button type="submit" class="btn btn-success px-4">
-                        <i class="bi bi-check-lg me-1"></i>Salvar
+                        <i class="ri-check-line me-1"></i>Salvar
                     </button>
                     <a href="{% url 'painel_trilha' %}" class="btn btn-outline-secondary">
-                        <i class="bi bi-arrow-left me-1"></i>Voltar
+                        <i class="ri-arrow-left-line me-1"></i>Voltar
                     </a>
                 </div>
             </form>

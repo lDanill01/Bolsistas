@@ -5,15 +5,15 @@
 <div class="container-fluid py-3">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2 class="fw-bold text-primary mb-0">
-            <i class="bi bi-journal-text me-2"></i>Edital
+            <i class="ri-file-text-line me-2"></i>Edital
         </h2>
         <div class="d-flex gap-2">
             <a href="{% url 'edital_pdf' edital.pk %}" class="btn btn-success">
-                <i class="bi bi-file-earmark-pdf me-1"></i>Download PDF
+                <i class="ri-file-pdf-2-line me-1"></i>Download PDF
             </a>
             {% if is_superuser or is_manager or is_execute_user %}
             <a href="{% url 'edital_candidatos' edital.pk %}" class="btn btn-primary">
-                <i class="bi bi-people me-1"></i>Ver Candidatos
+                <i class="ri-team-line me-1"></i>Ver Candidatos
                 {% if edital.total_inscritos %}
                 <span class="badge bg-info ms-1">{{ edital.total_inscritos }}</span>
                 {% endif %}
@@ -22,24 +22,24 @@
             {% if is_superuser or is_manager %}
             {% if edital.status == 'em_analise' %}
             <a href="{% url 'edital_validar' edital.pk %}" class="btn btn-success">
-                <i class="bi bi-check-circle me-1"></i>Validar
+                <i class="ri-checkbox-circle-line me-1"></i>Validar
             </a>
             {% endif %}
             {% if edital.status != 'encerrado' or is_superuser %}
             {% if is_superuser and edital.status != 'excluido' %}
             <a href="{% url 'edital_update' edital.pk %}" class="btn btn-secondary">
-                <i class="bi bi-pencil-square me-1"></i>Editar
+                <i class="ri-edit-2-line me-1"></i>Editar
             </a>
             {% endif %}
             {% endif %}
             {% endif %}
             {% if is_superuser and edital.status != 'excluido' %}
             <a href="{% url 'edital_delete' edital.pk %}" class="btn btn-danger">
-                <i class="bi bi-trash me-1"></i>Excluir
+                <i class="ri-delete-bin-6-line me-1"></i>Excluir
             </a>
             {% endif %}
             <a href="{% url 'edital_list' %}" class="btn btn-warning">
-                <i class="bi bi-arrow-left me-1"></i>Voltar
+                <i class="ri-arrow-left-line me-1"></i>Voltar
             </a>
         </div>
     </div>
@@ -50,8 +50,8 @@
             <div class="card mb-4">
                 <button class="card-header bg-white border-0 w-100 text-center py-3" type="button" data-bs-toggle="collapse" data-bs-target="#analise-ia-collapse" aria-expanded="false" aria-controls="analise-ia-collapse">
                     <h5 class="fw-semibold mb-0">
-                        <i class="bi bi-stars me-2 text-primary"></i>Análise por IA
-                        <i class="bi bi-chevron-down ms-2 small text-muted"></i>
+                        <i class="ri-sparkling-2-line me-2 text-primary"></i>Análise por IA
+                        <i class="ri-arrow-down-s-line ms-2 small text-muted"></i>
                     </h5>
                 </button>
                 <div class="collapse" id="analise-ia-collapse">
@@ -86,7 +86,7 @@
                                     hx-target="#analise-ia-resultado"
                                     hx-indicator="#analise-ia-spinner"
                                     hx-swap="innerHTML">
-                                <i class="bi bi-magic me-1"></i>Resumir por IA
+                                <i class="ri-magic-line me-1"></i>Resumir por IA
                             </button>
                         </div>
                         <div id="analise-ia-spinner" class="htmx-indicator text-center py-3">
@@ -107,7 +107,7 @@
 
             <div class="card p-4 mb-4">
                 <h5 class="fw-semibold mb-3">
-                    <i class="bi bi-file-earmark-text me-2 text-primary"></i>Dados do Edital
+                    <i class="ri-file-line-text me-2 text-primary"></i>Dados do Edital
                 </h5>
                 <div class="row g-3">
                     <div class="col-md-6">
@@ -133,7 +133,7 @@
 
             <div class="card p-4 mb-4">
                 <h5 class="fw-semibold mb-3">
-                    <i class="bi bi-building me-2 text-primary"></i>Dados do Instituto
+                    <i class="ri-building-line me-2 text-primary"></i>Dados do Instituto
                 </h5>
                 <div class="row g-3">
                     <div class="col-md-6">
@@ -157,7 +157,7 @@
                         <label class="form-label small text-muted mb-1">Documentos Anexados</label>
                         <div class="form-control bg-light">
                             <a href="{% url 'protected_media' edital.documento_anexo.name %}"  target="_blank">
-                                <i class="bi bi-file-earmark-pdf me-1"></i>Termo de Parceria e/ou Plano de Projeto
+                                <i class="ri-file-pdf-2-line me-1"></i>Termo de Parceria e/ou Plano de Projeto
                             </a>
                         </div>
                     </div>
@@ -201,7 +201,7 @@
 
             <div class="card p-4 mb-4">
                 <h5 class="fw-semibold mb-3">
-                    <i class="bi bi-list-check me-2 text-primary"></i>Requisitos para Bolsas
+                    <i class="ri-list-check-3 me-2 text-primary"></i>Requisitos para Bolsas
                 </h5>
                 <div class="row g-3">
                     <div class="col-md-4">
@@ -225,7 +225,7 @@
 
             <div class="card p-4 mb-4">
                 <h5 class="fw-semibold mb-3">
-                    <i class="bi bi-file-text me-2 text-primary"></i>Detalhes Adicionais
+                    <i class="ri-file-text-line me-2 text-primary"></i>Detalhes Adicionais
                 </h5>
                 <div class="row g-3">
                     <div class="col-md-6">
@@ -257,13 +257,13 @@
                     <form method="post" action="{% url 'aplicar_edital' edital.pk %}">
                         {% csrf_token %}
                         <button type="submit" class="btn btn-success btn-lg w-100">
-                            <i class="bi bi-send-check me-2"></i>Candidatar-se
+                            <i class="ri-send-plane-line-check me-2"></i>Candidatar-se
                         </button>
                     </form>
                 </div>
                 {% elif ja_aplicou %}
                 <div class="card p-4 mb-4 text-center bg-success bg-opacity-10">
-                    <i class="bi bi-check-circle text-success fs-3 mb-2"></i>
+                    <i class="ri-checkbox-circle-line text-success fs-3 mb-2"></i>
                     <p class="fw-medium text-success mb-0">Você já se candidatou a este edital</p>
                     {% with aplicacao=edital.aplicacoes.all.0 %}
                     {% if aplicacao.numero_inscricao %}
@@ -283,7 +283,7 @@
             {% if is_superuser or is_execute_user %}
             <div class="card p-4 mb-4">
                 <h5 class="fw-semibold mb-3">
-                    <i class="bi bi-info-circle me-2 text-primary"></i>Informações
+                    <i class="ri-information-line me-2 text-primary"></i>Informações
                 </h5>
                 <div class="text-right mb-3">
                     <span class="badge fs-6 {% if edital.status == 'aberto' %}bg-success{% elif edital.status == 'cancelado' %}bg-danger{% elif edital.status == 'encerrado' %}bg-secondary{% elif edital.status == 'excluido' %}bg-dark{% else %}bg-warning text-dark{% endif %}">
@@ -329,7 +329,7 @@
             {% if cronograma %}
             <div class="card p-4 mb-4">
                 <h5 class="fw-semibold mb-3">
-                    <i class="bi bi-calendar-event me-2 text-primary"></i>Cronograma
+                    <i class="ri-calendar-schedule-line me-2 text-primary"></i>Cronograma
                 </h5>
 
                 <div class="row g-4">

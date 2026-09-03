@@ -6,23 +6,23 @@
 <div class="container-fluid py-3">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2 class="fw-bold text-primary mb-0">
-            <i class="bi bi-trophy me-2"></i>Resultados
+            <i class="ri-trophy-line me-2"></i>Resultados
         </h2>
     </div>
 
     <div class="mb-4">
         <div class="btn-group" role="group" aria-label="Filtro de visualização">
             <a href="?view=todas" class="btn btn-outline-primary {% if view_atual == 'todas' %}active{% endif %}">
-                <i class="bi bi-grid me-1"></i>Todas
+                <i class="ri-grid-line me-1"></i>Todas
             </a>
             <a href="?view=prova" class="btn btn-outline-primary {% if view_atual == 'prova' %}active{% endif %}">
-                <i class="bi bi-pencil-square me-1"></i>Nota da Prova
+                <i class="ri-edit-2-line me-1"></i>Nota da Prova
             </a>
             <a href="?view=entrevista" class="btn btn-outline-primary {% if view_atual == 'entrevista' %}active{% endif %}">
-                <i class="bi bi-chat-dots me-1"></i>Nota da Entrevista
+                <i class="ri-chat-3-line me-1"></i>Nota da Entrevista
             </a>
             <a href="?view=final" class="btn btn-outline-primary {% if view_atual == 'final' %}active{% endif %}">
-                <i class="bi bi-bar-chart me-1"></i>Nota Final
+                <i class="ri-bar-chart-line me-1"></i>Nota Final
             </a>
         </div>
     </div>
@@ -34,13 +34,13 @@
                 <h5 class="fw-semibold mb-1">
                     {{ edital.nome_edital }}
                     <a href="{% url 'resultados_download' edital.pk %}" class="btn btn-sm btn-outline-secondary ms-2" title="Baixar resultados">
-                        <i class="bi bi-download me-1"></i>Baixar CSV
+                        <i class="ri-download-2-line me-1"></i>Baixar CSV
                     </a>
                 </h5>
                 <p class="text-muted small mb-1">
-                    <i class="bi bi-building me-1"></i>{{ edital.get_nome_instituto_display }}
+                    <i class="ri-building-line me-1"></i>{{ edital.get_nome_instituto_display }}
                     <span class="mx-2">|</span>
-                    <i class="bi bi-hash me-1"></i>Edital Nº {{ edital.numero_serie }}
+                    <i class="ri-hashtag me-1"></i>Edital Nº {{ edital.numero_serie }}
                 </p>
                 {% if edital.detalhes_edital %}
                 <p class="text-muted small mb-0">{{ edital.detalhes_edital|truncatechars:250 }}</p>
@@ -130,7 +130,7 @@
     </div>
     {% empty %}
     <div class="card p-5 text-center">
-        <i class="bi bi-trophy fs-1 text-muted mb-3"></i>
+        <i class="ri-trophy-line fs-1 text-muted mb-3"></i>
         <p class="text-muted mb-0">Nenhum resultado disponível no momento.</p>
     </div>
     {% endfor %}

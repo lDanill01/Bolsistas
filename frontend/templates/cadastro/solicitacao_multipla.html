@@ -8,12 +8,12 @@
 
 {% block content %}
 <div class="mc-page">
-    <div class="mc-breadcrumb"><a href="{% url 'home' %}">Bolsistas</a><i class="bi bi-chevron-right" style="font-size:11px"></i><a href="{% url 'cadastro_detail' %}">Meu cadastro</a><i class="bi bi-chevron-right" style="font-size:11px"></i><span class="current">Editar</span></div>
+    <div class="mc-breadcrumb"><a href="{% url 'home' %}">Bolsistas</a><i class="ri-arrow-right-s-line" style="font-size:11px"></i><a href="{% url 'cadastro_detail' %}">Meu cadastro</a><i class="ri-arrow-right-s-line" style="font-size:11px"></i><span class="current">Editar</span></div>
 
     <div class="mc-pagehead" style="padding-bottom:0.3rem;">
-        <h1><i class="bi bi-pencil-square"></i>Editar cadastro</h1>
+        <h1><i class="ri-edit-2-line"></i>Editar cadastro</h1>
     </div>
-    <div class="mc-mode-badge"><i class="bi bi-pencil"></i>Alterações pendentes de salvar</div>
+    <div class="mc-mode-badge"><i class="ri-pencil-line"></i>Alterações pendentes de salvar</div>
 
     <form method="post" enctype="multipart/form-data" novalidate>
         {% csrf_token %}
@@ -47,7 +47,7 @@
         </div>
 
         <div class="mc-card">
-            <h2 class="mc-card-title"><i class="bi bi-geo-alt"></i>Endereço</h2>
+            <h2 class="mc-card-title"><i class="ri-map-pin-line"></i>Endereço</h2>
             <div class="mc-grid">
                 <div class="mc-field {% if form.rua.errors %}has-error{% endif %}">
                     <label class="mc-edit-label" for="{{ form.rua.id_for_label }}">{{ form.rua.label }}<span class="req">*</span></label>
@@ -78,7 +78,7 @@
         </div>
 
         <div class="mc-card">
-            <h2 class="mc-card-title"><i class="bi bi-mortarboard"></i>Dados acadêmicos</h2>
+            <h2 class="mc-card-title"><i class="ri-graduation-cap-line"></i>Dados acadêmicos</h2>
             {% if formacao_formset %}
             <div id="formacoes-container">
                 {{ formacao_formset.management_form }}
@@ -86,7 +86,7 @@
                 <div class="mc-acad-block formacao-row">
                     {{ fm.id }}
                     <span class="mc-remove-btn" title="Marcar para remover" onclick="this.closest('.mc-acad-block').querySelector('input[type=checkbox][name$=\"-DELETE\"]')?.click();">
-                        <i class="bi bi-trash"></i>
+                        <i class="ri-delete-bin-6-line"></i>
                     </span>
                     <div class="mc-subsection-head">
                         <div class="mc-subsection-title">{{ fm.instance.get_tipo_display|default:'Nova formação' }}{% if fm.instance.status %}<span class="mc-stage-badge">{{ fm.instance.get_status_display }}</span>{% endif %}</div>
@@ -163,13 +163,13 @@
                 </div>
             </div>
             <button type="button" class="mc-add-block" onclick="addFormset('formacoes', 'formacoes-container', 'formacoes-empty')">
-                <i class="bi bi-plus-lg"></i>Adicionar formação
+                <i class="ri-add-line"></i>Adicionar formação
             </button>
             {% endif %}
         </div>
 
         <div class="mc-card">
-            <h2 class="mc-card-title"><i class="bi bi-bar-chart"></i>Critérios e pontuação</h2>
+            <h2 class="mc-card-title"><i class="ri-bar-chart-line"></i>Critérios e pontuação</h2>
             <div class="mc-chip-toggle-grid">
                 <div class="mc-chip-toggle">
                     <span class="label">Projetos/pesquisa (anos)</span>
@@ -212,7 +212,7 @@
         </div>
 
         <div class="mc-card">
-            <h2 class="mc-card-title"><i class="bi bi-briefcase"></i>Experiência profissional</h2>
+            <h2 class="mc-card-title"><i class="ri-briefcase-4-line"></i>Experiência profissional</h2>
             {% if experiencia_formset %}
             <div id="experiencias-container">
                 {{ experiencia_formset.management_form }}
@@ -258,21 +258,21 @@
                 </div>
             </div>
             <button type="button" class="mc-add-block" onclick="addFormset('experiencias', 'experiencias-container', 'experiencias-empty')">
-                <i class="bi bi-plus-lg"></i>Adicionar experiência
+                <i class="ri-add-line"></i>Adicionar experiência
             </button>
             {% endif %}
         </div>
 
         <div class="mc-card">
-            <h2 class="mc-card-title"><i class="bi bi-paperclip"></i>Anexos comprobatórios</h2>
+            <h2 class="mc-card-title"><i class="ri-attachment-2"></i>Anexos comprobatórios</h2>
             <div class="mc-upload-zone">
                 <i class="bi bi-cloud-upload"></i>
                 <span class="mc-upload-title">Documentos comprobatórios dos critérios</span>
                 <span class="mc-upload-sub">Marque os critérios acima e envie os PDFs para inovacao@ms.senai.br — PDF, JPG ou PNG até 10 MB</span>
             </div>
             <div class="mc-footer-bar">
-                <a href="{% url 'cadastro_detail' %}" class="mc-btn mc-btn-ghost"><i class="bi bi-x-lg"></i>Cancelar</a>
-                <button type="submit" class="mc-btn mc-btn-primary"><i class="bi bi-floppy"></i>Salvar alterações</button>
+                <a href="{% url 'cadastro_detail' %}" class="mc-btn mc-btn-ghost"><i class="ri-close-line"></i>Cancelar</a>
+                <button type="submit" class="mc-btn mc-btn-primary"><i class="ri-save-3-line"></i>Salvar alterações</button>
             </div>
         </div>
     </form>

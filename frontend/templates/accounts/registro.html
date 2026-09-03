@@ -41,9 +41,9 @@
                     <div class="mb-3">
                         <label class="form-label fw-semibold">{{ form.password1.label }}</label>
                         <div class="input-group">
-                            <span class="input-group-text"><i class="bi bi-lock-fill"></i></span>
+                            <span class="input-group-text"><i class="ri-lock-line"></i></span>
                             {{ form.password1 }}
-                            <button class="btn btn-outline-secondary" type="button" onclick="toggleSenha('id_password1')"><i class="bi bi-eye"></i></button>
+                            <button class="btn btn-outline-secondary" type="button" onclick="toggleSenha('id_password1')"><i class="ri-eye-line"></i></button>
                         </div>
                         {% if form.password1.errors %}
                         <div class="text-danger small mt-1">{{ form.password1.errors|join:', ' }}</div>
@@ -53,9 +53,9 @@
                     <div class="mb-3">
                         <label class="form-label fw-semibold">{{ form.password2.label }}</label>
                         <div class="input-group">
-                            <span class="input-group-text"><i class="bi bi-lock-fill"></i></span>
+                            <span class="input-group-text"><i class="ri-lock-line"></i></span>
                             {{ form.password2 }}
-                            <button class="btn btn-outline-secondary" type="button" onclick="toggleSenha('id_password2')"><i class="bi bi-eye"></i></button>
+                            <button class="btn btn-outline-secondary" type="button" onclick="toggleSenha('id_password2')"><i class="ri-eye-line"></i></button>
                         </div>
                         {% if form.password2.errors %}
                         <div class="text-danger small mt-1">{{ form.password2.errors|join:', ' }}</div>
@@ -63,7 +63,7 @@
                     </div>
 
                     <button type="submit" class="btn btn-primary w-100 py-2 mt-2">
-                        <i class="bi bi-check-lg me-2"></i>Criar Conta
+                        <i class="ri-check-line me-2"></i>Criar Conta
                     </button>
                 </form>
 

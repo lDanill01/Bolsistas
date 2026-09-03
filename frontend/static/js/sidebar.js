@@ -23,11 +23,11 @@
         if (!icon) return;
         // ">" recolhido (clique para manter aberto) / "<" fixado aberto
         if (isPinned()) {
-            icon.classList.remove('bi-chevron-right');
-            icon.classList.add('bi-chevron-left');
+            icon.classList.remove('ri-arrow-right-s-line');
+            icon.classList.add('ri-arrow-left-s-line');
         } else {
-            icon.classList.remove('bi-chevron-left');
-            icon.classList.add('bi-chevron-right');
+            icon.classList.remove('ri-arrow-left-s-line');
+            icon.classList.add('ri-arrow-right-s-line');
         }
     }
 
