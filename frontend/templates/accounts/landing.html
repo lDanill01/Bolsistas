@@ -3,7 +3,7 @@
 {% block title %}Bem-vindo ao Bolsas SENAI - MS{% endblock %}
 
 {% block public_content %}
-<div class="text-white position-relative overflow-hidden" style="background:linear-gradient(150deg, var(--blue-900) 0%, var(--blue-700) 52%, var(--blue-600) 100%);padding:72px 0 56px;">
+<div class="landing-hero text-white position-relative overflow-hidden">
     <div class="position-absolute top-0 start-0 bottom-0 d-flex flex-column" style="width:10px;">
         <div style="flex:1;background:var(--blue-500)"></div>
         <div style="flex:1;background:var(--sesi-green)"></div>
@@ -14,7 +14,7 @@
     <div class="container py-2 position-relative">
         <div class="d-inline-flex align-items-center gap-2 mb-3" style="font-size:12.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--orange-400);">
             <span style="width:22px;height:2px;background:var(--orange-500);display:inline-block;"></span>
-            Sistema FIEMS · ms.senai.br
+            Sistema FIEMS · Bolsas SENAI
         </div>
         <div class="row align-items-center">
             <div class="col-lg-6 mb-4 mb-lg-0">
@@ -27,7 +27,7 @@
                 </p>
                 <div class="d-flex flex-wrap gap-3">
                     <a href="{% url 'login' %}" class="btn btn-light btn-lg px-4 text-primary fw-semibold">
-                        <i class="bi bi-box-arrow-in-right me-2"></i>Entrar
+                        <i class="ri-login-box-line me-2"></i>Entrar
                     </a>
                     <a href="{% url 'registro' %}" class="btn btn-outline-light btn-lg px-4">
                         <i class="ri-user-add-line me-2"></i>Criar Conta
@@ -35,29 +35,33 @@
                 </div>
             </div>
             <div class="col-lg-6">
-                <div class="row g-3">
+                <div class="landing-feature-grid row g-3">
                     <div class="col-6">
-                        <div class="bg-white bg-opacity-10 rounded-3 p-3 text-center">
-                            <i class="bi bi-person-check fs-1 mb-2 d-block"></i>
-                            <span class="fw-semibold small">Cadastro de Bolsistas</span>
+                        <div class="landing-feature-card">
+                            <i class="ri-user-star-line"></i>
+                            <strong>Cadastro de Bolsistas</strong>
+                            <span>Perfil completo e organizado</span>
                         </div>
                     </div>
                     <div class="col-6">
-                        <div class="bg-white bg-opacity-10 rounded-3 p-3 text-center">
-                            <i class="ri-file-text-line fs-1 mb-2 d-block"></i>
-                            <span class="fw-semibold small">Editais Abertos</span>
+                        <div class="landing-feature-card">
+                            <i class="ri-file-list-3-line"></i>
+                            <strong>Editais Abertos</strong>
+                            <span>Oportunidades em um só lugar</span>
                         </div>
                     </div>
                     <div class="col-6">
-                        <div class="bg-white bg-opacity-10 rounded-3 p-3 text-center">
-                            <i class="bi bi-star-fill fs-1 mb-2 d-block"></i>
-                            <span class="fw-semibold small">Classificacao</span>
+                        <div class="landing-feature-card">
+                            <i class="ri-bar-chart-box-line"></i>
+                            <strong>Classificação</strong>
+                            <span>Acompanhamento transparente</span>
                         </div>
                     </div>
                     <div class="col-6">
-                        <div class="bg-white bg-opacity-10 rounded-3 p-3 text-center">
-                            <i class="ri-notification-3-line fs-1 mb-2 d-block"></i>
-                            <span class="fw-semibold small">Notificacoes</span>
+                        <div class="landing-feature-card">
+                            <i class="ri-notification-3-line"></i>
+                            <strong>Notificações</strong>
+                            <span>Você acompanha cada etapa</span>
                         </div>
                     </div>
                 </div>
@@ -66,34 +70,31 @@
     </div>
 </div>
 
-<div class="container py-5">
+<div class="landing-how container py-5">
     <div class="text-center mb-5">
         <h2 class="fw-bold text-primary">Como funciona</h2>
         <p class="text-muted">Tres passos simples para participar dos editais</p>
     </div>
-    <div class="row g-4">
+    <div class="landing-steps row g-4">
         <div class="col-md-4">
-            <div class="card p-4 text-center h-100">
-                <div class="rounded-circle bg-primary bg-opacity-10 d-inline-flex align-items-center justify-content-center mb-3" style="width:80px;height:80px;">
-                    <i class="ri-user-add-line fs-2 text-primary"></i>
+            <div class="landing-step-card h-100">
+                <div class="landing-step-icon"><span>01</span><i class="ri-user-add-line"></i>
                 </div>
                 <h5 class="fw-semibold">1. Cadastre-se</h5>
                 <p class="text-muted small">Crie sua conta e complete seu perfil com dados pessoais, curriculo e foto.</p>
             </div>
         </div>
         <div class="col-md-4">
-            <div class="card p-4 text-center h-100">
-                <div class="rounded-circle bg-primary bg-opacity-10 d-inline-flex align-items-center justify-content-center mb-3" style="width:80px;height:80px;">
-                    <i class="ri-send-plane-line-check fs-2 text-primary"></i>
+            <div class="landing-step-card h-100">
+                <div class="landing-step-icon"><span>02</span><i class="ri-send-plane-line"></i>
                 </div>
                 <h5 class="fw-semibold">2. Candidate-se</h5>
                 <p class="text-muted small">Encontre o edital ideal e envie sua candidatura com apenas um clique.</p>
             </div>
         </div>
         <div class="col-md-4">
-            <div class="card p-4 text-center h-100">
-                <div class="rounded-circle bg-primary bg-opacity-10 d-inline-flex align-items-center justify-content-center mb-3" style="width:80px;height:80px;">
-                    <i class="bi bi-star-fill fs-2 text-primary"></i>
+            <div class="landing-step-card h-100">
+                <div class="landing-step-icon"><span>03</span><i class="ri-line-chart-line"></i>
                 </div>
                 <h5 class="fw-semibold">3. Acompanhe</h5>
                 <p class="text-muted small">Receba notificacoes e acompanhe sua classificacao em tempo real.</p>

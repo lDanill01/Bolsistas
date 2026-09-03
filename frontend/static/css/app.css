@@ -353,6 +353,46 @@ footer { margin-top: auto; }
 
 /* ---- MAIN CONTENT ---- */
 .main-content { padding: 1.5rem 1.5rem; }
+
+/* ---- HOME PÚBLICA ---- */
+.landing-hero {
+    background: linear-gradient(145deg, #17356f 0%, #315a98 100%);
+    padding: 72px 0 56px;
+}
+.landing-feature-card {
+    min-height: 142px;
+    padding: 1.15rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: .3rem;
+    border: 1px solid rgba(255,255,255,.16);
+    border-radius: 16px;
+    background: rgba(255,255,255,.10);
+    box-shadow: 0 8px 24px rgba(10,35,80,.10);
+    transition: background .2s ease, transform .2s ease;
+}
+.landing-feature-card:hover { background: rgba(255,255,255,.15); transform: translateY(-2px); }
+.landing-feature-card i { color: #f0b39a; font-size: 1.8rem; line-height: 1; margin-bottom: .35rem; }
+.landing-feature-card strong { font-size: .94rem; font-weight: 700; }
+.landing-feature-card span { color: rgba(255,255,255,.68); font-size: .76rem; }
+.landing-how { max-width: 1120px; }
+.landing-step-card {
+    position: relative;
+    padding: 1.7rem 1.5rem;
+    text-align: center;
+    background: #f8fafc;
+    border: 1px solid #e3e9f2;
+    border-radius: 16px;
+    box-shadow: 0 5px 18px rgba(35,52,82,.05);
+    transition: border-color .2s ease, transform .2s ease, box-shadow .2s ease;
+}
+.landing-step-card:hover { border-color: #c8d5e7; transform: translateY(-2px); box-shadow: 0 9px 24px rgba(35,52,82,.08); }
+.landing-step-icon { width: 76px; height: 76px; margin: 0 auto 1.1rem; position: relative; display: grid; place-items: center; border-radius: 22px; color: #4f709d; background: #eaf0f8; }
+.landing-step-icon i { font-size: 2rem; }
+.landing-step-icon span { position: absolute; top: -8px; right: -8px; display: grid; place-items: center; width: 28px; height: 28px; border-radius: 50%; color: #fff; background: #d96b45; font-size: .68rem; font-weight: 800; }
+.landing-step-card h5 { color: #29466f; }
+.landing-step-card p { max-width: 255px; margin: 0 auto; }
 @media (max-width: 767.98px) { .main-content { padding: 1rem 0.75rem; } }
 
 /* ---- PUBLIC PAGES (login/landing) header accent ---- */

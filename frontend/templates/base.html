@@ -90,14 +90,10 @@
 {# ---- Páginas públicas (landing / login / registro) ---- #}
 <div class="public-topbar"><div style="background:var(--blue-500)"></div><div style="background:var(--sesi-green)"></div><div style="background:var(--orange-500)"></div><div style="background:var(--iel-teal)"></div></div>
 <nav class="bg-white border-bottom">
-    <div class="container d-flex align-items-center justify-content-between py-2">
+    <div class="container d-flex align-items-center justify-content-center py-2">
         <a href="{% url 'home' %}" class="d-flex align-items-center gap-2 text-decoration-none">
             <img src="{% static 'img/logo-senai.png' %}" alt="SENAI Sistema FIEMS" height="32">
         </a>
-        <div class="d-flex gap-2">
-            <a href="{% url 'login' %}" class="btn btn-sm btn-outline-primary">Entrar</a>
-            <a href="{% url 'registro' %}" class="btn btn-sm btn-primary">Criar conta</a>
-        </div>
     </div>
 </nav>
 <main class="flex-grow-1">
