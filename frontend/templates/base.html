@@ -24,9 +24,6 @@
 
     <div id="content-wrapper">
         <nav class="top-navbar d-flex justify-content-between align-items-center">
-            <button id="sidebar-toggle" class="navbar-toggler-sidebar" type="button" title="Menu">
-                <i class="ri-menu-line"></i>
-            </button>
             <div class="d-flex align-items-center gap-3">
                 <span hx-get="{% url 'notificacao_unread_count' %}" hx-trigger="load" hx-swap="outerHTML">
                     <a href="{% url 'notificacao_list' %}" class="notif-bell text-decoration-none" title="Notificações">
