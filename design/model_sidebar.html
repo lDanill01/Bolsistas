@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modelo de Sidebar</title>
+    
+    <!-- Font Awesome 6 (Versão Atualizada) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@300;400;600&display=swap" rel="stylesheet">
+
+    <style>
+        /* ===== VARIÁVEIS CSS (Fácil de customizar) ===== */
+        :root {
+            --sidebar-bg: #212121;
+            --sidebar-hover: #000000;
+            --text-color: #999999;
+            --text-active: #ffffff;
+            --sidebar-width: 250px;
+            --sidebar-collapsed: 60px;
+            --transition-speed: 0.2s;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Titillium Web', sans-serif;
+            background-color: #e2e2e2; /* Cor de fundo do conteúdo */
+        }
+
+        /* ===== ESTRUTURA DA SIDEBAR ===== */
+        .main-menu {
+            background: var(--sidebar-bg);
+            border-right: 1px solid #e5e5e5;
+            position: fixed;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            width: var(--sidebar-collapsed);
+            overflow: hidden;
+            z-index: 1000;
+            transition: width var(--transition-speed) ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Classe adicionada via JS para expandir */
+        .main-menu.expanded {
+            width: var(--sidebar-width);
+        }
+
+        /* Botão de recolher/expandir */
+        .toggle-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-color);
+            font-size: 20px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            border-bottom: 1px solid #333;
+            transition: color var(--transition-speed);
+        }
+
+        .toggle-btn:hover {
+            color: var(--text-active);
+        }
+
+        /* ===== LISTAS DE NAVEGAÇÃO ===== */
+        .main-menu ul {
+            list-style: none;
+            flex-grow: 1; /* Faz a lista principal ocupar o espaço disponível */
+            overflow-y: auto;
+        }
+
+        .main-menu ul.logout {
+            flex-grow: 0; /* Mantém o logout no fundo */
+            border-top: 1px solid #333;
+        }
+
+        .main-menu li {
+            width: 100%;
+        }
+
+        .main-menu li a {
+            display: flex;
+            align-items: center;
+            color: var(--text-color);
+            text-decoration: none;
+            font-size: 14px;
+            padding: 15px 0;
+            transition: all var(--transition-speed) ease;
+            white-space: nowrap; /* Evita que o texto quebre quando recolher */
+        }
+
+        .main-menu li a:hover,
+        .main-menu li.active > a {
+            background-color: var(--sidebar-hover);
+            color: var(--text-active);
+        }
+
+        /* Ícones */
+        .nav-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: var(--sidebar-collapsed); /* Mesma largura do menu recolhido */
+            min-width: var(--sidebar-collapsed);
+            font-size: 18px;
+        }
+
+        /* Texto */
+        .nav-text {
+            opacity: 0; /* Escondido por padrão (menu recolhido) */
+            transition: opacity var(--transition-speed) ease;
+        }
+
+        /* Quando o menu está expandido, mostra o texto */
+        .main-menu.expanded .nav-text {
+            opacity: 1;
+        }
+
+        /* Área de Conteúdo (Apenas para demonstração) */
+        .content-area {
+            margin-left: var(--sidebar-collapsed);
+            padding: 30px;
+            transition: margin-left var(--transition-speed) ease;
+        }
+        .main-menu.expanded ~ .content-area {
+            margin-left: var(--sidebar-width);
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- INÍCIO DA SIDEBAR -->
+    <nav class="main-menu" id="sidebar">
+        
+        <!-- Botão para recolher/expandir -->
+        <button class="toggle-btn" id="btn-toggle">
+            <i class="fa-solid fa-bars"></i>
+        </button>
+
+        <!-- Menu Principal -->
+        <ul>
+            <li class="active">
+                <a href="#">
+                    <span class="nav-icon"><i class="fa-solid fa-house"></i></span>
+                    <span class="nav-text">Dashboard</span>
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    <span class="nav-icon"><i class="fa-solid fa-earth-americas"></i></span>
+                    <span class="nav-text">Global Surveyors</span>
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    <span class="nav-icon"><i class="fa-solid fa-comments"></i></span>
+                    <span class="nav-text">Group Hub Forums</span>
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    <span class="nav-icon"><i class="fa-solid fa-camera-retro"></i></span>
+                    <span class="nav-text">Survey Photos</span>
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    <span class="nav-icon"><i class="fa-solid fa-film"></i></span>
+                    <span class="nav-text">Tutorials</span>
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    <span class="nav-icon"><i class="fa-solid fa-book"></i></span>
+                    <span class="nav-text">Jobs</span>
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    <span class="nav-icon"><i class="fa-solid fa-gears"></i></span>
+                    <span class="nav-text">Tools & Resources</span>
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    <span class="nav-icon"><i class="fa-solid fa-location-dot"></i></span>
+                    <span class="nav-text">Member Map</span>
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    <span class="nav-icon"><i class="fa-solid fa-circle-info"></i></span>
+                    <span class="nav-text">Documentation</span>
+                </a>
+            </li>
+        </ul>
+
+        <!-- Menu Logout (Fixado no rodapé da sidebar) -->
+        <ul class="logout">
+            <li>
+                <a href="#">
+                    <span class="nav-icon"><i class="fa-solid fa-power-off"></i></span>
+                    <span class="nav-text">Logout</span>
+                </a>
+            </li>  
+        </ul>
+    </nav>
+    <!-- FIM DA SIDEBAR -->
+
+    <!-- ÁREA DE CONTEÚDO DO SITE -->
+    <div class="content-area">
+        <h1>Conteúdo do Projeto</h1>
+        <p>Clique no ícone de menu acima para recolher e expandir a sidebar.</p>
+    </div>
+
+    <!-- JAVASCRIPT PARA A FUNÇÃO RECOLHER -->
+    <script>
+        const btnToggle = document.getElementById('btn-toggle');
+        const sidebar = document.getElementById('sidebar');
+
+        btnToggle.addEventListener('click', () => {
+            sidebar.classList.toggle('expanded');
+            
+            // Opcional: Trocar o ícone do botão dependendo do estado
+            const icon = btnToggle.querySelector('i');
+            if (sidebar.classList.contains('expanded')) {
+                icon.classList.remove('fa-bars');
+                icon.classList.add('fa-angle-left'); // Ícone de voltar
+            } else {
+                icon.classList.remove('fa-angle-left');
+                icon.classList.add('fa-bars'); // Ícone de menu
+            }
+        });
+    </script>
+</body>
+</html>

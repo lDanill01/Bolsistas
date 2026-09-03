@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Editar cadastro — Portal da Inovação</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tabler-icons/2.44.0/iconfont/tabler-icons.min.css">
+<style>
+:root{
+  --bg:#F4F5F7;
+  --surface:#FFFFFF;
+  --text-primary:#16202E;
+  --text-secondary:#667085;
+  --text-muted:#98A2B3;
+  --border:#E4E7EC;
+  --border-focus:#2A4B8D;
+  --accent:#2A4B8D;
+  --accent-50:#EAF0FB;
+  --accent-800:#1C3566;
+  --success:#1B7A4D;
+  --success-50:#E7F5EE;
+  --success-800:#0F4A2E;
+  --danger:#C0393E;
+  --danger-50:#FCEBEB;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{
+  background:var(--bg);
+  font-family:'IBM Plex Sans',sans-serif;
+  color:var(--text-primary);
+  padding-bottom:6rem;
+}
+.topbar{
+  background:var(--surface);
+  border-bottom:1px solid var(--border);
+  padding:0.9rem 2.5rem;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+}
+.brand{display:flex;align-items:center;gap:10px;font-family:'Sora',sans-serif;font-weight:600;font-size:15px;color:var(--accent-800);}
+.brand i{font-size:20px;}
+.user{display:flex;align-items:center;gap:14px;color:var(--text-secondary);font-size:14px;}
+.bell{position:relative;font-size:19px;}
+.bell::after{content:'';position:absolute;top:-2px;right:-2px;width:7px;height:7px;border-radius:50%;background:#D8464B;}
+
+.page{max-width:900px;margin:0 auto;padding:0 2rem;}
+
+.breadcrumb{
+  font-size:13px;color:var(--text-muted);
+  padding:1.5rem 0 0.4rem;
+  display:flex;align-items:center;gap:6px;
+}
+.breadcrumb a{color:var(--text-muted);text-decoration:none;}
+.breadcrumb .current{color:var(--text-secondary);}
+
+.pagehead{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0.3rem 0 0.5rem;
+}
+.pagehead h1{
+  font-family:'Sora',sans-serif;font-weight:600;font-size:24px;
+  display:flex;align-items:center;gap:12px;
+}
+.pagehead h1 i{font-size:22px;color:var(--accent);}
+.mode-badge{
+  display:inline-flex;align-items:center;gap:6px;
+  background:var(--accent-50);color:var(--accent-800);
+  font-size:12.5px;font-weight:600;padding:4px 11px;border-radius:7px;
+  margin-bottom:1.4rem;
+}
+.mode-badge i{font-size:14px;}
+
+.card{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:1.5rem 1.75rem;
+  margin-bottom:1.1rem;
+}
+.card h2{
+  font-family:'Sora',sans-serif;font-weight:600;font-size:15px;
+  display:flex;align-items:center;gap:9px;
+  margin-bottom:1.4rem;
+  color:var(--text-primary);
+}
+.card h2 i{font-size:17px;color:var(--accent);}
+
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.2rem 1.6rem;}
+
+.field{display:flex;flex-direction:column;gap:6px;}
+.field label{font-size:12.5px;font-weight:500;color:var(--text-secondary);}
+.field label .req{color:var(--danger);margin-left:2px;}
+.field input,.field select{
+  font-family:'IBM Plex Sans',sans-serif;
+  font-size:14px;color:var(--text-primary);
+  border:1px solid var(--border);
+  border-radius:8px;
+  padding:9px 12px;
+  background:var(--surface);
+  outline:none;
+  transition:border-color .12s;
+}
+.field input:focus,.field select:focus{
+  border-color:var(--border-focus);
+  box-shadow:0 0 0 3px var(--accent-50);
+}
+.field input:disabled{
+  background:#F8F9FA;color:var(--text-muted);
+}
+.field .hint{font-size:11.5px;color:var(--text-muted);}
+.field .error{font-size:11.5px;color:var(--danger);display:flex;align-items:center;gap:4px;}
+.field.has-error input{border-color:var(--danger);}
+.field.has-error input:focus{box-shadow:0 0 0 3px var(--danger-50);}
+
+.locked-note{
+  display:flex;align-items:center;gap:7px;
+  font-size:12px;color:var(--text-muted);
+  margin-top:-4px;margin-bottom:1.2rem;
+}
+.locked-note i{font-size:14px;}
+
+.subsection{margin-bottom:1.6rem;}
+.subsection:last-child{margin-bottom:0;}
+.subsection-head{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:1rem;
+}
+.subsection-title{
+  display:flex;align-items:center;gap:9px;
+  font-size:13.5px;font-weight:600;
+}
+.subsection-title .stage-badge{
+  font-size:11px;font-weight:600;background:var(--success-50);color:var(--success-800);
+  padding:2px 8px;border-radius:6px;
+}
+.link-btn{
+  display:flex;align-items:center;gap:5px;
+  background:none;border:none;color:var(--accent);
+  font-size:13px;font-weight:500;cursor:pointer;
+}
+.acad-block{
+  border:1px solid var(--border);border-radius:10px;padding:1.1rem 1.2rem;
+  position:relative;
+}
+.acad-block + .acad-block{margin-top:0.9rem;}
+.remove-btn{
+  position:absolute;top:10px;right:10px;
+  background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:16px;
+}
+.add-block{
+  display:flex;align-items:center;justify-content:center;gap:7px;
+  border:1px dashed var(--border);border-radius:10px;
+  padding:0.85rem;color:var(--accent);font-size:13.5px;font-weight:500;
+  cursor:pointer;background:none;width:100%;margin-top:0.9rem;
+}
+
+.chip-toggle-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
+.chip-toggle{
+  display:flex;align-items:center;justify-content:space-between;
+  border:1px solid var(--border);border-radius:9px;padding:9px 13px;
+}
+.chip-toggle .label{font-size:13px;color:var(--text-secondary);}
+.switch{
+  position:relative;width:38px;height:22px;flex-shrink:0;
+}
+.switch input{position:absolute;opacity:0;width:100%;height:100%;margin:0;cursor:pointer;}
+.switch .track{
+  position:absolute;inset:0;background:var(--border);border-radius:20px;transition:background .12s;
+}
+.switch .track::after{
+  content:'';position:absolute;top:2px;left:2px;width:18px;height:18px;
+  background:#fff;border-radius:50%;transition:transform .12s;
+  box-shadow:0 1px 2px rgba(0,0,0,.15);
+}
+.switch input:checked + .track{background:var(--success);}
+.switch input:checked + .track::after{transform:translateX(16px);}
+.count-input{
+  width:70px;font-size:13px;text-align:center;
+  border:1px solid var(--border);border-radius:7px;padding:6px 4px;
+}
+
+.upload-zone{
+  border:1px dashed var(--border);border-radius:10px;
+  padding:1.6rem;display:flex;flex-direction:column;align-items:center;gap:8px;
+  color:var(--text-muted);text-align:center;
+}
+.upload-zone i{font-size:26px;color:var(--text-muted);}
+.upload-zone .upload-title{font-size:14px;color:var(--text-secondary);font-weight:500;}
+.upload-zone .upload-sub{font-size:12px;}
+.btn-choose{
+  margin-top:6px;
+  font-size:13px;font-weight:500;color:var(--accent);
+  border:1px solid var(--accent-50);background:var(--accent-50);
+  padding:6px 14px;border-radius:7px;cursor:pointer;
+}
+
+.footer-bar{
+  position:sticky;bottom:0;left:0;right:0;
+  background:var(--surface);border-top:1px solid var(--border);
+  padding:1rem 2.5rem;
+  display:flex;justify-content:flex-end;gap:10px;
+  margin-top:1.5rem;
+}
+.btn{
+  font-family:'IBM Plex Sans',sans-serif;
+  font-size:14px;font-weight:500;
+  padding:9px 16px;border-radius:8px;
+  display:flex;align-items:center;gap:7px;
+  cursor:pointer;border:1px solid transparent;
+}
+.btn-primary{background:var(--accent);color:#fff;}
+.btn-ghost{background:transparent;color:var(--text-secondary);border-color:var(--border);}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="brand"><i class="ti ti-bulb"></i>Portal da Inovação</div>
+  <div class="user">
+    <span class="bell"><i class="ti ti-bell"></i></span>
+    <span><i class="ti ti-user-circle" style="font-size:18px;vertical-align:-3px;margin-right:4px;"></i>Bolsista6</span>
+  </div>
+</div>
+
+<div class="page">
+
+  <div class="breadcrumb"><a>Bolsistas</a><i class="ti ti-chevron-right" style="font-size:13px"></i><a>Meu cadastro</a><i class="ti ti-chevron-right" style="font-size:13px"></i><span class="current">Editar</span></div>
+
+  <div class="pagehead">
+    <h1><i class="ti ti-edit"></i>Editar cadastro</h1>
+  </div>
+  <div class="mode-badge"><i class="ti ti-pencil"></i>Alterações pendentes de salvar</div>
+
+  <div class="card">
+    <h2><i class="ti ti-id-badge-2"></i>Dados pessoais</h2>
+    <div class="grid">
+      <div class="field">
+        <label>Nome<span class="req">*</span></label>
+        <input type="text" value="Bolsista6">
+      </div>
+      <div class="field has-error">
+        <label>E-mail<span class="req">*</span></label>
+        <input type="email" value="bolsista6email.com">
+        <span class="error"><i class="ti ti-alert-circle"></i>Informe um e-mail válido</span>
+      </div>
+      <div class="field">
+        <label>Nº de série</label>
+        <input type="text" value="0532" disabled>
+        <span class="hint">Atribuído pelo sistema</span>
+      </div>
+      <div class="field">
+        <label>Telefone<span class="req">*</span></label>
+        <input type="text" value="(67) 99999-9999">
+      </div>
+      <div class="field">
+        <label>Data de nascimento<span class="req">*</span></label>
+        <input type="text" value="01/01/1995">
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2><i class="ti ti-map-pin"></i>Endereço</h2>
+    <div class="grid">
+      <div class="field">
+        <label>Rua<span class="req">*</span></label>
+        <input type="text" value="Rua Teste">
+      </div>
+      <div class="field">
+        <label>Número<span class="req">*</span></label>
+        <input type="text" value="100">
+      </div>
+      <div class="field">
+        <label>Bairro<span class="req">*</span></label>
+        <input type="text" value="Centro">
+      </div>
+      <div class="field">
+        <label>Cidade<span class="req">*</span></label>
+        <input type="text" value="Campo Grande">
+      </div>
+      <div class="field">
+        <label>Estado<span class="req">*</span></label>
+        <select>
+          <option>Mato Grosso do Sul</option>
+          <option>São Paulo</option>
+          <option>Paraná</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2><i class="ti ti-school"></i>Dados acadêmicos</h2>
+
+    <div class="acad-block">
+      <button class="remove-btn" aria-label="Remover graduação"><i class="ti ti-trash"></i></button>
+      <div class="subsection-head">
+        <div class="subsection-title">Graduação<span class="stage-badge">Concluída</span></div>
+      </div>
+      <div class="grid">
+        <div class="field">
+          <label>Instituição<span class="req">*</span></label>
+          <input type="text" value="Universidade Estadual do Centro-Oeste">
+        </div>
+        <div class="field">
+          <label>Área<span class="req">*</span></label>
+          <input type="text" value="Ciências Exatas e da Terra">
+        </div>
+        <div class="field">
+          <label>Curso<span class="req">*</span></label>
+          <input type="text" value="Ciência de Dados">
+        </div>
+        <div class="field">
+          <label>Ano de conclusão<span class="req">*</span></label>
+          <input type="text" value="2018">
+        </div>
+        <div class="field">
+          <label>Situação</label>
+          <select>
+            <option>Concluída</option>
+            <option>Em andamento</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="acad-block">
+      <button class="remove-btn" aria-label="Remover pós-graduação"><i class="ti ti-trash"></i></button>
+      <div class="subsection-head">
+        <div class="subsection-title">Pós-graduação<span class="stage-badge">Concluída</span></div>
+      </div>
+      <div class="grid">
+        <div class="field">
+          <label>Instituição<span class="req">*</span></label>
+          <input type="text" value="Universidade Cesumar">
+        </div>
+        <div class="field">
+          <label>Área<span class="req">*</span></label>
+          <input type="text" value="Ciências Exatas e da Terra">
+        </div>
+        <div class="field">
+          <label>Curso<span class="req">*</span></label>
+          <input type="text" value="Ciência de Dados">
+        </div>
+        <div class="field">
+          <label>Ano de conclusão<span class="req">*</span></label>
+          <input type="text" value="2020">
+        </div>
+        <div class="field">
+          <label>Situação</label>
+          <select>
+            <option>Concluída</option>
+            <option>Em andamento</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <button class="add-block"><i class="ti ti-plus"></i>Adicionar formação</button>
+  </div>
+
+  <div class="card">
+    <h2><i class="ti ti-chart-bar"></i>Critérios e pontuação</h2>
+    <div class="chip-toggle-grid">
+      <div class="chip-toggle">
+        <span class="label">Projetos/pesquisa (anos)</span>
+        <input class="count-input" type="text" value="4">
+      </div>
+      <div class="chip-toggle">
+        <span class="label">Participação em congressos</span>
+        <label class="switch"><input type="checkbox"><span class="track"></span></label>
+      </div>
+      <div class="chip-toggle">
+        <span class="label">Resumo em anais</span>
+        <label class="switch"><input type="checkbox"><span class="track"></span></label>
+      </div>
+      <div class="chip-toggle">
+        <span class="label">Artigo completo em anais</span>
+        <label class="switch"><input type="checkbox" checked><span class="track"></span></label>
+      </div>
+      <div class="chip-toggle">
+        <span class="label">Artigo científico nacional</span>
+        <label class="switch"><input type="checkbox"><span class="track"></span></label>
+      </div>
+      <div class="chip-toggle">
+        <span class="label">Artigo científico internacional</span>
+        <label class="switch"><input type="checkbox" checked><span class="track"></span></label>
+      </div>
+      <div class="chip-toggle">
+        <span class="label">Livro/patente</span>
+        <label class="switch"><input type="checkbox" checked><span class="track"></span></label>
+      </div>
+      <div class="chip-toggle">
+        <span class="label">Minicurso</span>
+        <label class="switch"><input type="checkbox"><span class="track"></span></label>
+      </div>
+      <div class="chip-toggle">
+        <span class="label">Treinamento</span>
+        <label class="switch"><input type="checkbox"><span class="track"></span></label>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2><i class="ti ti-briefcase"></i>Experiência profissional</h2>
+    <div class="grid">
+      <div class="field">
+        <label>Área de atuação<span class="req">*</span></label>
+        <input type="text" value="TI">
+      </div>
+      <div class="field">
+        <label>Anos de experiência<span class="req">*</span></label>
+        <input type="text" value="4">
+      </div>
+      <div class="field">
+        <label>Comprovante</label>
+        <input type="text" placeholder="Nenhum arquivo selecionado" disabled>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2><i class="ti ti-paperclip"></i>Anexos comprobatórios</h2>
+    <div class="upload-zone">
+      <i class="ti ti-cloud-upload"></i>
+      <span class="upload-title">Arraste arquivos aqui ou clique para selecionar</span>
+      <span class="upload-sub">PDF, JPG ou PNG até 10 MB</span>
+      <button class="btn-choose">Escolher arquivo</button>
+    </div>
+  </div>
+
+</div>
+
+<div class="footer-bar">
+  <button class="btn btn-ghost"><i class="ti ti-x"></i>Cancelar</button>
+  <button class="btn btn-primary"><i class="ti ti-device-floppy"></i>Salvar alterações</button>
+</div>
+
+</body>
+</html>

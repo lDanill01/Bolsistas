@@ -1,379 +1,281 @@
 {% extends 'base.html' %}
-{% block title %}Solicitar Edicao - Bolsas SENAI - MS{% endblock %}
+{% load static %}
+{% block title %}Editar cadastro - Bolsas SENAI - MS{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/meu-cadastro.css' %}">
+{% endblock %}
 
 {% block content %}
-<div class="container-fluid py-3">
-    <div class="row justify-content-center">
-        <div class="col-lg-10">
-            <div class="card p-4">
-                <h3 class="fw-bold text-primary mb-4">
-                    <i class="bi bi-pencil-square me-2"></i>Solicitar Edicao de Cadastro
-                </h3>
-                <p class="text-muted mb-4">
-                    Altere os campos desejados. As alteracoes serao salvas no seu cadastro.
-                </p>
+<div class="mc-page">
+    <div class="mc-breadcrumb"><a href="{% url 'home' %}">Bolsistas</a><i class="bi bi-chevron-right" style="font-size:11px"></i><a href="{% url 'cadastro_detail' %}">Meu cadastro</a><i class="bi bi-chevron-right" style="font-size:11px"></i><span class="current">Editar</span></div>
 
-                <form method="post" enctype="multipart/form-data" novalidate>
-                    {% csrf_token %}
+    <div class="mc-pagehead" style="padding-bottom:0.3rem;">
+        <h1><i class="bi bi-pencil-square"></i>Editar cadastro</h1>
+    </div>
+    <div class="mc-mode-badge"><i class="bi bi-pencil"></i>Alterações pendentes de salvar</div>
 
-                    <div class="card mb-4">
-                        <div class="card-body">
-                            <div class="row g-3">
-                                <div class="col-md-4">
-                                    <small class="text-muted d-block">Nome</small>
-                                    <span class="fw-medium">{{ user.nome_completo }}</span>
-                                </div>
-                                <div class="col-md-4">
-                                    <small class="text-muted d-block">Email</small>
-                                    <span class="fw-medium">{{ user.email }}</span>
-                                </div>
-                                <div class="col-md-2">
-                                    <small class="text-muted d-block">Nascimento</small>
-                                    <span class="fw-medium">{{ object.data_nascimento|date:'d/m/Y'|default:'-' }}</span>
-                                </div>
-                                <div class="col-md-2">
-                                    <small class="text-muted d-block">Telefone</small>
-                                    <span class="fw-medium">{{ object.telefone|default:'-' }}</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+    <form method="post" enctype="multipart/form-data" novalidate>
+        {% csrf_token %}
 
-                    <h5 class="fw-semibold mb-3">
-                        <i class="bi bi-person me-2 text-primary"></i>Dados Pessoais
-                    </h5>
-                    <div class="row g-3 mb-4">
-                        <div class="col-md-6">
-                            <label class="form-label fw-semibold">{{ form.telefone.label }}</label>
-                            <div class="input-group">
-                                <span class="input-group-text"><i class="bi bi-telephone-fill"></i></span>
-                                {{ form.telefone }}
-                            </div>
-                            {% if form.telefone.errors %}
-                            <div class="text-danger small mt-1">{{ form.telefone.errors|join:', ' }}</div>
-                            {% endif %}
-                        </div>
-                    </div>
-
-                    <h5 class="fw-semibold mb-3">
-                        <i class="bi bi-geo-alt me-2 text-primary"></i>Endereco
-                    </h5>
-                    <div class="row g-3 mb-4">
-                        <div class="col-md-8">
-                            <label class="form-label fw-semibold">{{ form.rua.label }}</label>
-                            {{ form.rua }}
-                            {% if form.rua.errors %}
-                            <div class="text-danger small mt-1">{{ form.rua.errors|join:', ' }}</div>
-                            {% endif %}
-                        </div>
-                        <div class="col-md-4">
-                            <label class="form-label fw-semibold">{{ form.numero.label }}</label>
-                            {{ form.numero }}
-                            {% if form.numero.errors %}
-                            <div class="text-danger small mt-1">{{ form.numero.errors|join:', ' }}</div>
-                            {% endif %}
-                        </div>
-                        <div class="col-md-4">
-                            <label class="form-label fw-semibold">{{ form.bairro.label }}</label>
-                            {{ form.bairro }}
-                            {% if form.bairro.errors %}
-                            <div class="text-danger small mt-1">{{ form.bairro.errors|join:', ' }}</div>
-                            {% endif %}
-                        </div>
-                        <div class="col-md-5">
-                            <label class="form-label fw-semibold">{{ form.cidade.label }}</label>
-                            {{ form.cidade }}
-                            {% if form.cidade.errors %}
-                            <div class="text-danger small mt-1">{{ form.cidade.errors|join:', ' }}</div>
-                            {% endif %}
-                        </div>
-                        <div class="col-md-3">
-                            <label class="form-label fw-semibold">{{ form.estado.label }}</label>
-                            {{ form.estado }}
-                            {% if form.estado.errors %}
-                            <div class="text-danger small mt-1">{{ form.estado.errors|join:', ' }}</div>
-                            {% endif %}
-                        </div>
-                    </div>
-
-                    <hr class="my-4">
-
-                    <h5 class="fw-semibold mb-3">
-                        <i class="bi bi-mortarboard me-2 text-primary"></i>Dados Acadêmicos
-                    </h5>
-
-                    {% if formacao_formset %}
-                    <div id="formacoes-container">
-                        {{ formacao_formset.management_form }}
-                        {% for fm in formacao_formset %}
-                        <div class="card mb-2 border formacao-row">
-                            <div class="card-body py-2 px-3">
-                                <div class="row g-2 align-items-end">
-                                    <div class="col-md-2">
-                                        <label class="form-label small">Formação</label>
-                                        <div class="input-group input-group-sm">
-                                            <span class="input-group-text"><i class="bi bi-mortarboard"></i></span>
-                                            {{ fm.tipo }}
-                                        </div>
-                                        {% if fm.tipo.errors %}
-                                        <div class="text-danger small mt-1">{{ fm.tipo.errors|join:', ' }}</div>
-                                        {% endif %}
-                                    </div>
-                                    <div class="col-md-1">
-                                        <label class="form-label small">Status</label>
-                                        {{ fm.status }}
-                                    </div>
-                                    <div class="col-md-3">
-                                        <label class="form-label small">Instituição</label>
-                                        {{ fm.instituicao }}
-                                        <select class="form-select form-select-sm instituicao-select" onchange="onOutraSelect(this, 'instituicao')"></select>
-                                        <input type="text" class="form-control form-control-sm outra-input d-none mt-1" placeholder="Digite o nome da instituição..." oninput="onOutraInput(this, 'instituicao')">
-                                    </div>
-                                    <div class="col-md-2">
-                                        <label class="form-label small">Área</label>
-                                        {{ fm.area }}
-                                        <select class="form-select form-select-sm area-select" onchange="onOutraSelect(this, 'area')"></select>
-                                        <input type="text" class="form-control form-control-sm outra-input d-none mt-1" placeholder="Digite a área..." oninput="onOutraInput(this, 'area')">
-                                    </div>
-                                    <div class="col-md-2">
-                                        <label class="form-label small">Curso</label>
-                                        {{ fm.curso }}
-                                        <select class="form-select form-select-sm curso-select" onchange="onOutraSelect(this, 'curso')"></select>
-                                        <input type="text" class="form-control form-control-sm outra-input d-none mt-1" placeholder="Digite o curso..." oninput="onOutraInput(this, 'curso')">
-                                    </div>
-                                    <div class="col-md-2">
-                                        <label class="form-label small">Ano de Conclusão</label>
-                                        {{ fm.ano_conclusao }}
-                                    </div>
-                                    <div class="col-12 d-flex align-items-center justify-content-between">
-                                        <div class="form-check">
-                                            {{ fm.id }}
-                                            {% if formacao_formset.can_delete %}
-                                            {{ fm.DELETE }}
-                                            <label class="form-check-label small text-danger">Remover esta formação</label>
-                                            {% endif %}
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        {% endfor %}
-                    </div>
-                    <div id="formacoes-empty" class="d-none">
-                        <div class="card mb-2 border">
-                            <div class="card-body py-2 px-3">
-                                <div class="row g-2 align-items-end">
-                                    <div class="col-md-2">
-                                        <label class="form-label small">Formação</label>
-                                        <div class="input-group input-group-sm">
-                                            <span class="input-group-text"><i class="bi bi-mortarboard"></i></span>
-                                            {{ formacao_formset.empty_form.tipo }}
-                                        </div>
-                                    </div>
-                                    <div class="col-md-1">
-                                        <label class="form-label small">Status</label>
-                                        {{ formacao_formset.empty_form.status }}
-                                    </div>
-                                    <div class="col-md-3">
-                                        <label class="form-label small">Instituição</label>
-                                        {{ formacao_formset.empty_form.instituicao }}
-                                        <select class="form-select form-select-sm instituicao-select" onchange="onOutraSelect(this, 'instituicao')"></select>
-                                        <input type="text" class="form-control form-control-sm outra-input d-none mt-1" placeholder="Digite o nome da instituição..." oninput="onOutraInput(this, 'instituicao')">
-                                    </div>
-                                    <div class="col-md-2">
-                                        <label class="form-label small">Área</label>
-                                        {{ formacao_formset.empty_form.area }}
-                                        <select class="form-select form-select-sm area-select" onchange="onOutraSelect(this, 'area')"></select>
-                                        <input type="text" class="form-control form-control-sm outra-input d-none mt-1" placeholder="Digite a área..." oninput="onOutraInput(this, 'area')">
-                                    </div>
-                                    <div class="col-md-2">
-                                        <label class="form-label small">Curso</label>
-                                        {{ formacao_formset.empty_form.curso }}
-                                        <select class="form-select form-select-sm curso-select" onchange="onOutraSelect(this, 'curso')"></select>
-                                        <input type="text" class="form-control form-control-sm outra-input d-none mt-1" placeholder="Digite o curso..." oninput="onOutraInput(this, 'curso')">
-                                    </div>
-                                    <div class="col-md-2">
-                                        <label class="form-label small">Ano de Conclusão</label>
-                                        {{ formacao_formset.empty_form.ano_conclusao }}
-                                    </div>
-                                    <div class="col-12">
-                                        <div class="form-check">
-                                            {{ formacao_formset.empty_form.id }}
-                                            {{ formacao_formset.empty_form.DELETE }}
-                                            <label class="form-check-label small text-danger">Remover esta formação</label>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="mb-3">
-                        <button type="button" class="btn btn-outline-secondary btn-sm" onclick="addFormset('formacoes', 'formacoes-container', 'formacoes-empty')">
-                            <i class="bi bi-plus-lg me-1"></i>Adicionar Formação
-                        </button>
-                    </div>
-                    {% endif %}
-
-                    <hr class="my-4">
-
-                    <h5 class="fw-semibold mb-3">
-                        <i class="bi bi-briefcase me-2 text-primary"></i>Experiência Profissional
-                    </h5>
-
-                    {% if experiencia_formset %}
-                    <div id="experiencias-container">
-                        {{ experiencia_formset.management_form }}
-                        {% for ef in experiencia_formset %}
-                        <div class="card mb-2 border experiencia-row">
-                            <div class="card-body py-2 px-3">
-                                <div class="row g-2 align-items-end">
-                                    <div class="col-md-5">
-                                        <label class="form-label small">Área de Atuação</label>
-                                        {{ ef.area_atuacao }}
-                                    </div>
-                                    <div class="col-md-3">
-                                        <label class="form-label small">Anos de Experiência</label>
-                                        {{ ef.anos_experiencia }}
-                                    </div>
-                                    <div class="col-md-3">
-                                        <label class="form-label small">Comprovante (PDF)</label>
-                                        {{ ef.anexo }}
-                                    </div>
-                                    <div class="col-md-1">
-                                        <div class="form-check">
-                                            {{ ef.id }}
-                                            {% if experiencia_formset.can_delete %}
-                                            {{ ef.DELETE }}
-                                            <label class="form-check-label small text-danger">Remover</label>
-                                            {% endif %}
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        {% endfor %}
-                    </div>
-                    <div id="experiencias-empty" class="d-none">
-                        <div class="card mb-2 border">
-                            <div class="card-body py-2 px-3">
-                                <div class="row g-2 align-items-end">
-                                    <div class="col-md-5">
-                                        <label class="form-label small">Área de Atuação</label>
-                                        {{ experiencia_formset.empty_form.area_atuacao }}
-                                    </div>
-                                    <div class="col-md-3">
-                                        <label class="form-label small">Anos de Experiência</label>
-                                        {{ experiencia_formset.empty_form.anos_experiencia }}
-                                    </div>
-                                    <div class="col-md-3">
-                                        <label class="form-label small">Comprovante (PDF)</label>
-                                        {{ experiencia_formset.empty_form.anexo }}
-                                    </div>
-                                    <div class="col-md-1">
-                                        <div class="form-check">
-                                            {{ experiencia_formset.empty_form.id }}
-                                            {{ experiencia_formset.empty_form.DELETE }}
-                                            <label class="form-check-label small text-danger">Remover</label>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="mb-3">
-                        <button type="button" class="btn btn-outline-secondary btn-sm" onclick="addFormset('experiencias', 'experiencias-container', 'experiencias-empty')">
-                            <i class="bi bi-plus-lg me-1"></i>Adicionar Experiência
-                        </button>
-                    </div>
-                    {% endif %}
-
-                    <hr class="my-4">
-
-                    <h5 class="fw-semibold mb-3">
-                        <i class="bi bi-bar-chart-line me-2 text-primary"></i>Critérios e Pontuação
-                    </h5>
-
-                    <div class="card p-3 mb-3">
-                        <div class="row g-3">
-                            <div class="col-md-6">
-                                <label class="form-label fw-semibold">Anos de experiência em projetos/pesquisa</label>
-                                <input type="text" class="form-control" value="{{ object.participacao_projetos_anos|default:'0' }} anos" readonly>
-                                <div class="form-text">Esse valor é calculado automaticamente a partir das experiências profissionais.</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row g-3">
-                        <div class="col-md-6">
-                            <div class="form-check border rounded p-3 bg-white">
-                                {{ form.participacao_congressos }}
-                                <label class="form-check-label fw-medium" for="{{ form.participacao_congressos.id_for_label }}">Participação em congressos, feiras, eventos e palestras</label>
-                                <div class="alerta-documentos text-warning small fw-semibold mt-1" style="display:none;"><i class="bi bi-envelope-at me-1"></i>Envie os documentos comprobatórios para inovacao@ms.senai.br</div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-check border rounded p-3 bg-white">
-                                {{ form.resumo_anais }}
-                                <label class="form-check-label fw-medium" for="{{ form.resumo_anais.id_for_label }}">Resumo publicado em anais de eventos</label>
-                                <div class="alerta-documentos text-warning small fw-semibold mt-1" style="display:none;"><i class="bi bi-envelope-at me-1"></i>Envie os documentos comprobatórios para inovacao@ms.senai.br</div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-check border rounded p-3 bg-white">
-                                {{ form.artigo_completo_anais }}
-                                <label class="form-check-label fw-medium" for="{{ form.artigo_completo_anais.id_for_label }}">Artigo completo publicado em anais de eventos</label>
-                                <div class="alerta-documentos text-warning small fw-semibold mt-1" style="display:none;"><i class="bi bi-envelope-at me-1"></i>Envie os documentos comprobatórios para inovacao@ms.senai.br</div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-check border rounded p-3 bg-white">
-                                {{ form.artigo_cientifico_nacional }}
-                                <label class="form-check-label fw-medium" for="{{ form.artigo_cientifico_nacional.id_for_label }}">Artigo científico ou capítulo de livro nacional publicado</label>
-                                <div class="alerta-documentos text-warning small fw-semibold mt-1" style="display:none;"><i class="bi bi-envelope-at me-1"></i>Envie os documentos comprobatórios para inovacao@ms.senai.br</div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-check border rounded p-3 bg-white">
-                                {{ form.artigo_cientifico_internacional }}
-                                <label class="form-check-label fw-medium" for="{{ form.artigo_cientifico_internacional.id_for_label }}">Artigo científico ou capítulo de livro internacional publicado</label>
-                                <div class="alerta-documentos text-warning small fw-semibold mt-1" style="display:none;"><i class="bi bi-envelope-at me-1"></i>Envie os documentos comprobatórios para inovacao@ms.senai.br</div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-check border rounded p-3 bg-white">
-                                {{ form.livro_patente }}
-                                <label class="form-check-label fw-medium" for="{{ form.livro_patente.id_for_label }}">Livro publicado na área de interesse ou patente registrada</label>
-                                <div class="alerta-documentos text-warning small fw-semibold mt-1" style="display:none;"><i class="bi bi-envelope-at me-1"></i>Envie os documentos comprobatórios para inovacao@ms.senai.br</div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-check border rounded p-3 bg-white">
-                                {{ form.participacao_minicurso }}
-                                <label class="form-check-label fw-medium" for="{{ form.participacao_minicurso.id_for_label }}">Participação em minicurso (até 4 horas) na área de interesse</label>
-                                <div class="alerta-documentos text-warning small fw-semibold mt-1" style="display:none;"><i class="bi bi-envelope-at me-1"></i>Envie os documentos comprobatórios para inovacao@ms.senai.br</div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-check border rounded p-3 bg-white">
-                                {{ form.treinamento }}
-                                <label class="form-check-label fw-medium" for="{{ form.treinamento.id_for_label }}">Treinamento (acima de 4 horas) na área de interesse</label>
-                                <div class="alerta-documentos text-warning small fw-semibold mt-1" style="display:none;"><i class="bi bi-envelope-at me-1"></i>Envie os documentos comprobatórios para inovacao@ms.senai.br</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="d-flex gap-2 mt-4">
-                        <button type="submit" class="btn btn-primary px-4">
-                            <i class="bi bi-check-lg me-1"></i>Salvar
-                        </button>
-                        <a href="{% url 'cadastro_detail' %}" class="btn btn-outline-secondary">
-                            <i class="bi bi-arrow-left me-1"></i>Voltar
-                        </a>
-                    </div>
-                </form>
+        <div class="mc-card">
+            <h2 class="mc-card-title"><i class="bi bi-person-badge"></i>Dados pessoais</h2>
+            <div class="mc-grid">
+                <div class="mc-field">
+                    <label class="mc-edit-label">Nome<span class="req">*</span></label>
+                    <input type="text" class="form-control" value="{{ user.nome_completo }}" disabled>
+                </div>
+                <div class="mc-field">
+                    <label class="mc-edit-label">E-mail<span class="req">*</span></label>
+                    <input type="email" class="form-control" value="{{ user.email }}" disabled>
+                </div>
+                <div class="mc-field">
+                    <label class="mc-edit-label">Nº de série</label>
+                    <input type="text" class="form-control" value="{{ object.numero_serie|default:'' }}" disabled>
+                    <div class="mc-hint">Atribuído pelo sistema</div>
+                </div>
+                <div class="mc-field {% if form.telefone.errors %}has-error{% endif %}">
+                    <label class="mc-edit-label" for="{{ form.telefone.id_for_label }}">{{ form.telefone.label }}<span class="req">*</span></label>
+                    {{ form.telefone }}
+                    {% if form.telefone.errors %}<span class="mc-error"><i class="bi bi-exclamation-circle"></i>{{ form.telefone.errors|join:', ' }}</span>{% endif %}
+                </div>
+                <div class="mc-field">
+                    <label class="mc-edit-label">Data de nascimento<span class="req">*</span></label>
+                    <input type="text" class="form-control" value="{{ object.data_nascimento|date:'d/m/Y'|default:'-' }}" disabled>
+                </div>
             </div>
         </div>
-    </div>
+
+        <div class="mc-card">
+            <h2 class="mc-card-title"><i class="bi bi-geo-alt"></i>Endereço</h2>
+            <div class="mc-grid">
+                <div class="mc-field {% if form.rua.errors %}has-error{% endif %}">
+                    <label class="mc-edit-label" for="{{ form.rua.id_for_label }}">{{ form.rua.label }}<span class="req">*</span></label>
+                    {{ form.rua }}
+                    {% if form.rua.errors %}<span class="mc-error"><i class="bi bi-exclamation-circle"></i>{{ form.rua.errors|join:', ' }}</span>{% endif %}
+                </div>
+                <div class="mc-field {% if form.numero.errors %}has-error{% endif %}">
+                    <label class="mc-edit-label" for="{{ form.numero.id_for_label }}">{{ form.numero.label }}<span class="req">*</span></label>
+                    {{ form.numero }}
+                    {% if form.numero.errors %}<span class="mc-error"><i class="bi bi-exclamation-circle"></i>{{ form.numero.errors|join:', ' }}</span>{% endif %}
+                </div>
+                <div class="mc-field {% if form.bairro.errors %}has-error{% endif %}">
+                    <label class="mc-edit-label" for="{{ form.bairro.id_for_label }}">{{ form.bairro.label }}<span class="req">*</span></label>
+                    {{ form.bairro }}
+                    {% if form.bairro.errors %}<span class="mc-error"><i class="bi bi-exclamation-circle"></i>{{ form.bairro.errors|join:', ' }}</span>{% endif %}
+                </div>
+                <div class="mc-field {% if form.cidade.errors %}has-error{% endif %}">
+                    <label class="mc-edit-label" for="{{ form.cidade.id_for_label }}">{{ form.cidade.label }}<span class="req">*</span></label>
+                    {{ form.cidade }}
+                    {% if form.cidade.errors %}<span class="mc-error"><i class="bi bi-exclamation-circle"></i>{{ form.cidade.errors|join:', ' }}</span>{% endif %}
+                </div>
+                <div class="mc-field {% if form.estado.errors %}has-error{% endif %}">
+                    <label class="mc-edit-label" for="{{ form.estado.id_for_label }}">{{ form.estado.label }}<span class="req">*</span></label>
+                    {{ form.estado }}
+                    {% if form.estado.errors %}<span class="mc-error"><i class="bi bi-exclamation-circle"></i>{{ form.estado.errors|join:', ' }}</span>{% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="mc-card">
+            <h2 class="mc-card-title"><i class="bi bi-mortarboard"></i>Dados acadêmicos</h2>
+            {% if formacao_formset %}
+            <div id="formacoes-container">
+                {{ formacao_formset.management_form }}
+                {% for fm in formacao_formset %}
+                <div class="mc-acad-block formacao-row">
+                    {{ fm.id }}
+                    <span class="mc-remove-btn" title="Marcar para remover" onclick="this.closest('.mc-acad-block').querySelector('input[type=checkbox][name$=\"-DELETE\"]')?.click();">
+                        <i class="bi bi-trash"></i>
+                    </span>
+                    <div class="mc-subsection-head">
+                        <div class="mc-subsection-title">{{ fm.instance.get_tipo_display|default:'Nova formação' }}{% if fm.instance.status %}<span class="mc-stage-badge">{{ fm.instance.get_status_display }}</span>{% endif %}</div>
+                    </div>
+                    <div class="mc-grid">
+                        <div class="mc-field">
+                            <label class="mc-edit-label">Formação<span class="req">*</span></label>
+                            {{ fm.tipo }}
+                            {% if fm.tipo.errors %}<span class="mc-error">{{ fm.tipo.errors|join:', ' }}</span>{% endif %}
+                        </div>
+                        <div class="mc-field">
+                            <label class="mc-edit-label">Situação</label>
+                            {{ fm.status }}
+                        </div>
+                        <div class="mc-field">
+                            <label class="mc-edit-label">Ano de conclusão<span class="req">*</span></label>
+                            {{ fm.ano_conclusao }}
+                        </div>
+                        <div class="mc-field">
+                            <label class="mc-edit-label">Instituição<span class="req">*</span></label>
+                            {{ fm.instituicao }}
+                            <select class="form-select form-select-sm instituicao-select mt-1" onchange="onOutraSelect(this, 'instituicao')"></select>
+                            <input type="text" class="form-control form-control-sm outra-input d-none mt-1" placeholder="Digite o nome da instituição..." oninput="onOutraInput(this, 'instituicao')">
+                        </div>
+                        <div class="mc-field">
+                            <label class="mc-edit-label">Área<span class="req">*</span></label>
+                            {{ fm.area }}
+                            <select class="form-select form-select-sm area-select mt-1" onchange="onOutraSelect(this, 'area')"></select>
+                            <input type="text" class="form-control form-control-sm outra-input d-none mt-1" placeholder="Digite a área..." oninput="onOutraInput(this, 'area')">
+                        </div>
+                        <div class="mc-field">
+                            <label class="mc-edit-label">Curso<span class="req">*</span></label>
+                            {{ fm.curso }}
+                            <select class="form-select form-select-sm curso-select mt-1" onchange="onOutraSelect(this, 'curso')"></select>
+                            <input type="text" class="form-control form-control-sm outra-input d-none mt-1" placeholder="Digite o curso..." oninput="onOutraInput(this, 'curso')">
+                        </div>
+                    </div>
+                    {% if formacao_formset.can_delete %}
+                    <div class="form-check mt-2">
+                        {{ fm.DELETE }}
+                        <label class="form-check-label small text-danger">Remover esta formação</label>
+                    </div>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+            <div id="formacoes-empty" class="d-none">
+                <div class="mc-acad-block">
+                    {{ formacao_formset.empty_form.id }}
+                    <div class="mc-subsection-head">
+                        <div class="mc-subsection-title">Nova formação</div>
+                    </div>
+                    <div class="mc-grid">
+                        <div class="mc-field"><label class="mc-edit-label">Formação<span class="req">*</span></label>{{ formacao_formset.empty_form.tipo }}</div>
+                        <div class="mc-field"><label class="mc-edit-label">Situação</label>{{ formacao_formset.empty_form.status }}</div>
+                        <div class="mc-field"><label class="mc-edit-label">Ano de conclusão<span class="req">*</span></label>{{ formacao_formset.empty_form.ano_conclusao }}</div>
+                        <div class="mc-field"><label class="mc-edit-label">Instituição<span class="req">*</span></label>{{ formacao_formset.empty_form.instituicao }}
+                            <select class="form-select form-select-sm instituicao-select mt-1" onchange="onOutraSelect(this, 'instituicao')"></select>
+                            <input type="text" class="form-control form-control-sm outra-input d-none mt-1" placeholder="Digite o nome da instituição..." oninput="onOutraInput(this, 'instituicao')">
+                        </div>
+                        <div class="mc-field"><label class="mc-edit-label">Área<span class="req">*</span></label>{{ formacao_formset.empty_form.area }}
+                            <select class="form-select form-select-sm area-select mt-1" onchange="onOutraSelect(this, 'area')"></select>
+                            <input type="text" class="form-control form-control-sm outra-input d-none mt-1" placeholder="Digite a área..." oninput="onOutraInput(this, 'area')">
+                        </div>
+                        <div class="mc-field"><label class="mc-edit-label">Curso<span class="req">*</span></label>{{ formacao_formset.empty_form.curso }}
+                            <select class="form-select form-select-sm curso-select mt-1" onchange="onOutraSelect(this, 'curso')"></select>
+                            <input type="text" class="form-control form-control-sm outra-input d-none mt-1" placeholder="Digite o curso..." oninput="onOutraInput(this, 'curso')">
+                        </div>
+                    </div>
+                    <div class="form-check mt-2">
+                        {{ formacao_formset.empty_form.DELETE }}
+                        <label class="form-check-label small text-danger">Remover esta formação</label>
+                    </div>
+                </div>
+            </div>
+            <button type="button" class="mc-add-block" onclick="addFormset('formacoes', 'formacoes-container', 'formacoes-empty')">
+                <i class="bi bi-plus-lg"></i>Adicionar formação
+            </button>
+            {% endif %}
+        </div>
+
+        <div class="mc-card">
+            <h2 class="mc-card-title"><i class="bi bi-bar-chart"></i>Critérios e pontuação</h2>
+            <div class="mc-chip-toggle-grid">
+                <div class="mc-chip-toggle">
+                    <span class="label">Projetos/pesquisa (anos)</span>
+                    <input class="mc-count-input" type="text" value="{{ object.participacao_projetos_anos|default:'0' }}" disabled>
+                </div>
+                <div class="mc-chip-toggle">
+                    <span class="label">{{ form.participacao_congressos.label }}</span>
+                    <span class="form-check">{{ form.participacao_congressos }}</span>
+                </div>
+                <div class="mc-chip-toggle">
+                    <span class="label">{{ form.resumo_anais.label }}</span>
+                    <span class="form-check">{{ form.resumo_anais }}</span>
+                </div>
+                <div class="mc-chip-toggle">
+                    <span class="label">{{ form.artigo_completo_anais.label }}</span>
+                    <span class="form-check">{{ form.artigo_completo_anais }}</span>
+                </div>
+                <div class="mc-chip-toggle">
+                    <span class="label">{{ form.artigo_cientifico_nacional.label }}</span>
+                    <span class="form-check">{{ form.artigo_cientifico_nacional }}</span>
+                </div>
+                <div class="mc-chip-toggle">
+                    <span class="label">{{ form.artigo_cientifico_internacional.label }}</span>
+                    <span class="form-check">{{ form.artigo_cientifico_internacional }}</span>
+                </div>
+                <div class="mc-chip-toggle">
+                    <span class="label">{{ form.livro_patente.label }}</span>
+                    <span class="form-check">{{ form.livro_patente }}</span>
+                </div>
+                <div class="mc-chip-toggle">
+                    <span class="label">{{ form.participacao_minicurso.label }}</span>
+                    <span class="form-check">{{ form.participacao_minicurso }}</span>
+                </div>
+                <div class="mc-chip-toggle">
+                    <span class="label">{{ form.treinamento.label }}</span>
+                    <span class="form-check">{{ form.treinamento }}</span>
+                </div>
+            </div>
+            <div class="mc-hint mt-2">Ao marcar um critério, envie os documentos comprobatórios para inovacao@ms.senai.br</div>
+        </div>
+
+        <div class="mc-card">
+            <h2 class="mc-card-title"><i class="bi bi-briefcase"></i>Experiência profissional</h2>
+            {% if experiencia_formset %}
+            <div id="experiencias-container">
+                {{ experiencia_formset.management_form }}
+                {% for ef in experiencia_formset %}
+                <div class="mc-acad-block experiencia-row">
+                    {{ ef.id }}
+                    <div class="mc-grid">
+                        <div class="mc-field">
+                            <label class="mc-edit-label">Área de atuação<span class="req">*</span></label>
+                            {{ ef.area_atuacao }}
+                        </div>
+                        <div class="mc-field">
+                            <label class="mc-edit-label">Anos de experiência<span class="req">*</span></label>
+                            {{ ef.anos_experiencia }}
+                        </div>
+                        <div class="mc-field">
+                            <label class="mc-edit-label">Comprovante</label>
+                            {{ ef.anexo }}
+                            {% if ef.instance.anexo %}<div class="mc-hint"><a href="{% url 'protected_media' ef.instance.anexo.name %}" target="_blank">Ver atual</a></div>{% endif %}
+                        </div>
+                    </div>
+                    {% if experiencia_formset.can_delete %}
+                    <div class="form-check mt-2">
+                        {{ ef.DELETE }}
+                        <label class="form-check-label small text-danger">Remover</label>
+                    </div>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+            <div id="experiencias-empty" class="d-none">
+                <div class="mc-acad-block">
+                    {{ experiencia_formset.empty_form.id }}
+                    <div class="mc-grid">
+                        <div class="mc-field"><label class="mc-edit-label">Área de atuação<span class="req">*</span></label>{{ experiencia_formset.empty_form.area_atuacao }}</div>
+                        <div class="mc-field"><label class="mc-edit-label">Anos de experiência<span class="req">*</span></label>{{ experiencia_formset.empty_form.anos_experiencia }}</div>
+                        <div class="mc-field"><label class="mc-edit-label">Comprovante</label>{{ experiencia_formset.empty_form.anexo }}</div>
+                    </div>
+                    <div class="form-check mt-2">
+                        {{ experiencia_formset.empty_form.DELETE }}
+                        <label class="form-check-label small text-danger">Remover</label>
+                    </div>
+                </div>
+            </div>
+            <button type="button" class="mc-add-block" onclick="addFormset('experiencias', 'experiencias-container', 'experiencias-empty')">
+                <i class="bi bi-plus-lg"></i>Adicionar experiência
+            </button>
+            {% endif %}
+        </div>
+
+        <div class="mc-card">
+            <h2 class="mc-card-title"><i class="bi bi-paperclip"></i>Anexos comprobatórios</h2>
+            <div class="mc-upload-zone">
+                <i class="bi bi-cloud-upload"></i>
+                <span class="mc-upload-title">Documentos comprobatórios dos critérios</span>
+                <span class="mc-upload-sub">Marque os critérios acima e envie os PDFs para inovacao@ms.senai.br — PDF, JPG ou PNG até 10 MB</span>
+            </div>
+            <div class="mc-footer-bar">
+                <a href="{% url 'cadastro_detail' %}" class="mc-btn mc-btn-ghost"><i class="bi bi-x-lg"></i>Cancelar</a>
+                <button type="submit" class="mc-btn mc-btn-primary"><i class="bi bi-floppy"></i>Salvar alterações</button>
+            </div>
+        </div>
+    </form>
 </div>
 {% endblock %}
 
@@ -408,7 +310,7 @@ function onOutraSelect(sel, fieldName) {
     }
 
     if (fieldName === 'area') {
-        var card = sel.closest('.card');
+        var card = sel.closest('.mc-acad-block');
         var cursoSelect = card.querySelector('.curso-select');
         var cursoHidden = card.querySelector('input[id$="-curso"]') || card.querySelector('input[name$="-curso"]');
         if (!cursoSelect || !cursoHidden) return;
@@ -469,7 +371,7 @@ function onOutraInput(inp, fieldName) {
     hidden.value = inp.value;
 
     if (fieldName === 'area') {
-        var card = inp.closest('.card');
+        var card = inp.closest('.mc-acad-block');
         var cursoSelect = card.querySelector('.curso-select');
         if (cursoSelect) {
             onOutraSelect(cursoSelect, 'curso');
@@ -539,16 +441,6 @@ document.addEventListener('DOMContentLoaded', function () {
             initOutraRow(row);
         });
     }
-
-    document.querySelectorAll('.form-check-input[type="checkbox"]').forEach(function (cb) {
-        var alerta = cb.closest('.form-check').querySelector('.alerta-documentos');
-        if (alerta) {
-            if (cb.checked) alerta.style.display = '';
-            cb.addEventListener('change', function () {
-                alerta.style.display = this.checked ? '' : 'none';
-            });
-        }
-    });
 });
 </script>
 {% endblock %}

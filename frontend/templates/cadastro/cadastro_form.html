@@ -1,450 +1,289 @@
 {% extends 'base.html' %}
+{% load static %}
 {% block title %}{% if object %}Editar{% else %}Novo{% endif %} Cadastro - Bolsas SENAI - MS{% endblock %}
 
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/meu-cadastro.css' %}">
+{% endblock %}
+
 {% block content %}
-<div class="container-fluid py-3">
-    <div class="card shadow-sm">
-        <div class="card-header bg-white border-bottom py-3">
-            <h4 class="fw-semibold mb-0 text-dark">
-                <i class="bi bi-person-badge me-2"></i>
-                {% if object %}Editar Cadastro{% else %}Novo Cadastro{% endif %}
-            </h4>
-        </div>
-        <div class="card-body p-4">
-            <form method="post" enctype="multipart/form-data" novalidate>
-                {% csrf_token %}
+<div class="mc-page">
+    <div class="mc-breadcrumb"><a href="{% url 'home' %}">Bolsistas</a><i class="bi bi-chevron-right" style="font-size:11px"></i><span class="current">{% if object %}Editar cadastro{% else %}Novo cadastro{% endif %}</span></div>
 
-                <h5 class="fw-semibold mb-3 text-secondary">
-                    <i class="bi bi-person me-2"></i>Dados Pessoais
-                </h5>
-
-                <div class="row g-3 mb-4">
-                    <div class="col-md-6">
-                        <label class="form-label fw-semibold">Nome</label>
-                        <div class="input-group">
-                            <span class="input-group-text"><i class="bi bi-person-fill"></i></span>
-                            <input type="text" class="form-control" value="{{ user.nome_completo }}" readonly>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <label class="form-label fw-semibold">E-mail</label>
-                        <div class="input-group">
-                            <span class="input-group-text">@</span>
-                            <input type="email" class="form-control" value="{{ user.email }}" readonly>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <label class="form-label fw-semibold">{{ form.telefone.label }}</label>
-                        <div class="input-group">
-                            <span class="input-group-text"><i class="bi bi-telephone-fill"></i></span>
-                            {{ form.telefone }}
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <label class="form-label fw-semibold">{{ form.data_nascimento.label }}</label>
-                        <div class="input-group">
-                            <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
-                            {{ form.data_nascimento }}
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <label class="form-label fw-semibold">Senha</label>
-                        <div class="input-group">
-                            <span class="input-group-text"><i class="bi bi-lock-fill"></i></span>
-                            <input type="password" class="form-control" value="********" readonly>
-                        </div>
-                        <div class="form-text">A senha pode ser alterada nas configurações da conta.</div>
-                    </div>
-
-                    <div class="col-md-4">
-                        <label class="form-label fw-semibold">{{ form.curriculo.label }}</label>
-                        {{ form.curriculo }}
-                        <div class="form-text">Anexe seu currículo em PDF (opcional).</div>
-                        {% if object and object.curriculo %}
-                        <div class="mt-1">
-                            <a href="{% url 'protected_media' object.curriculo.name %}" class="btn btn-link btn-sm p-0" target="_blank">
-                                <i class="bi bi-file-earmark-pdf"></i> Currículo atual
-                            </a>
-                        </div>
-                        {% endif %}
-                    </div>
-                    <div class="col-md-4">
-                        <label class="form-label fw-semibold">Documento de Identificação (RG ou CPF) - PDF</label>
-                        <input type="file" name="anexo_rg_cpf" class="form-control" accept=".pdf" multiple>
-                        {% if object %}
-                        <div class="mt-1">
-                            {% for an in object.anexos.all %}{% if an.tipo == 'rg_cpf' %}
-                            <a href="{% url 'protected_media' an.anexo.name %}" class="btn btn-link btn-sm p-0" target="_blank">
-                                <i class="bi bi-file-earmark-pdf"></i> {{ an.anexo.name|cut:'anexos/' }}
-                            </a>
-                            {% endif %}{% endfor %}
-                        </div>
-                        {% endif %}
-                    </div>
-                    <div class="col-md-4">
-                        <label class="form-label fw-semibold">Comprovante de Endereço - PDF</label>
-                        <input type="file" name="anexo_comprovante_endereco" class="form-control" accept=".pdf" multiple>
-                        {% if object %}
-                        <div class="mt-1">
-                            {% for an in object.anexos.all %}{% if an.tipo == 'comprovante_endereco' %}
-                            <a href="{% url 'protected_media' an.anexo.name %}" class="btn btn-link btn-sm p-0" target="_blank">
-                                <i class="bi bi-file-earmark-pdf"></i> {{ an.anexo.name|cut:'anexos/' }}
-                            </a>
-                            {% endif %}{% endfor %}
-                        </div>
-                        {% endif %}
-                    </div>
-                </div>
-
-                <h5 class="fw-semibold mb-3 text-secondary">
-                    <i class="bi bi-geo-alt me-2"></i>Endereço
-                </h5>
-
-                <div class="row g-3 mb-4">
-                    <div class="col-md-8">
-                        <label class="form-label fw-semibold">{{ form.rua.label }}</label>
-                        <div class="input-group">
-                            <span class="input-group-text"><i class="bi bi-signpost-2"></i></span>
-                            {{ form.rua }}
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <label class="form-label fw-semibold">{{ form.numero.label }}</label>
-                        <div class="input-group">
-                            <span class="input-group-text">Nº</span>
-                            {{ form.numero }}
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <label class="form-label fw-semibold">{{ form.bairro.label }}</label>
-                        <div class="input-group">
-                            <span class="input-group-text"><i class="bi bi-geo-alt"></i></span>
-                            {{ form.bairro }}
-                        </div>
-                    </div>
-                    <div class="col-md-5">
-                        <label class="form-label fw-semibold">{{ form.cidade.label }}</label>
-                        <div class="input-group">
-                            <span class="input-group-text"><i class="bi bi-building"></i></span>
-                            {{ form.cidade }}
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <label class="form-label fw-semibold">{{ form.estado.label }}</label>
-                        {{ form.estado }}
-                    </div>
-                </div>
-
-                <hr class="my-4">
-
-                <h5 class="fw-semibold mb-3 text-secondary">
-                    <i class="bi bi-mortarboard me-2"></i>Dados Acadêmicos
-                </h5>
-
-                {% if formacao_formset %}
-                <div id="formacoes-container">
-                    {{ formacao_formset.management_form }}
-                    {% for fm in formacao_formset %}
-                    <div class="card mb-2 border formacao-row">
-                        <div class="card-body py-2 px-3">
-                            <div class="row g-2 align-items-end">
-                                <div class="col-md-2">
-                                    <label class="form-label small">Formação</label>
-                                    <div class="input-group input-group-sm">
-                                        <span class="input-group-text"><i class="bi bi-mortarboard"></i></span>
-                                        {{ fm.tipo }}
-                                    </div>
-                                </div>
-                                <div class="col-md-1">
-                                    <label class="form-label small">Status</label>
-                                    {{ fm.status }}
-                                </div>
-                                <div class="col-md-3">
-                                    <label class="form-label small">Instituição</label>
-                                    {{ fm.instituicao }}
-                                    <select class="form-select form-select-sm instituicao-select" onchange="onOutraSelect(this, 'instituicao')">
-                                    </select>
-                                    <input type="text" class="form-control form-control-sm outra-input d-none mt-1" placeholder="Digite o nome da instituição..." oninput="onOutraInput(this, 'instituicao')">
-                                </div>
-                                <div class="col-md-2">
-                                    <label class="form-label small">Área</label>
-                                    {{ fm.area }}
-                                    <select class="form-select form-select-sm area-select" onchange="onOutraSelect(this, 'area')">
-                                    </select>
-                                    <input type="text" class="form-control form-control-sm outra-input d-none mt-1" placeholder="Digite a área..." oninput="onOutraInput(this, 'area')">
-                                </div>
-                                <div class="col-md-2">
-                                    <label class="form-label small">Curso</label>
-                                    {{ fm.curso }}
-                                    <select class="form-select form-select-sm curso-select" onchange="onOutraSelect(this, 'curso')">
-                                    </select>
-                                    <input type="text" class="form-control form-control-sm outra-input d-none mt-1" placeholder="Digite o curso..." oninput="onOutraInput(this, 'curso')">
-                                </div>
-                                <div class="col-md-2">
-                                    <label class="form-label small">Ano de Conclusão</label>
-                                    {{ fm.ano_conclusao }}
-                                </div>
-                                <div class="col-12 d-flex align-items-center justify-content-between">
-                                    <div class="form-check">
-                                        {{ fm.id }}
-                                        {% if formacao_formset.can_delete %}
-                                        {{ fm.DELETE }}
-                                        <label class="form-check-label small text-danger">Remover esta formação</label>
-                                        {% endif %}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    {% endfor %}
-                </div>
-                <div id="formacoes-empty" class="d-none">
-                    <div class="card mb-2 border">
-                        <div class="card-body py-2 px-3">
-                            <div class="row g-2 align-items-end">
-                                <div class="col-md-2">
-                                    <label class="form-label small">Formação</label>
-                                    <div class="input-group input-group-sm">
-                                        <span class="input-group-text"><i class="bi bi-mortarboard"></i></span>
-                                        {{ formacao_formset.empty_form.tipo }}
-                                    </div>
-                                </div>
-                                <div class="col-md-1">
-                                    <label class="form-label small">Status</label>
-                                    {{ formacao_formset.empty_form.status }}
-                                </div>
-                                <div class="col-md-3">
-                                    <label class="form-label small">Instituição</label>
-                                    {{ formacao_formset.empty_form.instituicao }}
-                                    <select class="form-select form-select-sm instituicao-select" onchange="onOutraSelect(this, 'instituicao')">
-                                    </select>
-                                    <input type="text" class="form-control form-control-sm outra-input d-none mt-1" placeholder="Digite o nome da instituição..." oninput="onOutraInput(this, 'instituicao')">
-                                </div>
-                                <div class="col-md-2">
-                                    <label class="form-label small">Área</label>
-                                    {{ formacao_formset.empty_form.area }}
-                                    <select class="form-select form-select-sm area-select" onchange="onOutraSelect(this, 'area')">
-                                    </select>
-                                    <input type="text" class="form-control form-control-sm outra-input d-none mt-1" placeholder="Digite a área..." oninput="onOutraInput(this, 'area')">
-                                </div>
-                                <div class="col-md-2">
-                                    <label class="form-label small">Curso</label>
-                                    {{ formacao_formset.empty_form.curso }}
-                                    <select class="form-select form-select-sm curso-select" onchange="onOutraSelect(this, 'curso')">
-                                    </select>
-                                    <input type="text" class="form-control form-control-sm outra-input d-none mt-1" placeholder="Digite o curso..." oninput="onOutraInput(this, 'curso')">
-                                </div>
-                                <div class="col-md-2">
-                                    <label class="form-label small">Ano de Conclusão</label>
-                                    {{ formacao_formset.empty_form.ano_conclusao }}
-                                </div>
-                                <div class="col-12">
-                                    <div class="form-check">
-                                        {{ formacao_formset.empty_form.id }}
-                                        {{ formacao_formset.empty_form.DELETE }}
-                                        <label class="form-check-label small text-danger">Remover esta formação</label>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="mb-3">
-                    <button type="button" class="btn btn-outline-secondary btn-sm" onclick="addFormset('formacoes', 'formacoes-container', 'formacoes-empty')">
-                        <i class="bi bi-plus-lg me-1"></i>Adicionar Formação
-                    </button>
-                </div>
-                {% endif %}
-
-                <hr class="my-4">
-
-                <h5 class="fw-semibold mb-3 text-secondary">
-                    <i class="bi bi-list-check me-2"></i>Outras Informações
-                </h5>
-
-                <h6 class="fw-bold text-secondary mb-2"><i class="bi bi-briefcase me-2"></i>Experiência Profissional</h6>
-                {% if experiencia_formset %}
-                <div id="experiencias-container">
-                    {{ experiencia_formset.management_form }}
-                    {% for ef in experiencia_formset %}
-                    <div class="card mb-2 border experiencia-row">
-                        <div class="card-body py-2 px-3">
-                            <div class="row g-2 align-items-end">
-                                <div class="col-md-5">
-                                    <label class="form-label small">Área de Atuação</label>
-                                    {{ ef.area_atuacao }}
-                                </div>
-                                <div class="col-md-3">
-                                    <label class="form-label small">Anos de Experiência</label>
-                                    {{ ef.anos_experiencia }}
-                                </div>
-                                <div class="col-md-3">
-                                    <label class="form-label small">Comprovante (PDF)</label>
-                                    {{ ef.anexo }}
-                                </div>
-                                <div class="col-md-1">
-                                    <div class="form-check">
-                                        {{ ef.id }}
-                                        {% if experiencia_formset.can_delete %}
-                                        {{ ef.DELETE }}
-                                        <label class="form-check-label small text-danger">Remover</label>
-                                        {% endif %}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    {% endfor %}
-                </div>
-                <div id="experiencias-empty" class="d-none">
-                    <div class="card mb-2 border">
-                        <div class="card-body py-2 px-3">
-                            <div class="row g-2 align-items-end">
-                                <div class="col-md-5">
-                                    <label class="form-label small">Área de Atuação</label>
-                                    {{ experiencia_formset.empty_form.area_atuacao }}
-                                </div>
-                                <div class="col-md-3">
-                                    <label class="form-label small">Anos de Experiência</label>
-                                    {{ experiencia_formset.empty_form.anos_experiencia }}
-                                </div>
-                                <div class="col-md-3">
-                                    <label class="form-label small">Comprovante (PDF)</label>
-                                    {{ experiencia_formset.empty_form.anexo }}
-                                </div>
-                                <div class="col-md-1">
-                                    <div class="form-check">
-                                        {{ experiencia_formset.empty_form.id }}
-                                        {{ experiencia_formset.empty_form.DELETE }}
-                                        <label class="form-check-label small text-danger">Remover</label>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="mb-3">
-                    <button type="button" class="btn btn-outline-secondary btn-sm" onclick="addFormset('experiencias', 'experiencias-container', 'experiencias-empty')">
-                        <i class="bi bi-plus-lg me-1"></i>Adicionar Experiência
-                    </button>
-                </div>
-                {% endif %}
-
-                <hr class="my-3">
-
-                <h6 class="fw-bold text-secondary mb-2"><i class="bi bi-card-checklist me-2"></i>Demais Informações</h6>
-                <p class="text-muted small mb-3">Marque as opções aplicáveis. Ao marcar, será exibido um campo para anexar comprovantes em PDF.</p>
-
-                <div class="card border mb-4">
-                    <div class="card-body">
-                        <div class="row g-2">
-                            <div class="col-md-6 demais-item">
-                                <div class="form-check">
-                                    {{ form.participacao_congressos }}
-                                    <label class="form-check-label" for="{{ form.participacao_congressos.id_for_label }}">{{ form.participacao_congressos.label }}</label>
-                                </div>
-                                <div class="anexo-slider mt-2 d-none">
-                                    <input type="file" name="anexo_participacao_congressos" class="form-control form-control-sm" accept=".pdf" multiple>
-                                    <small class="text-muted">Anexe comprovantes em PDF</small>
-                                    {% if object %}{% for an in object.anexos.all %}{% if an.tipo == 'participacao_congressos' %}<a href="{% url 'protected_media' an.anexo.name %}" class="d-block" target="_blank"><i class="bi bi-file-earmark-pdf"></i> {{ an.anexo.name|cut:'anexos/' }}</a>{% endif %}{% endfor %}{% endif %}
-                                </div>
-                            </div>
-                            <div class="col-md-6 demais-item">
-                                <div class="form-check">
-                                    {{ form.resumo_anais }}
-                                    <label class="form-check-label" for="{{ form.resumo_anais.id_for_label }}">{{ form.resumo_anais.label }}</label>
-                                </div>
-                                <div class="anexo-slider mt-2 d-none">
-                                    <input type="file" name="anexo_resumo_anais" class="form-control form-control-sm" accept=".pdf" multiple>
-                                    <small class="text-muted">Anexe comprovantes em PDF</small>
-                                    {% if object %}{% for an in object.anexos.all %}{% if an.tipo == 'resumo_anais' %}<a href="{% url 'protected_media' an.anexo.name %}" class="d-block" target="_blank"><i class="bi bi-file-earmark-pdf"></i> {{ an.anexo.name|cut:'anexos/' }}</a>{% endif %}{% endfor %}{% endif %}
-                                </div>
-                            </div>
-                            <div class="col-md-6 demais-item">
-                                <div class="form-check">
-                                    {{ form.artigo_completo_anais }}
-                                    <label class="form-check-label" for="{{ form.artigo_completo_anais.id_for_label }}">{{ form.artigo_completo_anais.label }}</label>
-                                </div>
-                                <div class="anexo-slider mt-2 d-none">
-                                    <input type="file" name="anexo_artigo_completo_anais" class="form-control form-control-sm" accept=".pdf" multiple>
-                                    <small class="text-muted">Anexe comprovantes em PDF</small>
-                                    {% if object %}{% for an in object.anexos.all %}{% if an.tipo == 'artigo_completo_anais' %}<a href="{% url 'protected_media' an.anexo.name %}" class="d-block" target="_blank"><i class="bi bi-file-earmark-pdf"></i> {{ an.anexo.name|cut:'anexos/' }}</a>{% endif %}{% endfor %}{% endif %}
-                                </div>
-                            </div>
-                            <div class="col-md-6 demais-item">
-                                <div class="form-check">
-                                    {{ form.artigo_cientifico_nacional }}
-                                    <label class="form-check-label" for="{{ form.artigo_cientifico_nacional.id_for_label }}">{{ form.artigo_cientifico_nacional.label }}</label>
-                                </div>
-                                <div class="anexo-slider mt-2 d-none">
-                                    <input type="file" name="anexo_artigo_cientifico_nacional" class="form-control form-control-sm" accept=".pdf" multiple>
-                                    <small class="text-muted">Anexe comprovantes em PDF</small>
-                                    {% if object %}{% for an in object.anexos.all %}{% if an.tipo == 'artigo_cientifico_nacional' %}<a href="{% url 'protected_media' an.anexo.name %}" class="d-block" target="_blank"><i class="bi bi-file-earmark-pdf"></i> {{ an.anexo.name|cut:'anexos/' }}</a>{% endif %}{% endfor %}{% endif %}
-                                </div>
-                            </div>
-                            <div class="col-md-6 demais-item">
-                                <div class="form-check">
-                                    {{ form.artigo_cientifico_internacional }}
-                                    <label class="form-check-label" for="{{ form.artigo_cientifico_internacional.id_for_label }}">{{ form.artigo_cientifico_internacional.label }}</label>
-                                </div>
-                                <div class="anexo-slider mt-2 d-none">
-                                    <input type="file" name="anexo_artigo_cientifico_internacional" class="form-control form-control-sm" accept=".pdf" multiple>
-                                    <small class="text-muted">Anexe comprovantes em PDF</small>
-                                    {% if object %}{% for an in object.anexos.all %}{% if an.tipo == 'artigo_cientifico_internacional' %}<a href="{% url 'protected_media' an.anexo.name %}" class="d-block" target="_blank"><i class="bi bi-file-earmark-pdf"></i> {{ an.anexo.name|cut:'anexos/' }}</a>{% endif %}{% endfor %}{% endif %}
-                                </div>
-                            </div>
-                            <div class="col-md-6 demais-item">
-                                <div class="form-check">
-                                    {{ form.livro_patente }}
-                                    <label class="form-check-label" for="{{ form.livro_patente.id_for_label }}">{{ form.livro_patente.label }}</label>
-                                </div>
-                                <div class="anexo-slider mt-2 d-none">
-                                    <input type="file" name="anexo_livro_patente" class="form-control form-control-sm" accept=".pdf" multiple>
-                                    <small class="text-muted">Anexe comprovantes em PDF</small>
-                                    {% if object %}{% for an in object.anexos.all %}{% if an.tipo == 'livro_patente' %}<a href="{% url 'protected_media' an.anexo.name %}" class="d-block" target="_blank"><i class="bi bi-file-earmark-pdf"></i> {{ an.anexo.name|cut:'anexos/' }}</a>{% endif %}{% endfor %}{% endif %}
-                                </div>
-                            </div>
-                            <div class="col-md-6 demais-item">
-                                <div class="form-check">
-                                    {{ form.participacao_minicurso }}
-                                    <label class="form-check-label" for="{{ form.participacao_minicurso.id_for_label }}">{{ form.participacao_minicurso.label }}</label>
-                                </div>
-                                <div class="anexo-slider mt-2 d-none">
-                                    <input type="file" name="anexo_participacao_minicurso" class="form-control form-control-sm" accept=".pdf" multiple>
-                                    <small class="text-muted">Anexe comprovantes em PDF</small>
-                                    {% if object %}{% for an in object.anexos.all %}{% if an.tipo == 'participacao_minicurso' %}<a href="{% url 'protected_media' an.anexo.name %}" class="d-block" target="_blank"><i class="bi bi-file-earmark-pdf"></i> {{ an.anexo.name|cut:'anexos/' }}</a>{% endif %}{% endfor %}{% endif %}
-                                </div>
-                            </div>
-                            <div class="col-md-6 demais-item">
-                                <div class="form-check">
-                                    {{ form.treinamento }}
-                                    <label class="form-check-label" for="{{ form.treinamento.id_for_label }}">{{ form.treinamento.label }}</label>
-                                </div>
-                                <div class="anexo-slider mt-2 d-none">
-                                    <input type="file" name="anexo_treinamento" class="form-control form-control-sm" accept=".pdf" multiple>
-                                    <small class="text-muted">Anexe comprovantes em PDF</small>
-                                    {% if object %}{% for an in object.anexos.all %}{% if an.tipo == 'treinamento' %}<a href="{% url 'protected_media' an.anexo.name %}" class="d-block" target="_blank"><i class="bi bi-file-earmark-pdf"></i> {{ an.anexo.name|cut:'anexos/' }}</a>{% endif %}{% endfor %}{% endif %}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <hr class="my-4">
-
-                <div class="d-flex gap-2">
-                    <button type="submit" class="btn btn-primary px-4">
-                        <i class="bi bi-check-lg me-1"></i>{% if object %}Atualizar{% else %}Salvar{% endif %}
-                    </button>
-                    <a href="{% url 'cadastro_detail' %}" class="btn btn-outline-secondary">
-                        <i class="bi bi-arrow-left me-1"></i>Voltar
-                    </a>
-                </div>
-            </form>
-        </div>
+    <div class="mc-pagehead" style="padding-bottom:0.3rem;">
+        <h1><i class="bi bi-pencil-square"></i>{% if object %}Editar cadastro{% else %}Novo cadastro{% endif %}</h1>
     </div>
-</div>
+    <div class="mc-mode-badge"><i class="bi bi-pencil"></i>{% if object %}Alterações pendentes de salvar{% else %}Preencha os dados abaixo{% endif %}</div>
 
+    <form method="post" enctype="multipart/form-data" novalidate>
+        {% csrf_token %}
+
+        <div class="mc-card">
+            <h2 class="mc-card-title"><i class="bi bi-person-badge"></i>Dados pessoais</h2>
+            <div class="mc-grid">
+                <div class="mc-field">
+                    <label class="mc-edit-label">Nome<span class="req">*</span></label>
+                    <input type="text" class="form-control" value="{{ user.nome_completo }}" disabled>
+                </div>
+                <div class="mc-field">
+                    <label class="mc-edit-label">E-mail<span class="req">*</span></label>
+                    <input type="email" class="form-control" value="{{ user.email }}" disabled>
+                </div>
+                <div class="mc-field">
+                    <label class="mc-edit-label">Nº de série</label>
+                    <input type="text" class="form-control" value="{{ object.numero_serie|default:'—' }}" disabled>
+                    <div class="mc-hint">Atribuído pelo sistema</div>
+                </div>
+                <div class="mc-field {% if form.telefone.errors %}has-error{% endif %}">
+                    <label class="mc-edit-label">{{ form.telefone.label }}<span class="req">*</span></label>
+                    {{ form.telefone }}
+                    {% if form.telefone.errors %}<span class="mc-error"><i class="bi bi-exclamation-circle"></i>{{ form.telefone.errors|join:', ' }}</span>{% endif %}
+                </div>
+                <div class="mc-field {% if form.data_nascimento.errors %}has-error{% endif %}">
+                    <label class="mc-edit-label">{{ form.data_nascimento.label }}<span class="req">*</span></label>
+                    {{ form.data_nascimento }}
+                    {% if form.data_nascimento.errors %}<span class="mc-error"><i class="bi bi-exclamation-circle"></i>{{ form.data_nascimento.errors|join:', ' }}</span>{% endif %}
+                </div>
+                <div class="mc-field">
+                    <label class="mc-edit-label">Senha</label>
+                    <input type="password" class="form-control" value="********" disabled>
+                    <div class="mc-hint">A senha pode ser alterada nas configurações da conta.</div>
+                </div>
+                <div class="mc-field">
+                    <label class="mc-edit-label">{{ form.curriculo.label }}</label>
+                    {{ form.curriculo }}
+                    <div class="mc-hint">Anexe seu currículo em PDF (opcional).</div>
+                    {% if object and object.curriculo %}
+                    <div class="mt-1">
+                        <a href="{% url 'protected_media' object.curriculo.name %}" target="_blank"><i class="bi bi-file-earmark-pdf"></i> Currículo atual</a>
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="mc-field">
+                    <label class="mc-edit-label">Documento de Identificação (RG ou CPF) - PDF</label>
+                    <input type="file" name="anexo_rg_cpf" class="form-control" accept=".pdf" multiple>
+                    {% if object %}
+                    <div class="mt-1">
+                        {% for an in object.anexos.all %}{% if an.tipo == 'rg_cpf' %}
+                        <a href="{% url 'protected_media' an.anexo.name %}" target="_blank"><i class="bi bi-file-earmark-pdf"></i> {{ an.anexo.name|cut:'anexos/' }}</a>
+                        {% endif %}{% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="mc-field">
+                    <label class="mc-edit-label">Comprovante de Endereço - PDF</label>
+                    <input type="file" name="anexo_comprovante_endereco" class="form-control" accept=".pdf" multiple>
+                    {% if object %}
+                    <div class="mt-1">
+                        {% for an in object.anexos.all %}{% if an.tipo == 'comprovante_endereco' %}
+                        <a href="{% url 'protected_media' an.anexo.name %}" target="_blank"><i class="bi bi-file-earmark-pdf"></i> {{ an.anexo.name|cut:'anexos/' }}</a>
+                        {% endif %}{% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="mc-card">
+            <h2 class="mc-card-title"><i class="bi bi-geo-alt"></i>Endereço</h2>
+            <div class="mc-grid">
+                <div class="mc-field"><label class="mc-edit-label">{{ form.rua.label }}<span class="req">*</span></label>{{ form.rua }}</div>
+                <div class="mc-field"><label class="mc-edit-label">{{ form.numero.label }}<span class="req">*</span></label>{{ form.numero }}</div>
+                <div class="mc-field"><label class="mc-edit-label">{{ form.bairro.label }}<span class="req">*</span></label>{{ form.bairro }}</div>
+                <div class="mc-field"><label class="mc-edit-label">{{ form.cidade.label }}<span class="req">*</span></label>{{ form.cidade }}</div>
+                <div class="mc-field"><label class="mc-edit-label">{{ form.estado.label }}<span class="req">*</span></label>{{ form.estado }}</div>
+            </div>
+        </div>
+
+        <div class="mc-card">
+            <h2 class="mc-card-title"><i class="bi bi-mortarboard"></i>Dados acadêmicos</h2>
+            {% if formacao_formset %}
+            <div id="formacoes-container">
+                {{ formacao_formset.management_form }}
+                {% for fm in formacao_formset %}
+                <div class="mc-acad-block formacao-row">
+                    {{ fm.id }}
+                    <div class="mc-subsection-head">
+                        <div class="mc-subsection-title">{{ fm.instance.get_tipo_display|default:'Nova formação' }}</div>
+                    </div>
+                    <div class="mc-grid">
+                        <div class="mc-field"><label class="mc-edit-label">Formação</label>{{ fm.tipo }}</div>
+                        <div class="mc-field"><label class="mc-edit-label">Status</label>{{ fm.status }}</div>
+                        <div class="mc-field"><label class="mc-edit-label">Ano de Conclusão</label>{{ fm.ano_conclusao }}</div>
+                        <div class="mc-field"><label class="mc-edit-label">Instituição</label>{{ fm.instituicao }}
+                            <select class="form-select form-select-sm instituicao-select mt-1" onchange="onOutraSelect(this, 'instituicao')"></select>
+                            <input type="text" class="form-control form-control-sm outra-input d-none mt-1" placeholder="Digite o nome da instituição..." oninput="onOutraInput(this, 'instituicao')">
+                        </div>
+                        <div class="mc-field"><label class="mc-edit-label">Área</label>{{ fm.area }}
+                            <select class="form-select form-select-sm area-select mt-1" onchange="onOutraSelect(this, 'area')"></select>
+                            <input type="text" class="form-control form-control-sm outra-input d-none mt-1" placeholder="Digite a área..." oninput="onOutraInput(this, 'area')">
+                        </div>
+                        <div class="mc-field"><label class="mc-edit-label">Curso</label>{{ fm.curso }}
+                            <select class="form-select form-select-sm curso-select mt-1" onchange="onOutraSelect(this, 'curso')"></select>
+                            <input type="text" class="form-control form-control-sm outra-input d-none mt-1" placeholder="Digite o curso..." oninput="onOutraInput(this, 'curso')">
+                        </div>
+                    </div>
+                    {% if formacao_formset.can_delete %}
+                    <div class="form-check mt-2">{{ fm.DELETE }}<label class="form-check-label small text-danger">Remover esta formação</label></div>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+            <div id="formacoes-empty" class="d-none">
+                <div class="mc-acad-block">
+                    {{ formacao_formset.empty_form.id }}
+                    <div class="mc-subsection-head"><div class="mc-subsection-title">Nova formação</div></div>
+                    <div class="mc-grid">
+                        <div class="mc-field"><label class="mc-edit-label">Formação</label>{{ formacao_formset.empty_form.tipo }}</div>
+                        <div class="mc-field"><label class="mc-edit-label">Status</label>{{ formacao_formset.empty_form.status }}</div>
+                        <div class="mc-field"><label class="mc-edit-label">Ano de Conclusão</label>{{ formacao_formset.empty_form.ano_conclusao }}</div>
+                        <div class="mc-field"><label class="mc-edit-label">Instituição</label>{{ formacao_formset.empty_form.instituicao }}
+                            <select class="form-select form-select-sm instituicao-select mt-1" onchange="onOutraSelect(this, 'instituicao')"></select>
+                            <input type="text" class="form-control form-control-sm outra-input d-none mt-1" placeholder="Digite o nome da instituição..." oninput="onOutraInput(this, 'instituicao')">
+                        </div>
+                        <div class="mc-field"><label class="mc-edit-label">Área</label>{{ formacao_formset.empty_form.area }}
+                            <select class="form-select form-select-sm area-select mt-1" onchange="onOutraSelect(this, 'area')"></select>
+                            <input type="text" class="form-control form-control-sm outra-input d-none mt-1" placeholder="Digite a área..." oninput="onOutraInput(this, 'area')">
+                        </div>
+                        <div class="mc-field"><label class="mc-edit-label">Curso</label>{{ formacao_formset.empty_form.curso }}
+                            <select class="form-select form-select-sm curso-select mt-1" onchange="onOutraSelect(this, 'curso')"></select>
+                            <input type="text" class="form-control form-control-sm outra-input d-none mt-1" placeholder="Digite o curso..." oninput="onOutraInput(this, 'curso')">
+                        </div>
+                    </div>
+                    <div class="form-check mt-2">{{ formacao_formset.empty_form.DELETE }}<label class="form-check-label small text-danger">Remover esta formação</label></div>
+                </div>
+            </div>
+            <button type="button" class="mc-add-block" onclick="addFormset('formacoes', 'formacoes-container', 'formacoes-empty')">
+                <i class="bi bi-plus-lg"></i>Adicionar formação
+            </button>
+            {% endif %}
+        </div>
+
+        <div class="mc-card">
+            <h2 class="mc-card-title"><i class="bi bi-briefcase"></i>Experiência profissional</h2>
+            {% if experiencia_formset %}
+            <div id="experiencias-container">
+                {{ experiencia_formset.management_form }}
+                {% for ef in experiencia_formset %}
+                <div class="mc-acad-block experiencia-row">
+                    {{ ef.id }}
+                    <div class="mc-grid">
+                        <div class="mc-field"><label class="mc-edit-label">Área de Atuação</label>{{ ef.area_atuacao }}</div>
+                        <div class="mc-field"><label class="mc-edit-label">Anos de Experiência</label>{{ ef.anos_experiencia }}</div>
+                        <div class="mc-field"><label class="mc-edit-label">Comprovante (PDF)</label>{{ ef.anexo }}</div>
+                    </div>
+                    {% if experiencia_formset.can_delete %}
+                    <div class="form-check mt-2">{{ ef.DELETE }}<label class="form-check-label small text-danger">Remover</label></div>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+            <div id="experiencias-empty" class="d-none">
+                <div class="mc-acad-block">
+                    {{ experiencia_formset.empty_form.id }}
+                    <div class="mc-grid">
+                        <div class="mc-field"><label class="mc-edit-label">Área de Atuação</label>{{ experiencia_formset.empty_form.area_atuacao }}</div>
+                        <div class="mc-field"><label class="mc-edit-label">Anos de Experiência</label>{{ experiencia_formset.empty_form.anos_experiencia }}</div>
+                        <div class="mc-field"><label class="mc-edit-label">Comprovante (PDF)</label>{{ experiencia_formset.empty_form.anexo }}</div>
+                    </div>
+                    <div class="form-check mt-2">{{ experiencia_formset.empty_form.DELETE }}<label class="form-check-label small text-danger">Remover</label></div>
+                </div>
+            </div>
+            <button type="button" class="mc-add-block" onclick="addFormset('experiencias', 'experiencias-container', 'experiencias-empty')">
+                <i class="bi bi-plus-lg"></i>Adicionar experiência
+            </button>
+            {% endif %}
+        </div>
+
+        <div class="mc-card">
+            <h2 class="mc-card-title"><i class="bi bi-bar-chart"></i>Critérios e pontuação</h2>
+            <p class="mc-hint" style="margin-bottom:1rem;">Marque as opções aplicáveis. Ao marcar, será exibido um campo para anexar comprovantes em PDF.</p>
+            <div class="mc-chip-toggle-grid">
+                <div class="mc-chip-toggle demais-item">
+                    <span class="label">{{ form.participacao_congressos.label }}</span>
+                    <span class="form-check">{{ form.participacao_congressos }}</span>
+                </div>
+                <div class="mc-chip-toggle demais-item">
+                    <span class="label">{{ form.resumo_anais.label }}</span>
+                    <span class="form-check">{{ form.resumo_anais }}</span>
+                </div>
+                <div class="mc-chip-toggle demais-item">
+                    <span class="label">{{ form.artigo_completo_anais.label }}</span>
+                    <span class="form-check">{{ form.artigo_completo_anais }}</span>
+                </div>
+                <div class="mc-chip-toggle demais-item">
+                    <span class="label">{{ form.artigo_cientifico_nacional.label }}</span>
+                    <span class="form-check">{{ form.artigo_cientifico_nacional }}</span>
+                </div>
+                <div class="mc-chip-toggle demais-item">
+                    <span class="label">{{ form.artigo_cientifico_internacional.label }}</span>
+                    <span class="form-check">{{ form.artigo_cientifico_internacional }}</span>
+                </div>
+                <div class="mc-chip-toggle demais-item">
+                    <span class="label">{{ form.livro_patente.label }}</span>
+                    <span class="form-check">{{ form.livro_patente }}</span>
+                </div>
+                <div class="mc-chip-toggle demais-item">
+                    <span class="label">{{ form.participacao_minicurso.label }}</span>
+                    <span class="form-check">{{ form.participacao_minicurso }}</span>
+                </div>
+                <div class="mc-chip-toggle demais-item">
+                    <span class="label">{{ form.treinamento.label }}</span>
+                    <span class="form-check">{{ form.treinamento }}</span>
+                </div>
+            </div>
+            <div class="mt-3" style="display:grid;gap:10px;">
+                <div class="demais-item" data-tipo="participacao_congressos"><div class="anexo-slider mt-2 d-none">
+                    <input type="file" name="anexo_participacao_congressos" class="form-control form-control-sm" accept=".pdf" multiple>
+                    <small class="text-muted">Anexe comprovantes em PDF</small>
+                    {% if object %}{% for an in object.anexos.all %}{% if an.tipo == 'participacao_congressos' %}<a href="{% url 'protected_media' an.anexo.name %}" class="d-block" target="_blank"><i class="bi bi-file-earmark-pdf"></i> {{ an.anexo.name|cut:'anexos/' }}</a>{% endif %}{% endfor %}{% endif %}
+                </div></div>
+                <div class="demais-item" data-tipo="resumo_anais"><div class="anexo-slider mt-2 d-none">
+                    <input type="file" name="anexo_resumo_anais" class="form-control form-control-sm" accept=".pdf" multiple>
+                    <small class="text-muted">Anexe comprovantes em PDF</small>
+                    {% if object %}{% for an in object.anexos.all %}{% if an.tipo == 'resumo_anais' %}<a href="{% url 'protected_media' an.anexo.name %}" class="d-block" target="_blank"><i class="bi bi-file-earmark-pdf"></i> {{ an.anexo.name|cut:'anexos/' }}</a>{% endif %}{% endfor %}{% endif %}
+                </div></div>
+                <div class="demais-item" data-tipo="artigo_completo_anais"><div class="anexo-slider mt-2 d-none">
+                    <input type="file" name="anexo_artigo_completo_anais" class="form-control form-control-sm" accept=".pdf" multiple>
+                    <small class="text-muted">Anexe comprovantes em PDF</small>
+                    {% if object %}{% for an in object.anexos.all %}{% if an.tipo == 'artigo_completo_anais' %}<a href="{% url 'protected_media' an.anexo.name %}" class="d-block" target="_blank"><i class="bi bi-file-earmark-pdf"></i> {{ an.anexo.name|cut:'anexos/' }}</a>{% endif %}{% endfor %}{% endif %}
+                </div></div>
+                <div class="demais-item" data-tipo="artigo_cientifico_nacional"><div class="anexo-slider mt-2 d-none">
+                    <input type="file" name="anexo_artigo_cientifico_nacional" class="form-control form-control-sm" accept=".pdf" multiple>
+                    <small class="text-muted">Anexe comprovantes em PDF</small>
+                    {% if object %}{% for an in object.anexos.all %}{% if an.tipo == 'artigo_cientifico_nacional' %}<a href="{% url 'protected_media' an.anexo.name %}" class="d-block" target="_blank"><i class="bi bi-file-earmark-pdf"></i> {{ an.anexo.name|cut:'anexos/' }}</a>{% endif %}{% endfor %}{% endif %}
+                </div></div>
+                <div class="demais-item" data-tipo="artigo_cientifico_internacional"><div class="anexo-slider mt-2 d-none">
+                    <input type="file" name="anexo_artigo_cientifico_internacional" class="form-control form-control-sm" accept=".pdf" multiple>
+                    <small class="text-muted">Anexe comprovantes em PDF</small>
+                    {% if object %}{% for an in object.anexos.all %}{% if an.tipo == 'artigo_cientifico_internacional' %}<a href="{% url 'protected_media' an.anexo.name %}" class="d-block" target="_blank"><i class="bi bi-file-earmark-pdf"></i> {{ an.anexo.name|cut:'anexos/' }}</a>{% endif %}{% endfor %}{% endif %}
+                </div></div>
+                <div class="demais-item" data-tipo="livro_patente"><div class="anexo-slider mt-2 d-none">
+                    <input type="file" name="anexo_livro_patente" class="form-control form-control-sm" accept=".pdf" multiple>
+                    <small class="text-muted">Anexe comprovantes em PDF</small>
+                    {% if object %}{% for an in object.anexos.all %}{% if an.tipo == 'livro_patente' %}<a href="{% url 'protected_media' an.anexo.name %}" class="d-block" target="_blank"><i class="bi bi-file-earmark-pdf"></i> {{ an.anexo.name|cut:'anexos/' }}</a>{% endif %}{% endfor %}{% endif %}
+                </div></div>
+                <div class="demais-item" data-tipo="participacao_minicurso"><div class="anexo-slider mt-2 d-none">
+                    <input type="file" name="anexo_participacao_minicurso" class="form-control form-control-sm" accept=".pdf" multiple>
+                    <small class="text-muted">Anexe comprovantes em PDF</small>
+                    {% if object %}{% for an in object.anexos.all %}{% if an.tipo == 'participacao_minicurso' %}<a href="{% url 'protected_media' an.anexo.name %}" class="d-block" target="_blank"><i class="bi bi-file-earmark-pdf"></i> {{ an.anexo.name|cut:'anexos/' }}</a>{% endif %}{% endfor %}{% endif %}
+                </div></div>
+                <div class="demais-item" data-tipo="treinamento"><div class="anexo-slider mt-2 d-none">
+                    <input type="file" name="anexo_treinamento" class="form-control form-control-sm" accept=".pdf" multiple>
+                    <small class="text-muted">Anexe comprovantes em PDF</small>
+                    {% if object %}{% for an in object.anexos.all %}{% if an.tipo == 'treinamento' %}<a href="{% url 'protected_media' an.anexo.name %}" class="d-block" target="_blank"><i class="bi bi-file-earmark-pdf"></i> {{ an.anexo.name|cut:'anexos/' }}</a>{% endif %}{% endfor %}{% endif %}
+                </div></div>
+            </div>
+            <div class="mc-footer-bar">
+                <a href="{% url 'cadastro_detail' %}" class="mc-btn mc-btn-ghost"><i class="bi bi-x-lg"></i>Cancelar</a>
+                <button type="submit" class="mc-btn mc-btn-primary"><i class="bi bi-floppy"></i>{% if object %}Salvar alterações{% else %}Salvar{% endif %}</button>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}
+
+{% block extra_js %}
 <script>
 const areas = {{ areas|safe }};
 const cursosPorArea = {{ cursos_por_area|safe }};
@@ -465,68 +304,37 @@ function onOutraSelect(sel, fieldName) {
     var col = sel.parentElement;
     var hidden = col.querySelector('input[type="hidden"]');
     var outraInput = col.querySelector('.outra-input');
-
-    if (sel.value === 'OUTRA') {
-        outraInput.classList.remove('d-none');
-        hidden.value = outraInput.value;
-    } else {
-        outraInput.classList.add('d-none');
-        hidden.value = sel.value;
-    }
-
+    if (sel.value === 'OUTRA') { outraInput.classList.remove('d-none'); hidden.value = outraInput.value; }
+    else { outraInput.classList.add('d-none'); hidden.value = sel.value; }
     if (fieldName === 'area') {
-        var card = sel.closest('.card');
+        var card = sel.closest('.mc-acad-block');
         var cursoSelect = card.querySelector('.curso-select');
         var cursoHidden = card.querySelector('input[id$="-curso"]');
         if (!cursoSelect || !cursoHidden) return;
-
         var areaVal = sel.value === 'OUTRA' ? hidden.value : sel.value;
         var currentCurso = cursoHidden.value;
         var allCursos = [];
-
         cursoSelect.innerHTML = '<option value="">--- Selecione ---</option>';
         cursoSelect.innerHTML += '<option value="OUTRA">OUTRA</option>';
         var found = false;
-
-        if (areaVal && sel.value !== 'OUTRA' && cursosPorArea[areaVal]) {
-            allCursos = cursosPorArea[areaVal];
-        } else if (areaVal) {
+        if (areaVal && sel.value !== 'OUTRA' && cursosPorArea[areaVal]) { allCursos = cursosPorArea[areaVal]; }
+        else if (areaVal) {
             var seen = {};
-            Object.values(cursosPorArea).forEach(function (arr) {
-                arr.forEach(function (c) { seen[c] = true; });
-            });
+            Object.values(cursosPorArea).forEach(function (arr) { arr.forEach(function (c) { seen[c] = true; }); });
             allCursos = Object.keys(seen);
         }
-
         allCursos.forEach(function (curso) {
-            var opt = document.createElement('option');
-            opt.value = curso;
-            opt.textContent = curso;
+            var opt = document.createElement('option'); opt.value = curso; opt.textContent = curso;
             if (curso === currentCurso) found = true;
             cursoSelect.appendChild(opt);
         });
-
         if (currentCurso && !found) {
-            if (currentCurso === 'OUTRA') {
-                cursoSelect.value = 'OUTRA';
-            } else {
-                var opt = document.createElement('option');
-                opt.value = currentCurso;
-                opt.textContent = currentCurso;
-                opt.selected = true;
-                cursoSelect.appendChild(opt);
-            }
-        } else if (found) {
-            cursoSelect.value = currentCurso;
-        }
-
+            if (currentCurso === 'OUTRA') { cursoSelect.value = 'OUTRA'; }
+            else { var opt = document.createElement('option'); opt.value = currentCurso; opt.textContent = currentCurso; opt.selected = true; cursoSelect.appendChild(opt); }
+        } else if (found) { cursoSelect.value = currentCurso; }
         var cursoOutraInput = cursoSelect.parentElement.querySelector('.outra-input');
-        if (cursoSelect.value === 'OUTRA' && cursoOutraInput) {
-            cursoOutraInput.classList.remove('d-none');
-            if (cursoHidden.value !== 'OUTRA') cursoOutraInput.value = cursoHidden.value;
-        } else if (cursoOutraInput) {
-            cursoOutraInput.classList.add('d-none');
-        }
+        if (cursoSelect.value === 'OUTRA' && cursoOutraInput) { cursoOutraInput.classList.remove('d-none'); if (cursoHidden.value !== 'OUTRA') cursoOutraInput.value = cursoHidden.value; }
+        else if (cursoOutraInput) { cursoOutraInput.classList.add('d-none'); }
     }
 }
 
@@ -534,13 +342,10 @@ function onOutraInput(inp, fieldName) {
     var col = inp.parentElement;
     var hidden = col.querySelector('input[id$="-' + fieldName + '"]') || col.querySelector('input[name$="-' + fieldName + '"]');
     if (hidden) hidden.value = inp.value;
-
     if (fieldName === 'area') {
-        var card = inp.closest('.card');
+        var card = inp.closest('.mc-acad-block');
         var cursoSelect = card.querySelector('.curso-select');
-        if (cursoSelect) {
-            onOutraSelect(cursoSelect, 'curso');
-        }
+        if (cursoSelect) { onOutraSelect(cursoSelect, 'curso'); }
     }
 }
 
@@ -549,22 +354,13 @@ function initOutraSelect(card, fieldName, options) {
     var select = card.querySelector(selectClass);
     var hidden = card.querySelector('input[id$="-' + fieldName + '"]') || card.querySelector('input[name$="-' + fieldName + '"]');
     if (!select || !hidden) return;
-
     populateOutraSelect(select, options);
-
     var currentVal = hidden.value;
     var outraInput = select.parentElement.querySelector('.outra-input');
     if (currentVal) {
         var escaped = currentVal.replace(/"/g, '&quot;');
-        if (select.querySelector('option[value="' + escaped + '"]')) {
-            select.value = currentVal;
-        } else {
-            select.value = 'OUTRA';
-            if (outraInput) {
-                outraInput.classList.remove('d-none');
-                outraInput.value = currentVal;
-            }
-        }
+        if (select.querySelector('option[value="' + escaped + '"]')) { select.value = currentVal; }
+        else { select.value = 'OUTRA'; if (outraInput) { outraInput.classList.remove('d-none'); outraInput.value = currentVal; } }
     }
 }
 
@@ -572,12 +368,9 @@ function initOutraRow(card) {
     initOutraSelect(card, 'area', areas);
     initOutraSelect(card, 'curso', []);
     initOutraSelect(card, 'instituicao', instituicoes);
-
     var areaSelect = card.querySelector('.area-select');
     var areaHidden = card.querySelector('input[id$="-area"]');
-    if (areaSelect && areaHidden && areaHidden.value) {
-        onOutraSelect(areaSelect, 'area');
-    }
+    if (areaSelect && areaHidden && areaHidden.value) { onOutraSelect(areaSelect, 'area'); }
 }
 
 function addFormset(prefix, containerId, emptyId) {
@@ -593,34 +386,24 @@ function addFormset(prefix, containerId, emptyId) {
     const newEl = wrapper.firstElementChild || wrapper;
     container.appendChild(newEl);
     totalInput.value = parseInt(index, 10) + 1;
-
-    if (prefix === 'formacoes') {
-        initOutraRow(newEl);
-    }
+    if (prefix === 'formacoes') { initOutraRow(newEl); }
 }
 
 document.addEventListener('DOMContentLoaded', function () {
     var container = document.getElementById('formacoes-container');
-    if (container) {
-        container.querySelectorAll('.formacao-row').forEach(function (row) {
-            initOutraRow(row);
+    if (container) { container.querySelectorAll('.formacao-row').forEach(function (row) { initOutraRow(row); }); }
+    var toggles = document.querySelectorAll('.mc-chip-toggle .form-check-input[type="checkbox"]');
+    var sliders = document.querySelectorAll('.mt-3 .demais-item .anexo-slider');
+    function syncSliders() {
+        toggles.forEach(function (cb, i) {
+            var slider = sliders[i] ? sliders[i] : null;
+            if (!slider) return;
+            slider.classList.toggle('d-none', !cb.checked);
+            if (!cb.checked) { const f = slider.querySelector('input[type=file]'); if (f) f.value = ''; }
         });
     }
-
-    document.querySelectorAll('.demais-item').forEach(function (item) {
-        const cb = item.querySelector('input[type=checkbox]');
-        const slider = item.querySelector('.anexo-slider');
-        if (!cb || !slider) return;
-        function toggle() {
-            slider.classList.toggle('d-none', !cb.checked);
-            if (!cb.checked) {
-                const f = slider.querySelector('input[type=file]');
-                if (f) f.value = '';
-            }
-        }
-        toggle();
-        cb.addEventListener('change', toggle);
-    });
+    toggles.forEach(function (cb) { cb.addEventListener('change', syncSliders); });
+    syncSliders();
 });
 </script>
 {% endblock %}

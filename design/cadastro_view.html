@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<!--
+  ============================================================================
+  CADASTRO_VIEW — modelo de referência da tela "Meu cadastro" (visualização)
+  Salvo em: design/cadastro_view.html
+  ============================================================================
+  COMO REPLICAR NO PROJETO:
+  - Template : frontend/templates/cadastro/cadastro_detail.html
+               (+ partial frontend/templates/cadastro/partials/formacao_section.html
+                  para a timeline de Dados acadêmicos com htmx add/remove)
+  - Estilos  : frontend/static/css/meu-cadastro.css  (escopo .mc-*)
+  - Layout   : estende base.html (sidebar + top-navbar). LARGURA TOTAL:
+               .mc-page { width:100%; max-width:none; margin:0 } — sem
+               centralização de 900px e sem espaços laterais.
+  - Ícones   : Bootstrap Icons (bi-*). Ações: Editar dados -> url
+               'solicitacao_criar' (ViewUser) ou 'cadastro_update_pk' (admin);
+               Voltar -> url 'home'.
+  ============================================================================
+-->
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Meu Cadastro — Modelo</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+<style>
+  :root {
+    --sidebar-bg: #0E2C63; --sidebar-bg-hover: #16386F; --sidebar-bg-active: #1D4796;
+    --sidebar-text: #fff; --sidebar-text-muted: rgba(255,255,255,.65); --sidebar-section: rgba(255,255,255,.65);
+    --sidebar-width: 268px; --sidebar-collapsed: 60px; --transition-speed: 0.2s;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background: #F2F4F8; color: #232E45; }
+  .app-wrapper { display: flex; min-height: 100vh; }
+  #sidebar { width: var(--sidebar-collapsed); min-width: var(--sidebar-collapsed); background: var(--sidebar-bg); color: var(--sidebar-text);
+    transition: width var(--transition-speed) ease, min-width var(--transition-speed) ease;
+    z-index: 1040; display: flex; flex-direction: column; position: fixed; top: 0; left: 0; bottom: 0; overflow: hidden; }
+  #sidebar .toggle-btn { background: transparent; border: none; color: var(--sidebar-text-muted); font-size: 20px; padding: 16px; cursor: pointer; }
+  #sidebar .sidebar-brand { padding: .75rem 0; display: flex; justify-content: center; }
+  #sidebar .sidebar-brand .brand-demo { color: #fff; font-weight: 800; font-size: 13px; background: rgba(255,255,255,.15); border-radius: 6px; padding: 4px 10px; }
+  #sidebar .sidebar-nav { flex: 1; display: flex; flex-direction: column; padding: .5rem 0; }
+  #sidebar .sidebar-menu { list-style: none; flex-grow: 1; overflow: hidden; }
+  #sidebar .sidebar-menu.logout { flex-grow: 0; }
+  #sidebar .sidebar-section { display: none; }
+  #sidebar .sidebar-link { display: flex; align-items: center; color: var(--sidebar-text); text-decoration: none; font-size: .88rem; padding: .8rem 0; white-space: nowrap; overflow: hidden; }
+  #sidebar li.active > .sidebar-link { background: var(--sidebar-bg-active); font-weight: 700; }
+  #sidebar .nav-icon { display: flex; align-items: center; justify-content: center; width: var(--sidebar-collapsed); min-width: var(--sidebar-collapsed); font-size: 1.05rem; }
+  #sidebar .nav-text { opacity: 0; transition: opacity var(--transition-speed) ease; overflow: hidden; }
+  @media (min-width: 768px) {
+    #sidebar:hover, #sidebar.pinned { width: var(--sidebar-width); min-width: var(--sidebar-width); }
+    #sidebar:hover .nav-text, #sidebar.pinned .nav-text { opacity: 1; }
+    #sidebar:hover .sidebar-section, #sidebar.pinned .sidebar-section { display: block; padding: 0.9rem 1.25rem 0.35rem; font-size: .66rem; text-transform: uppercase; letter-spacing: .11em; color: var(--sidebar-section); font-weight: 700; }
+  }
+  #content-wrapper { flex: 1; margin-left: var(--sidebar-collapsed); transition: margin-left var(--transition-speed) ease; display: flex; flex-direction: column; min-width: 0; }
+  #content-wrapper.pinned { margin-left: var(--sidebar-width); }
+  .top-navbar { background: #fff; border-bottom: 1px solid #E6EAF0; padding: .55rem 1.25rem; position: sticky; top: 0; z-index: 1020; display: flex; align-items: center; justify-content: space-between; }
+  .top-navbar button { border: none; background: transparent; font-size: 1.35rem; color: #5A667D; cursor: pointer; }
+  .main-content { padding: 1.5rem; }
+
+  /* ===== .mc-* (cópia de frontend/static/css/meu-cadastro.css — modo view) ===== */
+  .mc-page { width: 100%; max-width: none; margin: 0; padding: 0 0 2rem; }
+  .mc-breadcrumb { font-size: 13px; color: #98A2B3; padding: 0.4rem 0; display: flex; align-items: center; gap: 6px; }
+  .mc-breadcrumb .current { color: #667085; }
+  .mc-pagehead { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 0.3rem 0 1.2rem; flex-wrap: wrap; }
+  .mc-pagehead h1 { font-size: 24px; font-weight: 600; display: flex; align-items: center; gap: 12px; margin: 0; color: #16202E; }
+  .mc-pagehead h1 i { font-size: 22px; color: #2A4B8D; }
+  .mc-actions { display: flex; gap: 10px; }
+  .mc-card { background: #fff; border: 1px solid #E4E7EC; border-radius: 12px; padding: 1.5rem 1.75rem; margin-bottom: 1.1rem; }
+  .mc-card h2.mc-card-title { font-size: 15px; font-weight: 600; display: flex; align-items: center; gap: 9px; margin-bottom: 1.3rem; color: #16202E; }
+  .mc-card h2.mc-card-title i { font-size: 17px; color: #2A4B8D; }
+  .mc-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.4rem 1.6rem; }
+  .mc-field .mc-label { display: block; font-size: 12px; color: #667085; margin-bottom: 4px; font-weight: 500; }
+  .mc-field .mc-val { font-size: 14.5px; font-weight: 500; color: #16202E; }
+  .mc-badge-serie { display: inline-block; background: #FCEBEB; color: #8C2A2E; font-size: 12px; font-weight: 600; padding: 2px 9px; border-radius: 6px; }
+  .mc-timeline { position: relative; padding-left: 28px; }
+  .mc-timeline::before { content: ''; position: absolute; left: 8px; top: 6px; bottom: 6px; width: 1px; background: #E4E7EC; }
+  .mc-tl-item { position: relative; padding-bottom: 1.4rem; }
+  .mc-tl-item:last-child { padding-bottom: 0; }
+  .mc-tl-dot { position: absolute; left: -28px; top: 2px; width: 17px; height: 17px; border-radius: 50%; background: #E7F5EE; border: 1px solid #1B7A4D; display: flex; align-items: center; justify-content: center; }
+  .mc-tl-dot i { font-size: 10px; color: #0F4A2E; }
+  .mc-tl-head { display: flex; align-items: center; gap: 10px; margin-bottom: 4px; }
+  .mc-tl-stage { font-weight: 600; font-size: 14.5px; }
+  .mc-tl-status { font-size: 11.5px; font-weight: 600; background: #E7F5EE; color: #0F4A2E; padding: 2px 9px; border-radius: 6px; }
+  .mc-tl-inst { font-size: 14px; margin-bottom: 2px; }
+  .mc-tl-meta { font-size: 13px; color: #667085; }
+  .mc-tl-year { font-size: 12.5px; color: #98A2B3; margin-top: 3px; }
+  .mc-chips { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+  .mc-chip { display: flex; align-items: center; justify-content: space-between; gap: 8px; border: 1px solid #E4E7EC; border-radius: 9px; padding: 10px 13px; background: #fff; }
+  .mc-chip .label { font-size: 13px; color: #667085; }
+  .mc-chip .yes { display: flex; align-items: center; gap: 5px; color: #0F4A2E; font-size: 13px; font-weight: 600; }
+  .mc-chip .no { display: flex; align-items: center; gap: 5px; color: #98A2B3; font-size: 13px; font-weight: 500; }
+  .mc-chip .num { font-size: 13px; font-weight: 600; color: #1C3566; background: #EAF0FB; padding: 2px 9px; border-radius: 6px; white-space: nowrap; }
+  .mc-table { width: 100%; border-collapse: collapse; }
+  .mc-table th { text-align: left; font-size: 12px; color: #667085; font-weight: 500; padding: 0 0 10px; border-bottom: 1px solid #E4E7EC; }
+  .mc-table td { padding: 12px 0; font-size: 14px; border-bottom: 1px solid #E4E7EC; }
+  .mc-tag-area { background: #EAF0FB; color: #1C3566; font-size: 12.5px; font-weight: 600; padding: 3px 10px; border-radius: 6px; }
+  .mc-empty { display: flex; align-items: center; gap: 10px; color: #98A2B3; font-size: 13.5px; border: 1px dashed #E4E7EC; border-radius: 9px; padding: 1.1rem; }
+  .mc-anexo-row { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 10px 0; border-bottom: 1px solid #E4E7EC; font-size: 14px; }
+  .mc-anexo-row:last-child { border-bottom: none; }
+  .mc-btn { font-size: 14px; font-weight: 500; padding: 9px 16px; border-radius: 8px; display: inline-flex; align-items: center; gap: 7px; cursor: pointer; border: 1px solid transparent; text-decoration: none; }
+  .mc-btn-primary { background: #2A4B8D; color: #fff; }
+  .mc-btn-ghost { background: transparent; color: #667085; border-color: #E4E7EC; }
+  @media (max-width: 767.98px) { .mc-grid, .mc-chips { grid-template-columns: 1fr; } .mc-card { padding: 1.1rem 1rem; } #content-wrapper { margin-left: 0; } #sidebar { display: none; } }
+</style>
+</head>
+<body>
+<div class="app-wrapper">
+  <nav id="sidebar" aria-label="Navegação principal">
+    <button class="toggle-btn" id="btn-toggle" type="button" title="Expandir/fixar menu"><i class="bi bi-chevron-right" id="btn-toggle-icon"></i></button>
+    <a href="#" class="sidebar-brand"><span class="brand-demo">SENAI</span></a>
+    <div class="sidebar-nav">
+      <ul class="sidebar-menu">
+        <li class="sidebar-section"><span class="nav-text">Principal</span></li>
+        <li><a href="#" class="sidebar-link"><span class="nav-icon"><i class="bi bi-grid-fill"></i></span><span class="nav-text">Dashboard</span></a></li>
+        <li class="sidebar-section"><span class="nav-text">Candidato</span></li>
+        <li class="active"><a href="#" class="sidebar-link"><span class="nav-icon"><i class="bi bi-person-lines-fill"></i></span><span class="nav-text">Meu Cadastro</span></a></li>
+        <li><a href="#" class="sidebar-link"><span class="nav-icon"><i class="bi bi-clipboard-check"></i></span><span class="nav-text">Minhas Candidaturas</span></a></li>
+        <li class="sidebar-section"><span class="nav-text">Bolsas</span></li>
+        <li><a href="#" class="sidebar-link"><span class="nav-icon"><i class="bi bi-journal-text"></i></span><span class="nav-text">Editais</span></a></li>
+        <li><a href="#" class="sidebar-link"><span class="nav-icon"><i class="bi bi-trophy"></i></span><span class="nav-text">Resultados</span></a></li>
+      </ul>
+      <ul class="sidebar-menu logout">
+        <li><a href="#" class="sidebar-link"><span class="nav-icon"><i class="bi bi-power"></i></span><span class="nav-text">Sair</span></a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div id="content-wrapper">
+    <nav class="top-navbar">
+      <button id="sidebar-toggle" type="button" title="Menu"><i class="bi bi-list"></i></button>
+      <span><i class="bi bi-bell-fill"></i>&nbsp;&nbsp;<i class="bi bi-person-circle"></i> Bolsista6</span>
+    </nav>
+    <main class="main-content">
+      <div class="mc-page">
+        <div class="mc-breadcrumb"><a>Bolsistas</a><i class="bi bi-chevron-right" style="font-size:11px"></i><span class="current">Meu cadastro</span></div>
+        <div class="mc-pagehead">
+          <h1><i class="bi bi-person-square"></i>Meu cadastro</h1>
+          <div class="mc-actions">
+            <a href="#" class="mc-btn mc-btn-primary"><i class="bi bi-pencil"></i>Editar dados</a>
+            <a href="#" class="mc-btn mc-btn-ghost"><i class="bi bi-arrow-left"></i>Voltar</a>
+          </div>
+        </div>
+
+        <div class="mc-card">
+          <h2 class="mc-card-title"><i class="bi bi-person-badge"></i>Dados pessoais</h2>
+          <div class="mc-grid">
+            <div class="mc-field"><span class="mc-label">Nome</span><div class="mc-val">Bolsista6</div></div>
+            <div class="mc-field"><span class="mc-label">E-mail</span><div class="mc-val">bolsista6@email.com</div></div>
+            <div class="mc-field"><span class="mc-label">Nº de série</span><div class="mc-val"><span class="mc-badge-serie">0532</span></div></div>
+            <div class="mc-field"><span class="mc-label">Telefone</span><div class="mc-val">(67) 99999-9999</div></div>
+            <div class="mc-field"><span class="mc-label">Data de nascimento</span><div class="mc-val">01/01/1995</div></div>
+          </div>
+        </div>
+
+        <div class="mc-card">
+          <h2 class="mc-card-title"><i class="bi bi-geo-alt"></i>Endereço</h2>
+          <div class="mc-grid">
+            <div class="mc-field"><span class="mc-label">Rua</span><div class="mc-val">Rua Teste</div></div>
+            <div class="mc-field"><span class="mc-label">Número</span><div class="mc-val">100</div></div>
+            <div class="mc-field"><span class="mc-label">Bairro</span><div class="mc-val">Centro</div></div>
+            <div class="mc-field"><span class="mc-label">Cidade</span><div class="mc-val">Campo Grande</div></div>
+            <div class="mc-field"><span class="mc-label">Estado</span><div class="mc-val">Mato Grosso do Sul</div></div>
+          </div>
+        </div>
+
+        <div class="mc-card">
+          <h2 class="mc-card-title"><i class="bi bi-mortarboard"></i>Dados acadêmicos</h2>
+          <div class="mc-timeline">
+            <div class="mc-tl-item">
+              <div class="mc-tl-dot"><i class="bi bi-check-lg"></i></div>
+              <div class="mc-tl-head"><span class="mc-tl-stage">Graduação</span><span class="mc-tl-status">Concluída</span></div>
+              <div class="mc-tl-inst">Universidade Estadual do Centro-Oeste — Ciências Exatas e da Terra</div>
+              <div class="mc-tl-meta">Ciência de Dados</div>
+              <div class="mc-tl-year">Conclusão em 2018</div>
+            </div>
+            <div class="mc-tl-item">
+              <div class="mc-tl-dot"><i class="bi bi-check-lg"></i></div>
+              <div class="mc-tl-head"><span class="mc-tl-stage">Pós-graduação</span><span class="mc-tl-status">Concluída</span></div>
+              <div class="mc-tl-inst">Universidade Cesumar — Ciências Exatas e da Terra</div>
+              <div class="mc-tl-meta">Ciência de Dados</div>
+              <div class="mc-tl-year">Conclusão em 2020</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="mc-card">
+          <h2 class="mc-card-title"><i class="bi bi-bar-chart"></i>Critérios e pontuação</h2>
+          <div class="mc-chips">
+            <div class="mc-chip"><span class="label">Projetos/pesquisa</span><span class="num">4 ano(s)</span></div>
+            <div class="mc-chip"><span class="label">Participação em congressos</span><span class="no"><i class="bi bi-x-lg"></i>Não</span></div>
+            <div class="mc-chip"><span class="label">Resumo em anais</span><span class="no"><i class="bi bi-x-lg"></i>Não</span></div>
+            <div class="mc-chip"><span class="label">Artigo completo em anais</span><span class="yes"><i class="bi bi-check-lg"></i>Sim</span></div>
+            <div class="mc-chip"><span class="label">Artigo científico nacional</span><span class="no"><i class="bi bi-x-lg"></i>Não</span></div>
+            <div class="mc-chip"><span class="label">Artigo científico internacional</span><span class="yes"><i class="bi bi-check-lg"></i>Sim</span></div>
+            <div class="mc-chip"><span class="label">Livro/patente</span><span class="yes"><i class="bi bi-check-lg"></i>Sim</span></div>
+            <div class="mc-chip"><span class="label">Minicurso</span><span class="no"><i class="bi bi-x-lg"></i>Não</span></div>
+            <div class="mc-chip"><span class="label">Treinamento</span><span class="no"><i class="bi bi-x-lg"></i>Não</span></div>
+          </div>
+        </div>
+
+        <div class="mc-card">
+          <h2 class="mc-card-title"><i class="bi bi-briefcase"></i>Experiência profissional</h2>
+          <table class="mc-table">
+            <thead><tr><th>Área de atuação</th><th>Anos</th><th>Comprovante</th></tr></thead>
+            <tbody><tr><td><span class="mc-tag-area">TI</span></td><td>4 ano(s)</td><td style="color:#98A2B3;">Não enviado</td></tr></tbody>
+          </table>
+        </div>
+
+        <div class="mc-card">
+          <h2 class="mc-card-title"><i class="bi bi-paperclip"></i>Anexos comprobatórios</h2>
+          <div class="mc-anexo-row"><span><i class="bi bi-file-earmark-pdf" style="color:#C0393E;"></i> Currículo</span><a href="#" class="mc-btn mc-btn-ghost" style="padding:4px 10px;font-size:12.5px;">Ver</a></div>
+          <div class="mc-anexo-row"><span><i class="bi bi-file-earmark-pdf" style="color:#C0393E;"></i> RG / CPF</span><a href="#" class="mc-btn mc-btn-ghost" style="padding:4px 10px;font-size:12.5px;">Ver</a></div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<script>
+// Sidebar: recolhida por padrão; hover expande (CSS); ">" fixa aberta.
+(function () {
+  function $(id) { return document.getElementById(id); }
+  function isPinned() { var sb = $('sidebar'); return sb && sb.classList.contains('pinned'); }
+  function syncIcon() {
+    var icon = $('btn-toggle-icon'); if (!icon) return;
+    if (isPinned()) { icon.classList.remove('bi-chevron-right'); icon.classList.add('bi-chevron-left'); }
+    else { icon.classList.remove('bi-chevron-left'); icon.classList.add('bi-chevron-right'); }
+  }
+  function apply(pinned) {
+    $('sidebar').classList.toggle('pinned', pinned);
+    $('content-wrapper').classList.toggle('pinned', pinned);
+    syncIcon();
+  }
+  document.addEventListener('DOMContentLoaded', function () {
+    var saved = null;
+    try { saved = localStorage.getItem('sb_pinned'); } catch (e) {}
+    apply(saved === '1');
+    function toggle() {
+      var next = !isPinned(); apply(next);
+      try { localStorage.setItem('sb_pinned', next ? '1' : '0'); } catch (e) {}
+    }
+    $('btn-toggle').addEventListener('click', toggle);
+    $('sidebar-toggle').addEventListener('click', toggle);
+  });
+})();
+</script>
+</body>
+</html>

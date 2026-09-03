@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Meu Cadastro — Portal da Inovação</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tabler-icons/2.44.0/iconfont/tabler-icons.min.css">
+<style>
+:root{
+  --bg:#F4F5F7;
+  --surface:#FFFFFF;
+  --text-primary:#16202E;
+  --text-secondary:#667085;
+  --text-muted:#98A2B3;
+  --border:#E4E7EC;
+  --accent:#2A4B8D;
+  --accent-50:#EAF0FB;
+  --accent-800:#1C3566;
+  --success:#1B7A4D;
+  --success-50:#E7F5EE;
+  --success-800:#0F4A2E;
+  --amber:#B7791F;
+  --amber-50:#FBF2E3;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{
+  background:var(--bg);
+  font-family:'IBM Plex Sans',sans-serif;
+  color:var(--text-primary);
+  padding-bottom:4rem;
+}
+.topbar{
+  background:var(--surface);
+  border-bottom:1px solid var(--border);
+  padding:0.9rem 2.5rem;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+}
+.brand{display:flex;align-items:center;gap:10px;font-family:'Sora',sans-serif;font-weight:600;font-size:15px;color:var(--accent-800);}
+.brand i{font-size:20px;}
+.user{display:flex;align-items:center;gap:14px;color:var(--text-secondary);font-size:14px;}
+.bell{position:relative;font-size:19px;}
+.bell::after{content:'';position:absolute;top:-2px;right:-2px;width:7px;height:7px;border-radius:50%;background:#D8464B;}
+
+.page{max-width:900px;margin:0 auto;padding:0 2rem;}
+
+.breadcrumb{
+  font-size:13px;color:var(--text-muted);
+  padding:1.5rem 0 0.4rem;
+  display:flex;align-items:center;gap:6px;
+}
+.breadcrumb a{color:var(--text-muted);text-decoration:none;}
+.breadcrumb .current{color:var(--text-secondary);}
+
+.pagehead{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0.3rem 0 1.6rem;
+}
+.pagehead h1{
+  font-family:'Sora',sans-serif;font-weight:600;font-size:24px;
+  display:flex;align-items:center;gap:12px;
+}
+.pagehead h1 i{font-size:22px;color:var(--accent);}
+.actions{display:flex;gap:10px;}
+.btn{
+  font-family:'IBM Plex Sans',sans-serif;
+  font-size:14px;font-weight:500;
+  padding:9px 16px;border-radius:8px;
+  display:flex;align-items:center;gap:7px;
+  cursor:pointer;border:1px solid transparent;
+}
+.btn-primary{background:var(--accent);color:#fff;}
+.btn-ghost{background:transparent;color:var(--text-secondary);border-color:var(--border);}
+
+.card{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:1.5rem 1.75rem;
+  margin-bottom:1.1rem;
+}
+.card h2{
+  font-family:'Sora',sans-serif;font-weight:600;font-size:15px;
+  display:flex;align-items:center;gap:9px;
+  margin-bottom:1.3rem;
+  color:var(--text-primary);
+}
+.card h2 i{font-size:17px;color:var(--accent);}
+
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.4rem 1.6rem;}
+.grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:1.4rem 1.6rem;}
+.field label{display:block;font-size:12px;color:var(--text-secondary);margin-bottom:4px;}
+.field .val{font-size:14.5px;font-weight:500;color:var(--text-primary);}
+.field .badge{
+  display:inline-block;background:#FCEBEB;color:#8C2A2E;
+  font-size:12px;font-weight:600;padding:2px 9px;border-radius:6px;
+}
+
+.timeline{position:relative;padding-left:28px;}
+.timeline::before{
+  content:'';position:absolute;left:8px;top:6px;bottom:6px;width:1px;background:var(--border);
+}
+.tl-item{position:relative;padding-bottom:1.6rem;}
+.tl-item:last-child{padding-bottom:0;}
+.tl-dot{
+  position:absolute;left:-28px;top:2px;width:17px;height:17px;border-radius:50%;
+  background:var(--success-50);border:1px solid var(--success);
+  display:flex;align-items:center;justify-content:center;
+}
+.tl-dot i{font-size:10px;color:var(--success-800);}
+.tl-head{display:flex;align-items:center;gap:10px;margin-bottom:4px;}
+.tl-head .stage{font-family:'Sora',sans-serif;font-weight:600;font-size:14.5px;}
+.tl-status{
+  font-size:11.5px;font-weight:600;background:var(--success-50);color:var(--success-800);
+  padding:2px 9px;border-radius:6px;
+}
+.tl-inst{font-size:14px;color:var(--text-primary);margin-bottom:2px;}
+.tl-meta{font-size:13px;color:var(--text-secondary);}
+.tl-year{font-size:12.5px;color:var(--text-muted);margin-top:3px;}
+
+.chips{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
+.chip{
+  display:flex;align-items:center;justify-content:space-between;
+  border:1px solid var(--border);border-radius:9px;padding:10px 13px;
+}
+.chip .label{font-size:13px;color:var(--text-secondary);}
+.chip .yes{display:flex;align-items:center;gap:5px;color:var(--success-800);font-size:13px;font-weight:600;}
+.chip .no{display:flex;align-items:center;gap:5px;color:var(--text-muted);font-size:13px;font-weight:500;}
+.chip .num{font-size:13px;font-weight:600;color:var(--accent-800);background:var(--accent-50);padding:2px 9px;border-radius:6px;}
+
+table{width:100%;border-collapse:collapse;}
+th{
+  text-align:left;font-size:12px;color:var(--text-secondary);font-weight:500;
+  padding:0 0 10px;border-bottom:1px solid var(--border);
+}
+td{padding:12px 0;font-size:14px;border-bottom:1px solid var(--border);}
+tr:last-child td{border-bottom:none;}
+.tag-area{
+  background:var(--accent-50);color:var(--accent-800);font-size:12.5px;font-weight:600;
+  padding:3px 10px;border-radius:6px;
+}
+
+.empty{
+  display:flex;align-items:center;gap:10px;color:var(--text-muted);font-size:13.5px;
+  border:1px dashed var(--border);border-radius:9px;padding:1.1rem;
+}
+.empty i{font-size:18px;}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="brand"><i class="ti ti-bulb"></i>Portal da Inovação</div>
+  <div class="user">
+    <span class="bell"><i class="ti ti-bell"></i></span>
+    <span><i class="ti ti-user-circle" style="font-size:18px;vertical-align:-3px;margin-right:4px;"></i>Bolsista6</span>
+  </div>
+</div>
+
+<div class="page">
+
+  <div class="breadcrumb"><a>Bolsistas</a><i class="ti ti-chevron-right" style="font-size:13px"></i><span class="current">Meu cadastro</span></div>
+
+  <div class="pagehead">
+    <h1><i class="ti ti-user-square-rounded"></i>Meu cadastro</h1>
+    <div class="actions">
+      <button class="btn btn-ghost"><i class="ti ti-arrow-left"></i>Voltar</button>
+      <button class="btn btn-primary"><i class="ti ti-edit"></i>Editar dados</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2><i class="ti ti-id-badge-2"></i>Dados pessoais</h2>
+    <div class="grid">
+      <div class="field"><label>Nome</label><div class="val">Bolsista6</div></div>
+      <div class="field"><label>E-mail</label><div class="val">bolsista6@email.com</div></div>
+      <div class="field"><label>Nº de série</label><div class="badge">0532</div></div>
+      <div class="field"><label>Telefone</label><div class="val">(67) 99999-9999</div></div>
+      <div class="field"><label>Data de nascimento</label><div class="val">01/01/1995</div></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2><i class="ti ti-map-pin"></i>Endereço</h2>
+    <div class="grid">
+      <div class="field"><label>Rua</label><div class="val">Rua Teste</div></div>
+      <div class="field"><label>Número</label><div class="val">100</div></div>
+      <div class="field"><label>Bairro</label><div class="val">Centro</div></div>
+      <div class="field"><label>Cidade</label><div class="val">Campo Grande</div></div>
+      <div class="field"><label>Estado</label><div class="val">Mato Grosso do Sul</div></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2><i class="ti ti-school"></i>Dados acadêmicos</h2>
+    <div class="timeline">
+      <div class="tl-item">
+        <div class="tl-dot"><i class="ti ti-check"></i></div>
+        <div class="tl-head"><span class="stage">Graduação</span><span class="tl-status">Concluída</span></div>
+        <div class="tl-inst">Universidade Estadual do Centro-Oeste — Ciências Exatas e da Terra</div>
+        <div class="tl-meta">Ciência de Dados</div>
+        <div class="tl-year">Conclusão em 2018</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot"><i class="ti ti-check"></i></div>
+        <div class="tl-head"><span class="stage">Pós-graduação</span><span class="tl-status">Concluída</span></div>
+        <div class="tl-inst">Universidade Cesumar — Ciências Exatas e da Terra</div>
+        <div class="tl-meta">Ciência de Dados</div>
+        <div class="tl-year">Conclusão em 2020</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2><i class="ti ti-chart-bar"></i>Critérios e pontuação</h2>
+    <div class="chips">
+      <div class="chip"><span class="label">Projetos/pesquisa</span><span class="num">4 anos</span></div>
+      <div class="chip"><span class="label">Participação em congressos</span><span class="no"><i class="ti ti-x"></i>Não</span></div>
+      <div class="chip"><span class="label">Resumo em anais</span><span class="no"><i class="ti ti-x"></i>Não</span></div>
+      <div class="chip"><span class="label">Artigo completo em anais</span><span class="yes"><i class="ti ti-check"></i>Sim</span></div>
+      <div class="chip"><span class="label">Artigo científico nacional</span><span class="no"><i class="ti ti-x"></i>Não</span></div>
+      <div class="chip"><span class="label">Artigo científico internacional</span><span class="yes"><i class="ti ti-check"></i>Sim</span></div>
+      <div class="chip"><span class="label">Livro/patente</span><span class="yes"><i class="ti ti-check"></i>Sim</span></div>
+      <div class="chip"><span class="label">Minicurso</span><span class="no"><i class="ti ti-x"></i>Não</span></div>
+      <div class="chip"><span class="label">Treinamento</span><span class="no"><i class="ti ti-x"></i>Não</span></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2><i class="ti ti-briefcase"></i>Experiência profissional</h2>
+    <table>
+      <tr><th>Área de atuação</th><th>Anos</th><th>Comprovante</th></tr>
+      <tr>
+        <td><span class="tag-area">TI</span></td>
+        <td>4 ano(s)</td>
+        <td style="color:var(--text-muted)">Não enviado</td>
+      </tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2><i class="ti ti-paperclip"></i>Anexos comprobatórios</h2>
+    <div class="empty"><i class="ti ti-file-off"></i>Nenhum anexo enviado</div>
+  </div>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<!--
+  ============================================================================
+  SIDEBAR_MODEL — modelo de referência da sidebar do projeto Bolsistas
+  Salvo em: design/sidebar_model.html
+  ============================================================================
+  COMO REPLICAR NO PROJETO:
+  - Template : frontend/templates/components/sidebar.html  (links + gating por
+               grupo via is_view_user / is_manager / has_cadastro, active via
+               request.resolver_match.url_name)
+  - Estilos  : frontend/static/css/sidebar.css
+  - JS       : frontend/static/js/sidebar.js (fixar/recolher + localStorage)
+  - Ícones   : Bootstrap Icons (bi-*). Cores SENAI: fundo #0E2C63,
+               hover #16386F, ativo #1D4796.
+
+  COMPORTAMENTO (igual ao implementado):
+  1. Padrão RECOLHIDA (60px, só ícones). Sem bordas brancas/divisores.
+  2. Hover expande temporariamente (268px) SEM deslocar o conteúdo (sobrepõe).
+  3. Clique em ">" fixa aberta (vira "<", conteúdo desloca p/ 268px) e salva
+     em localStorage ("sb_pinned"). Clique de novo recolhe automaticamente.
+  4. Logo SENAI único e centralizado (sem texto ao lado).
+  5. Logout (POST) fixo no rodapé. Mobile: slide-over com overlay.
+  ============================================================================
+-->
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sidebar Model — Bolsas SENAI</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+<style>
+  :root {
+    --sidebar-bg: #0E2C63;
+    --sidebar-bg-hover: #16386F;
+    --sidebar-bg-active: #1D4796;
+    --sidebar-text: #FFFFFF;
+    --sidebar-text-active: #FFFFFF;
+    --sidebar-text-muted: rgba(255,255,255,0.65);
+    --sidebar-section: rgba(255,255,255,0.65);
+    --sidebar-width: 268px;
+    --sidebar-collapsed: 60px;
+    --transition-speed: 0.2s;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background: #F2F4F8; color: #232E45; }
+
+  .app-wrapper { display: flex; min-height: 100vh; }
+
+  /* ---- SIDEBAR: recolhida por padrão (60px, só ícones), sem bordas ---- */
+  #sidebar {
+    width: var(--sidebar-collapsed);
+    min-width: var(--sidebar-collapsed);
+    background: var(--sidebar-bg);
+    color: var(--sidebar-text);
+    transition: width var(--transition-speed) ease, min-width var(--transition-speed) ease;
+    z-index: 1040;
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: 0; left: 0; bottom: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+  #sidebar .toggle-btn {
+    background: transparent; border: none;
+    color: var(--sidebar-text-muted);
+    font-size: 20px; padding: 16px; text-align: center;
+    cursor: pointer; transition: color var(--transition-speed) ease; flex-shrink: 0;
+  }
+  #sidebar .toggle-btn:hover { color: var(--sidebar-text-active); }
+
+  /* Logo único, sempre centralizado */
+  #sidebar .sidebar-brand { padding: 0.75rem 0; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  #sidebar .sidebar-brand .brand-logo {
+    height: 26px; width: auto; display: block;
+    background: #fff; border-radius: 6px; padding: 3px 8px; /* substitua pelo logo real */
+  }
+  #sidebar .sidebar-brand .brand-demo { color: #fff; font-weight: 800; font-size: 13px; }
+
+  #sidebar .sidebar-nav { flex: 1; display: flex; flex-direction: column; padding: .5rem 0; min-height: 0; }
+  #sidebar .sidebar-menu { list-style: none; margin: 0; padding: 0; flex-grow: 1; overflow-y: auto; overflow-x: hidden; }
+  #sidebar .sidebar-menu.logout { flex-grow: 0; overflow: visible; }
+  #sidebar .sidebar-menu li { width: 100%; }
+  #sidebar .sidebar-section {
+    display: none; padding: 0.9rem 1.25rem 0.35rem;
+    font-size: 0.66rem; text-transform: uppercase; letter-spacing: 0.11em;
+    color: var(--sidebar-section); font-weight: 700; white-space: nowrap; overflow: hidden;
+  }
+  #sidebar .sidebar-link {
+    display: flex; align-items: center;
+    color: var(--sidebar-text); text-decoration: none;
+    font-size: 0.88rem; font-weight: 500;
+    padding: 0.8rem 0; margin: 0; border: none; border-radius: 0;
+    transition: background 0.18s ease, color 0.18s ease;
+    white-space: nowrap; overflow: hidden; width: 100%;
+    background: transparent; cursor: pointer; text-align: left; font-family: inherit;
+  }
+  #sidebar .sidebar-link:hover { background: var(--sidebar-bg-hover); color: var(--sidebar-text-active); }
+  #sidebar li.active > .sidebar-link { background: var(--sidebar-bg-active); color: var(--sidebar-text-active); font-weight: 700; }
+  #sidebar .nav-icon {
+    display: flex; align-items: center; justify-content: center;
+    width: var(--sidebar-collapsed); min-width: var(--sidebar-collapsed); font-size: 1.05rem;
+  }
+  #sidebar .nav-text { opacity: 0; transition: opacity var(--transition-speed) ease; overflow: hidden; }
+
+  /* Expandir: hover (temporário) ou .pinned (fixo via botão ">") */
+  @media (min-width: 768px) {
+    #sidebar:hover, #sidebar.pinned { width: var(--sidebar-width); min-width: var(--sidebar-width); }
+    #sidebar:hover .nav-text, #sidebar.pinned .nav-text { opacity: 1; }
+    #sidebar:hover .sidebar-section, #sidebar.pinned .sidebar-section { display: block; }
+  }
+
+  /* ---- CONTEÚDO: margem 60px; só desloca p/ 268px quando fixada ---- */
+  #content-wrapper { flex: 1; margin-left: var(--sidebar-collapsed); transition: margin-left var(--transition-speed) ease; display: flex; flex-direction: column; min-width: 0; }
+  #content-wrapper.pinned { margin-left: var(--sidebar-width); }
+  .top-navbar { background: #fff; border-bottom: 1px solid #E6EAF0; padding: 0.55rem 1.25rem; position: sticky; top: 0; z-index: 1020; display: flex; align-items: center; gap: 1rem; }
+  .top-navbar .navbar-toggler-sidebar { border: none; background: transparent; color: #5A667D; font-size: 1.35rem; padding: 0.3rem 0.5rem; border-radius: 6px; cursor: pointer; }
+  .main-content { padding: 1.5rem; }
+  .demo-card { background: #fff; border: 1px solid #E6EAF0; border-radius: 12px; padding: 1.5rem; }
+
+  @media (max-width: 767.98px) {
+    #sidebar { margin-left: calc(-1 * var(--sidebar-width)); width: var(--sidebar-width); min-width: var(--sidebar-width); }
+    #sidebar.mobile-open { margin-left: 0; }
+    #sidebar.mobile-open .nav-text { opacity: 1; }
+    #sidebar.mobile-open .sidebar-section { display: block; }
+    #content-wrapper, #content-wrapper.pinned { margin-left: 0; }
+    .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(14,44,99,0.52); z-index: 1039; }
+    .sidebar-overlay.show { display: block; }
+  }
+</style>
+</head>
+<body>
+<div class="app-wrapper">
+  <!-- INÍCIO DA SIDEBAR -->
+  <nav id="sidebar" aria-label="Navegação principal">
+    <button class="toggle-btn" id="btn-toggle" type="button" title="Expandir/fixar menu">
+      <i class="bi bi-chevron-right" id="btn-toggle-icon"></i>
+    </button>
+    <a href="#" class="sidebar-brand" title="Bolsas SENAI">
+      <span class="brand-logo brand-demo">SENAI</span>
+    </a>
+    <div class="sidebar-nav">
+      <ul class="sidebar-menu">
+        <li class="sidebar-section"><span class="nav-text">Principal</span></li>
+        <li class="active"><a href="#" class="sidebar-link" title="Dashboard"><span class="nav-icon"><i class="bi bi-grid-fill"></i></span><span class="nav-text">Dashboard</span></a></li>
+        <li class="sidebar-section"><span class="nav-text">Candidato</span></li>
+        <li><a href="#" class="sidebar-link" title="Meu Cadastro"><span class="nav-icon"><i class="bi bi-person-lines-fill"></i></span><span class="nav-text">Meu Cadastro</span></a></li>
+        <li><a href="#" class="sidebar-link" title="Minhas Candidaturas"><span class="nav-icon"><i class="bi bi-clipboard-check"></i></span><span class="nav-text">Minhas Candidaturas</span></a></li>
+        <li class="sidebar-section"><span class="nav-text">Bolsas</span></li>
+        <li><a href="#" class="sidebar-link" title="Editais"><span class="nav-icon"><i class="bi bi-journal-text"></i></span><span class="nav-text">Editais</span></a></li>
+        <li><a href="#" class="sidebar-link" title="Resultados"><span class="nav-icon"><i class="bi bi-trophy"></i></span><span class="nav-text">Resultados</span></a></li>
+        <li class="sidebar-section"><span class="nav-text">Gestão</span></li>
+        <li><a href="#" class="sidebar-link" title="Avaliação"><span class="nav-icon"><i class="bi bi-clipboard2-check"></i></span><span class="nav-text">Avaliação</span></a></li>
+        <li><a href="#" class="sidebar-link" title="Trilha do Bolsista"><span class="nav-icon"><i class="bi bi-signpost-2"></i></span><span class="nav-text">Trilha do Bolsista</span></a></li>
+        <li><a href="#" class="sidebar-link" title="Gestão de Documentos"><span class="nav-icon"><i class="bi bi-folder2-open"></i></span><span class="nav-text">Gestão de Documentos</span></a></li>
+        <li><a href="#" class="sidebar-link" title="Solicitações"><span class="nav-icon"><i class="bi bi-list-check"></i></span><span class="nav-text">Solicitações</span></a></li>
+      </ul>
+      <ul class="sidebar-menu logout">
+        <li><button type="button" class="sidebar-link" title="Sair"><span class="nav-icon"><i class="bi bi-power"></i></span><span class="nav-text">Sair</span></button></li>
+      </ul>
+    </div>
+  </nav>
+  <!-- FIM DA SIDEBAR -->
+  <div id="sidebar-overlay" class="sidebar-overlay"></div>
+
+  <div id="content-wrapper">
+    <nav class="top-navbar">
+      <button id="sidebar-toggle" class="navbar-toggler-sidebar" type="button" title="Menu"><i class="bi bi-list"></i></button>
+      <strong>Bolsas SENAI — área de demonstração</strong>
+    </nav>
+    <main class="main-content">
+      <div class="demo-card">
+        <h1>Conteúdo do Projeto</h1>
+        <p>A sidebar inicia <strong>recolhida</strong> (só ícones). Passe o mouse para expandir temporariamente ou clique em <strong>&gt;</strong> para manter aberta (vira <strong>&lt;</strong>).</p>
+      </div>
+    </main>
+  </div>
+</div>
+
+<script>
+(function () {
+  var STORAGE_KEY = 'sb_pinned';
+  function $(id) { return document.getElementById(id); }
+  function isMobile() { return window.innerWidth < 768; }
+  function isPinned() { var sb = $('sidebar'); return sb && sb.classList.contains('pinned'); }
+  function syncIcon() {
+    var icon = $('btn-toggle-icon');
+    if (!icon) return;
+    if (isPinned()) { icon.classList.remove('bi-chevron-right'); icon.classList.add('bi-chevron-left'); }
+    else { icon.classList.remove('bi-chevron-left'); icon.classList.add('bi-chevron-right'); }
+  }
+  function applyState(pinned) {
+    var sb = $('sidebar'), wrap = $('content-wrapper');
+    if (!sb || !wrap) return;
+    if (pinned) { sb.classList.add('pinned'); sb.classList.remove('mobile-open'); wrap.classList.add('pinned'); }
+    else { sb.classList.remove('pinned'); wrap.classList.remove('pinned'); }
+    syncIcon();
+  }
+  function toggle() {
+    var sb = $('sidebar');
+    if (!sb) return;
+    if (isMobile()) {
+      sb.classList.toggle('mobile-open');
+      $('sidebar-overlay').classList.toggle('show', sb.classList.contains('mobile-open'));
+      return;
+    }
+    var next = !isPinned();
+    applyState(next);
+    try { localStorage.setItem(STORAGE_KEY, next ? '1' : '0'); } catch (e) {}
+  }
+  document.addEventListener('DOMContentLoaded', function () {
+    var saved = null;
+    try { saved = localStorage.getItem(STORAGE_KEY); } catch (e) {}
+    applyState(saved === '1');
+    $('btn-toggle').addEventListener('click', toggle);
+    $('sidebar-toggle').addEventListener('click', toggle);
+    $('sidebar-overlay').addEventListener('click', function () {
+      $('sidebar').classList.remove('mobile-open');
+      $('sidebar-overlay').classList.remove('show');
+    });
+    window.addEventListener('resize', function () { if (isMobile()) applyState(false); });
+  });
+})();
+</script>
+</body>
+</html>

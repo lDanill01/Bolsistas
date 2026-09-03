@@ -1,0 +1,115 @@
+/* Meu Cadastro — estilo derivado de design/meu-cadastro-redesign.html e meu-cadastro-editar.html
+   Escopo .mc-* para não conflitar com o DS global (app.css / Bootstrap). */
+.mc-page { width: 100%; max-width: none; margin: 0; padding: 0 0 2rem; }
+.mc-breadcrumb { font-size: 13px; color: #98A2B3; padding: 0.4rem 0; display: flex; align-items: center; gap: 6px; }
+.mc-breadcrumb a { color: #98A2B3; text-decoration: none; }
+.mc-breadcrumb .current { color: #667085; }
+.mc-pagehead { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 0.3rem 0 1.2rem; flex-wrap: wrap; }
+.mc-pagehead h1, .mc-pagehead h2 { font-size: 24px; font-weight: 600; display: flex; align-items: center; gap: 12px; margin: 0; color: #16202E; }
+.mc-pagehead h1 i, .mc-pagehead h2 i { font-size: 22px; color: #2A4B8D; }
+.mc-actions { display: flex; gap: 10px; }
+.mc-mode-badge { display: inline-flex; align-items: center; gap: 6px; background: #EAF0FB; color: #1C3566; font-size: 12.5px; font-weight: 600; padding: 4px 11px; border-radius: 7px; margin-bottom: 1.1rem; }
+.mc-mode-badge i { font-size: 14px; }
+
+.mc-card { background: #fff; border: 1px solid #E4E7EC; border-radius: 12px; padding: 1.5rem 1.75rem; margin-bottom: 1.1rem; box-shadow: none; }
+.mc-card:hover { box-shadow: none; transform: none; }
+.mc-card h2.mc-card-title { font-size: 15px; font-weight: 600; display: flex; align-items: center; gap: 9px; margin-bottom: 1.3rem; color: #16202E; }
+.mc-card h2.mc-card-title i { font-size: 17px; color: #2A4B8D; }
+
+.mc-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.4rem 1.6rem; }
+.mc-grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.4rem 1.6rem; }
+.mc-field > label, .mc-field .mc-label { display: block; font-size: 12px; color: #667085; margin-bottom: 4px; font-weight: 500; }
+.mc-field .mc-val { font-size: 14.5px; font-weight: 500; color: #16202E; overflow-wrap: anywhere; }
+.mc-badge-serie { display: inline-block; background: #FCEBEB; color: #8C2A2E; font-size: 12px; font-weight: 600; padding: 2px 9px; border-radius: 6px; }
+
+/* View: timeline acadêmica */
+.mc-timeline { position: relative; padding-left: 28px; }
+.mc-timeline::before { content: ''; position: absolute; left: 8px; top: 6px; bottom: 6px; width: 1px; background: #E4E7EC; }
+.mc-tl-item { position: relative; padding-bottom: 1.4rem; }
+.mc-tl-item:last-child { padding-bottom: 0; }
+.mc-tl-dot { position: absolute; left: -28px; top: 2px; width: 17px; height: 17px; border-radius: 50%; background: #E7F5EE; border: 1px solid #1B7A4D; display: flex; align-items: center; justify-content: center; }
+.mc-tl-dot i { font-size: 10px; color: #0F4A2E; }
+.mc-tl-head { display: flex; align-items: center; gap: 10px; margin-bottom: 4px; flex-wrap: wrap; }
+.mc-tl-stage { font-weight: 600; font-size: 14.5px; }
+.mc-tl-status { font-size: 11.5px; font-weight: 600; background: #E7F5EE; color: #0F4A2E; padding: 2px 9px; border-radius: 6px; }
+.mc-tl-inst { font-size: 14px; color: #16202E; margin-bottom: 2px; }
+.mc-tl-meta { font-size: 13px; color: #667085; }
+.mc-tl-year { font-size: 12.5px; color: #98A2B3; margin-top: 3px; }
+
+/* View: chips critérios */
+.mc-chips { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.mc-chip { display: flex; align-items: center; justify-content: space-between; gap: 8px; border: 1px solid #E4E7EC; border-radius: 9px; padding: 10px 13px; background: #fff; }
+.mc-chip .label { font-size: 13px; color: #667085; }
+.mc-chip .yes { display: flex; align-items: center; gap: 5px; color: #0F4A2E; font-size: 13px; font-weight: 600; }
+.mc-chip .no { display: flex; align-items: center; gap: 5px; color: #98A2B3; font-size: 13px; font-weight: 500; }
+.mc-chip .num { font-size: 13px; font-weight: 600; color: #1C3566; background: #EAF0FB; padding: 2px 9px; border-radius: 6px; white-space: nowrap; }
+
+/* View: tabela experiência */
+.mc-table { width: 100%; border-collapse: collapse; }
+.mc-table th { text-align: left; font-size: 12px; color: #667085; font-weight: 500; padding: 0 0 10px; border-bottom: 1px solid #E4E7EC; }
+.mc-table td { padding: 12px 0; font-size: 14px; border-bottom: 1px solid #E4E7EC; vertical-align: middle; }
+.mc-table tr:last-child td { border-bottom: none; }
+.mc-tag-area { background: #EAF0FB; color: #1C3566; font-size: 12.5px; font-weight: 600; padding: 3px 10px; border-radius: 6px; }
+.mc-empty { display: flex; align-items: center; gap: 10px; color: #98A2B3; font-size: 13.5px; border: 1px dashed #E4E7EC; border-radius: 9px; padding: 1.1rem; }
+.mc-empty i { font-size: 18px; }
+.mc-anexo-row { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 10px 0; border-bottom: 1px solid #E4E7EC; font-size: 14px; }
+.mc-anexo-row:last-child { border-bottom: none; }
+
+/* Edit: fields */
+.mc-field label.mc-edit-label { font-size: 12.5px; font-weight: 500; color: #667085; margin-bottom: 6px; }
+.mc-field label.mc-edit-label .req { color: #C0393E; margin-left: 2px; }
+.mc-card .form-control, .mc-card .form-select { font-size: 14px; color: #16202E; border: 1px solid #E4E7EC; border-radius: 8px; padding: 9px 12px; background: #fff; }
+.mc-card .form-control:focus, .mc-card .form-select:focus { border-color: #2A4B8D; box-shadow: 0 0 0 3px #EAF0FB; outline: none; }
+.mc-card .form-control:disabled { background: #F8F9FA; color: #98A2B3; }
+.mc-hint { font-size: 11.5px; color: #98A2B3; margin-top: 4px; }
+.mc-error { font-size: 11.5px; color: #C0393E; display: flex; align-items: center; gap: 4px; margin-top: 4px; }
+.mc-field.has-error .form-control { border-color: #C0393E; }
+.mc-field.has-error .form-control:focus { box-shadow: 0 0 0 3px #FCEBEB; }
+.mc-locked-note { display: flex; align-items: center; gap: 7px; font-size: 12px; color: #98A2B3; margin-top: -4px; margin-bottom: 1.2rem; }
+.mc-locked-note i { font-size: 14px; }
+
+/* Edit: blocos acadêmicos */
+.mc-acad-block { border: 1px solid #E4E7EC; border-radius: 10px; padding: 1.1rem 1.2rem; position: relative; background: #fff; }
+.mc-acad-block + .mc-acad-block { margin-top: 0.9rem; }
+.mc-remove-btn { position: absolute; top: 10px; right: 10px; background: none; border: none; color: #98A2B3; cursor: pointer; font-size: 16px; padding: 2px 6px; }
+.mc-remove-btn:hover { color: #C0393E; }
+.mc-subsection-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; }
+.mc-subsection-title { display: flex; align-items: center; gap: 9px; font-size: 13.5px; font-weight: 600; }
+.mc-stage-badge { font-size: 11px; font-weight: 600; background: #E7F5EE; color: #0F4A2E; padding: 2px 8px; border-radius: 6px; }
+.mc-add-block { display: flex; align-items: center; justify-content: center; gap: 7px; border: 1px dashed #E4E7EC; border-radius: 10px; padding: 0.85rem; color: #2A4B8D; font-size: 13.5px; font-weight: 500; cursor: pointer; background: none; width: 100%; margin-top: 0.9rem; }
+.mc-add-block:hover { background: #EAF0FB; }
+
+/* Edit: critérios como toggles */
+.mc-chip-toggle-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.mc-chip-toggle { display: flex; align-items: center; justify-content: space-between; gap: 8px; border: 1px solid #E4E7EC; border-radius: 9px; padding: 9px 13px; background: #fff; }
+.mc-chip-toggle .label { font-size: 13px; color: #667085; }
+.mc-chip-toggle .form-check { margin: 0; min-height: auto; display: flex; align-items: center; }
+.mc-chip-toggle .form-check-input { width: 38px; height: 22px; margin: 0; cursor: pointer; background-color: #E4E7EC; border: none; border-radius: 20px; background-image: none; position: relative; flex-shrink: 0; appearance: none; -webkit-appearance: none; }
+.mc-chip-toggle .form-check-input::after { content: ''; position: absolute; top: 2px; left: 2px; width: 18px; height: 18px; background: #fff; border-radius: 50%; transition: transform .12s; box-shadow: 0 1px 2px rgba(0,0,0,.15); }
+.mc-chip-toggle .form-check-input:checked { background-color: #1B7A4D; }
+.mc-chip-toggle .form-check-input:checked::after { transform: translateX(16px); }
+.mc-chip-toggle .form-check-input:focus { box-shadow: 0 0 0 3px #EAF0FB; }
+.mc-count-input { width: 70px; font-size: 13px; text-align: center; border: 1px solid #E4E7EC; border-radius: 7px; padding: 6px 4px; }
+.mc-alerta-docs { font-size: 11.5px; color: #B7791F; font-weight: 600; margin-top: 6px; }
+
+/* Upload */
+.mc-upload-zone { border: 1px dashed #E4E7EC; border-radius: 10px; padding: 1.6rem; display: flex; flex-direction: column; align-items: center; gap: 8px; color: #98A2B3; text-align: center; }
+.mc-upload-zone i { font-size: 26px; }
+.mc-upload-title { font-size: 14px; color: #667085; font-weight: 500; }
+.mc-upload-sub { font-size: 12px; }
+
+/* Footer sticky (editar) */
+.mc-footer-bar { position: sticky; bottom: 0; background: #fff; border-top: 1px solid #E4E7EC; padding: 1rem 1.75rem; display: flex; justify-content: flex-end; gap: 10px; margin: 1.5rem -1.75rem -1.5rem; border-radius: 0 0 12px 12px; }
+
+/* Botões locais (mesma linguagem do mock, sem sobrescrever .btn global) */
+.mc-btn { font-size: 14px; font-weight: 500; padding: 9px 16px; border-radius: 8px; display: inline-flex; align-items: center; gap: 7px; cursor: pointer; border: 1px solid transparent; text-decoration: none; }
+.mc-btn-primary { background: #2A4B8D; color: #fff; border-color: #2A4B8D; }
+.mc-btn-primary:hover { background: #1C3566; color: #fff; }
+.mc-btn-ghost { background: transparent; color: #667085; border-color: #E4E7EC; }
+.mc-btn-ghost:hover { background: #F4F5F7; color: #16202E; }
+
+@media (max-width: 767.98px) {
+  .mc-grid, .mc-grid-2, .mc-chips, .mc-chip-toggle-grid { grid-template-columns: 1fr; }
+  .mc-pagehead { align-items: flex-start; flex-direction: column; }
+  .mc-card { padding: 1.1rem 1rem; }
+}

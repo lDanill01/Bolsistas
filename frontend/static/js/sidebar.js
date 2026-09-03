@@ -3,32 +3,51 @@
     var WRAPPER_ID = 'content-wrapper';
     var TOGGLE_BTN_ID = 'sidebar-toggle';
     var OVERLAY_ID = 'sidebar-overlay';
-    var STORAGE_KEY = 'sb_collapsed';
+    var STORAGE_KEY = 'sb_pinned';
 
     function getSidebar() { return document.getElementById(SIDEBAR_ID); }
     function getWrapper() { return document.getElementById(WRAPPER_ID); }
     function getToggleBtn() { return document.getElementById(TOGGLE_BTN_ID); }
+    function getInnerToggleBtn() { return document.getElementById('btn-toggle'); }
     function getOverlay() { return document.getElementById(OVERLAY_ID); }
 
     function isMobile() { return window.innerWidth < 768; }
 
-    function isCollapsed() {
+    function isPinned() {
         var sidebar = getSidebar();
-        return sidebar && sidebar.classList.contains('collapsed');
+        return sidebar && sidebar.classList.contains('pinned');
     }
 
-    function applyState(collapsed) {
+    function syncInnerToggleIcon() {
+        var icon = document.getElementById('btn-toggle-icon');
+        if (!icon) return;
+        // ">" recolhido (clique para manter aberto) / "<" fixado aberto
+        if (isPinned()) {
+            icon.classList.remove('bi-chevron-right');
+            icon.classList.add('bi-chevron-left');
+        } else {
+            icon.classList.remove('bi-chevron-left');
+            icon.classList.add('bi-chevron-right');
+        }
+    }
+
+    function applyState(pinned) {
         var sidebar = getSidebar();
         var wrapper = getWrapper();
         if (!sidebar || !wrapper) return;
-        if (collapsed) {
-            sidebar.classList.add('collapsed');
+        if (pinned) {
+            sidebar.classList.add('pinned');
             sidebar.classList.remove('mobile-open');
-            wrapper.classList.add('expanded');
+            wrapper.classList.add('pinned');
+            wrapper.classList.remove('expanded');
         } else {
+            // Recolhe automaticamente: só ícones (hover expande temporariamente via CSS)
+            sidebar.classList.remove('pinned');
             sidebar.classList.remove('collapsed');
+            wrapper.classList.remove('pinned');
             wrapper.classList.remove('expanded');
         }
+        syncInnerToggleIcon();
     }
 
     function toggleSidebar() {
@@ -40,7 +59,7 @@
             if (overlay) overlay.classList.toggle('show', sidebar.classList.contains('mobile-open'));
             return;
         }
-        var newState = !isCollapsed();
+        var newState = !isPinned();
         applyState(newState);
         try { localStorage.setItem(STORAGE_KEY, newState ? '1' : '0'); } catch (e) {}
     }
@@ -58,8 +77,16 @@
         if (!sidebar || !wrapper) return;
 
         if (!isMobile()) {
-            var saved;
+            var saved = null;
             try { saved = localStorage.getItem(STORAGE_KEY); } catch (e) {}
+            if (saved === null) {
+                // Migra preferência antiga (sb_collapsed): '0' = era aberto -> fixa aberto
+                try {
+                    var legacy = localStorage.getItem('sb_collapsed');
+                    if (legacy === '0') saved = '1';
+                    localStorage.removeItem('sb_collapsed');
+                } catch (e) {}
+            }
             applyState(saved === '1');
         } else {
             applyState(false);
@@ -69,6 +96,12 @@
         if (toggleBtn) {
             toggleBtn.addEventListener('click', toggleSidebar);
         }
+
+        var innerToggleBtn = getInnerToggleBtn();
+        if (innerToggleBtn) {
+            innerToggleBtn.addEventListener('click', toggleSidebar);
+        }
+        syncInnerToggleIcon();
 
         var overlay = getOverlay();
         if (overlay) {

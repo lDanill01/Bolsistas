@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<!--
+  ============================================================================
+  CADASTRO_EDITAR — modelo de referência da tela "Editar cadastro"
+  Salvo em: design/cadastro_editar.html
+  ============================================================================
+  COMO REPLICAR NO PROJETO:
+  - Bolsista (ViewUser): frontend/templates/cadastro/solicitacao_multipla.html
+      (view SolicitacaoMultiplaView; data de nascimento exibida, telefone/
+       endereço/critérios editáveis; comprovantes via e-mail)
+  - Admin (Manager)    : frontend/templates/cadastro/cadastro_form.html
+      (view CadastroUpdateView; inclui data_nascimento editável + uploads de
+       currículo, RG/CPF, comprovante de endereço e anexos por critério)
+  - Estilos  : frontend/static/css/meu-cadastro.css (escopo .mc-*)
+  - LARGURA TOTAL: .mc-page { width:100%; max-width:none; margin:0 }
+  - JS no projeto: selects OUTRA (área/curso/instituição via
+      areas/cursos_por_area/instituicoes), addFormset() p/ formsets
+      formacoes/experiencias, toggles de critérios. Abaixo, versão
+      simplificada funcional para demonstração.
+  ============================================================================
+-->
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Editar Cadastro — Modelo</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+<style>
+  :root {
+    --sidebar-bg: #0E2C63; --sidebar-bg-hover: #16386F; --sidebar-bg-active: #1D4796;
+    --sidebar-text: #fff; --sidebar-text-muted: rgba(255,255,255,.65); --sidebar-section: rgba(255,255,255,.65);
+    --sidebar-width: 268px; --sidebar-collapsed: 60px; --transition-speed: 0.2s;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background: #F2F4F8; color: #232E45; padding-bottom: 0; }
+  .app-wrapper { display: flex; min-height: 100vh; }
+  #sidebar { width: var(--sidebar-collapsed); min-width: var(--sidebar-collapsed); background: var(--sidebar-bg); color: var(--sidebar-text);
+    transition: width var(--transition-speed) ease, min-width var(--transition-speed) ease;
+    z-index: 1040; display: flex; flex-direction: column; position: fixed; top: 0; left: 0; bottom: 0; overflow: hidden; }
+  #sidebar .toggle-btn { background: transparent; border: none; color: var(--sidebar-text-muted); font-size: 20px; padding: 16px; cursor: pointer; }
+  #sidebar .sidebar-brand { padding: .75rem 0; display: flex; justify-content: center; }
+  #sidebar .sidebar-brand .brand-demo { color: #fff; font-weight: 800; font-size: 13px; background: rgba(255,255,255,.15); border-radius: 6px; padding: 4px 10px; }
+  #sidebar .sidebar-nav { flex: 1; display: flex; flex-direction: column; padding: .5rem 0; }
+  #sidebar .sidebar-menu { list-style: none; flex-grow: 1; overflow: hidden; }
+  #sidebar .sidebar-menu.logout { flex-grow: 0; }
+  #sidebar .sidebar-section { display: none; }
+  #sidebar .sidebar-link { display: flex; align-items: center; color: var(--sidebar-text); text-decoration: none; font-size: .88rem; padding: .8rem 0; white-space: nowrap; overflow: hidden; }
+  #sidebar li.active > .sidebar-link { background: var(--sidebar-bg-active); font-weight: 700; }
+  #sidebar .nav-icon { display: flex; align-items: center; justify-content: center; width: var(--sidebar-collapsed); min-width: var(--sidebar-collapsed); font-size: 1.05rem; }
+  #sidebar .nav-text { opacity: 0; transition: opacity var(--transition-speed) ease; overflow: hidden; }
+  @media (min-width: 768px) {
+    #sidebar:hover, #sidebar.pinned { width: var(--sidebar-width); min-width: var(--sidebar-width); }
+    #sidebar:hover .nav-text, #sidebar.pinned .nav-text { opacity: 1; }
+    #sidebar:hover .sidebar-section, #sidebar.pinned .sidebar-section { display: block; padding: 0.9rem 1.25rem 0.35rem; font-size: .66rem; text-transform: uppercase; letter-spacing: .11em; color: var(--sidebar-section); font-weight: 700; }
+  }
+  #content-wrapper { flex: 1; margin-left: var(--sidebar-collapsed); transition: margin-left var(--transition-speed) ease; display: flex; flex-direction: column; min-width: 0; }
+  #content-wrapper.pinned { margin-left: var(--sidebar-width); }
+  .top-navbar { background: #fff; border-bottom: 1px solid #E6EAF0; padding: .55rem 1.25rem; position: sticky; top: 0; z-index: 1020; display: flex; align-items: center; justify-content: space-between; }
+  .top-navbar button { border: none; background: transparent; font-size: 1.35rem; color: #5A667D; cursor: pointer; }
+  .main-content { padding: 1.5rem; }
+
+  /* ===== .mc-* modo edição (cópia de frontend/static/css/meu-cadastro.css) ===== */
+  .mc-page { width: 100%; max-width: none; margin: 0; padding: 0 0 2rem; }
+  .mc-breadcrumb { font-size: 13px; color: #98A2B3; padding: 0.4rem 0; display: flex; align-items: center; gap: 6px; }
+  .mc-breadcrumb .current { color: #667085; }
+  .mc-pagehead { display: flex; align-items: center; justify-content: space-between; padding: 0.3rem 0 0.3rem; }
+  .mc-pagehead h1 { font-size: 24px; font-weight: 600; display: flex; align-items: center; gap: 12px; margin: 0; color: #16202E; }
+  .mc-pagehead h1 i { font-size: 22px; color: #2A4B8D; }
+  .mc-mode-badge { display: inline-flex; align-items: center; gap: 6px; background: #EAF0FB; color: #1C3566; font-size: 12.5px; font-weight: 600; padding: 4px 11px; border-radius: 7px; margin-bottom: 1.1rem; }
+  .mc-card { background: #fff; border: 1px solid #E4E7EC; border-radius: 12px; padding: 1.5rem 1.75rem; margin-bottom: 1.1rem; }
+  .mc-card h2.mc-card-title { font-size: 15px; font-weight: 600; display: flex; align-items: center; gap: 9px; margin-bottom: 1.3rem; color: #16202E; }
+  .mc-card h2.mc-card-title i { font-size: 17px; color: #2A4B8D; }
+  .mc-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.2rem 1.6rem; }
+  .mc-field { display: flex; flex-direction: column; gap: 6px; }
+  .mc-field label { font-size: 12.5px; font-weight: 500; color: #667085; }
+  .mc-field label .req { color: #C0393E; margin-left: 2px; }
+  .mc-field input, .mc-field select { font-size: 14px; color: #16202E; border: 1px solid #E4E7EC; border-radius: 8px; padding: 9px 12px; background: #fff; outline: none; font-family: inherit; }
+  .mc-field input:focus, .mc-field select:focus { border-color: #2A4B8D; box-shadow: 0 0 0 3px #EAF0FB; }
+  .mc-field input:disabled { background: #F8F9FA; color: #98A2B3; }
+  .mc-hint { font-size: 11.5px; color: #98A2B3; }
+  .mc-error { font-size: 11.5px; color: #C0393E; display: flex; align-items: center; gap: 4px; }
+  .mc-field.has-error input { border-color: #C0393E; }
+  .mc-acad-block { border: 1px solid #E4E7EC; border-radius: 10px; padding: 1.1rem 1.2rem; position: relative; }
+  .mc-acad-block + .mc-acad-block { margin-top: 0.9rem; }
+  .mc-remove-btn { position: absolute; top: 10px; right: 10px; background: none; border: none; color: #98A2B3; cursor: pointer; font-size: 16px; }
+  .mc-remove-btn:hover { color: #C0393E; }
+  .mc-subsection-title { display: flex; align-items: center; gap: 9px; font-size: 13.5px; font-weight: 600; margin-bottom: 1rem; }
+  .mc-stage-badge { font-size: 11px; font-weight: 600; background: #E7F5EE; color: #0F4A2E; padding: 2px 8px; border-radius: 6px; }
+  .mc-add-block { display: flex; align-items: center; justify-content: center; gap: 7px; border: 1px dashed #E4E7EC; border-radius: 10px; padding: 0.85rem; color: #2A4B8D; font-size: 13.5px; font-weight: 500; cursor: pointer; background: none; width: 100%; margin-top: 0.9rem; font-family: inherit; }
+  .mc-add-block:hover { background: #EAF0FB; }
+  .mc-chip-toggle-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+  .mc-chip-toggle { display: flex; align-items: center; justify-content: space-between; gap: 8px; border: 1px solid #E4E7EC; border-radius: 9px; padding: 9px 13px; }
+  .mc-chip-toggle .label { font-size: 13px; color: #667085; }
+  .switch { position: relative; width: 38px; height: 22px; flex-shrink: 0; }
+  .switch input { position: absolute; opacity: 0; width: 100%; height: 100%; margin: 0; cursor: pointer; }
+  .switch .track { position: absolute; inset: 0; background: #E4E7EC; border-radius: 20px; transition: background .12s; }
+  .switch .track::after { content: ''; position: absolute; top: 2px; left: 2px; width: 18px; height: 18px; background: #fff; border-radius: 50%; transition: transform .12s; box-shadow: 0 1px 2px rgba(0,0,0,.15); }
+  .switch input:checked + .track { background: #1B7A4D; }
+  .switch input:checked + .track::after { transform: translateX(16px); }
+  .mc-count-input { width: 70px; font-size: 13px; text-align: center; border: 1px solid #E4E7EC; border-radius: 7px; padding: 6px 4px; }
+  .mc-upload-zone { border: 1px dashed #E4E7EC; border-radius: 10px; padding: 1.6rem; display: flex; flex-direction: column; align-items: center; gap: 8px; color: #98A2B3; text-align: center; }
+  .mc-upload-zone i { font-size: 26px; }
+  .mc-upload-title { font-size: 14px; color: #667085; font-weight: 500; }
+  .mc-upload-sub { font-size: 12px; }
+  .mc-footer-bar { position: sticky; bottom: 0; background: #fff; border-top: 1px solid #E4E7EC; padding: 1rem 1.75rem; display: flex; justify-content: flex-end; gap: 10px; margin: 1.5rem -1.75rem -1.5rem; border-radius: 0 0 12px 12px; }
+  .mc-btn { font-size: 14px; font-weight: 500; padding: 9px 16px; border-radius: 8px; display: inline-flex; align-items: center; gap: 7px; cursor: pointer; border: 1px solid transparent; font-family: inherit; }
+  .mc-btn-primary { background: #2A4B8D; color: #fff; }
+  .mc-btn-ghost { background: transparent; color: #667085; border-color: #E4E7EC; }
+  .d-none { display: none !important; }
+  @media (max-width: 767.98px) { .mc-grid, .mc-chip-toggle-grid { grid-template-columns: 1fr; } .mc-card { padding: 1.1rem 1rem; } #content-wrapper { margin-left: 0; } #sidebar { display: none; } }
+</style>
+</head>
+<body>
+<div class="app-wrapper">
+  <nav id="sidebar" aria-label="Navegação principal">
+    <button class="toggle-btn" id="btn-toggle" type="button" title="Expandir/fixar menu"><i class="bi bi-chevron-right" id="btn-toggle-icon"></i></button>
+    <a href="#" class="sidebar-brand"><span class="brand-demo">SENAI</span></a>
+    <div class="sidebar-nav">
+      <ul class="sidebar-menu">
+        <li class="sidebar-section"><span class="nav-text">Principal</span></li>
+        <li><a href="#" class="sidebar-link"><span class="nav-icon"><i class="bi bi-grid-fill"></i></span><span class="nav-text">Dashboard</span></a></li>
+        <li class="sidebar-section"><span class="nav-text">Candidato</span></li>
+        <li class="active"><a href="#" class="sidebar-link"><span class="nav-icon"><i class="bi bi-person-lines-fill"></i></span><span class="nav-text">Meu Cadastro</span></a></li>
+      </ul>
+      <ul class="sidebar-menu logout">
+        <li><a href="#" class="sidebar-link"><span class="nav-icon"><i class="bi bi-power"></i></span><span class="nav-text">Sair</span></a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div id="content-wrapper">
+    <nav class="top-navbar">
+      <button id="sidebar-toggle" type="button" title="Menu"><i class="bi bi-list"></i></button>
+      <span><i class="bi bi-bell-fill"></i>&nbsp;&nbsp;<i class="bi bi-person-circle"></i> Bolsista6</span>
+    </nav>
+    <main class="main-content">
+      <div class="mc-page">
+        <div class="mc-breadcrumb"><a>Bolsistas</a><i class="bi bi-chevron-right" style="font-size:11px"></i><a>Meu cadastro</a><i class="bi bi-chevron-right" style="font-size:11px"></i><span class="current">Editar</span></div>
+        <div class="mc-pagehead"><h1><i class="bi bi-pencil-square"></i>Editar cadastro</h1></div>
+        <div class="mc-mode-badge"><i class="bi bi-pencil"></i>Alterações pendentes de salvar</div>
+
+        <form onsubmit="return false;">
+          <div class="mc-card">
+            <h2 class="mc-card-title"><i class="bi bi-person-badge"></i>Dados pessoais</h2>
+            <div class="mc-grid">
+              <div class="mc-field"><label>Nome<span class="req">*</span></label><input type="text" value="Bolsista6"></div>
+              <div class="mc-field has-error">
+                <label>E-mail<span class="req">*</span></label>
+                <input type="email" value="bolsista6email.com">
+                <span class="mc-error"><i class="bi bi-exclamation-circle"></i>Informe um e-mail válido</span>
+              </div>
+              <div class="mc-field"><label>Nº de série</label><input type="text" value="0532" disabled><span class="mc-hint">Atribuído pelo sistema</span></div>
+              <div class="mc-field"><label>Telefone<span class="req">*</span></label><input type="text" value="(67) 99999-9999"></div>
+              <div class="mc-field"><label>Data de nascimento<span class="req">*</span></label><input type="text" value="01/01/1995"></div>
+            </div>
+          </div>
+
+          <div class="mc-card">
+            <h2 class="mc-card-title"><i class="bi bi-geo-alt"></i>Endereço</h2>
+            <div class="mc-grid">
+              <div class="mc-field"><label>Rua<span class="req">*</span></label><input type="text" value="Rua Teste"></div>
+              <div class="mc-field"><label>Número<span class="req">*</span></label><input type="text" value="100"></div>
+              <div class="mc-field"><label>Bairro<span class="req">*</span></label><input type="text" value="Centro"></div>
+              <div class="mc-field"><label>Cidade<span class="req">*</span></label><input type="text" value="Campo Grande"></div>
+              <div class="mc-field"><label>Estado<span class="req">*</span></label>
+                <select><option>Mato Grosso do Sul</option><option>São Paulo</option><option>Paraná</option></select>
+              </div>
+            </div>
+          </div>
+
+          <div class="mc-card">
+            <h2 class="mc-card-title"><i class="bi bi-mortarboard"></i>Dados acadêmicos</h2>
+            <div id="formacoes-container">
+              <div class="mc-acad-block">
+                <button type="button" class="mc-remove-btn" onclick="this.closest('.mc-acad-block').remove()" title="Remover"><i class="bi bi-trash"></i></button>
+                <div class="mc-subsection-title">Graduação<span class="mc-stage-badge">Concluída</span></div>
+                <div class="mc-grid">
+                  <div class="mc-field"><label>Instituição<span class="req">*</span></label><input type="text" value="Universidade Estadual do Centro-Oeste"></div>
+                  <div class="mc-field"><label>Área<span class="req">*</span></label><input type="text" value="Ciências Exatas e da Terra"></div>
+                  <div class="mc-field"><label>Curso<span class="req">*</span></label><input type="text" value="Ciência de Dados"></div>
+                  <div class="mc-field"><label>Ano de conclusão<span class="req">*</span></label><input type="text" value="2018"></div>
+                  <div class="mc-field"><label>Situação</label><select><option>Concluída</option><option>Em andamento</option></select></div>
+                </div>
+              </div>
+              <div class="mc-acad-block">
+                <button type="button" class="mc-remove-btn" onclick="this.closest('.mc-acad-block').remove()" title="Remover"><i class="bi bi-trash"></i></button>
+                <div class="mc-subsection-title">Pós-graduação<span class="mc-stage-badge">Concluída</span></div>
+                <div class="mc-grid">
+                  <div class="mc-field"><label>Instituição<span class="req">*</span></label><input type="text" value="Universidade Cesumar"></div>
+                  <div class="mc-field"><label>Área<span class="req">*</span></label><input type="text" value="Ciências Exatas e da Terra"></div>
+                  <div class="mc-field"><label>Curso<span class="req">*</span></label><input type="text" value="Ciência de Dados"></div>
+                  <div class="mc-field"><label>Ano de conclusão<span class="req">*</span></label><input type="text" value="2020"></div>
+                  <div class="mc-field"><label>Situação</label><select><option>Concluída</option><option>Em andamento</option></select></div>
+                </div>
+              </div>
+            </div>
+            <button type="button" class="mc-add-block" onclick="addFormacao()"><i class="bi bi-plus-lg"></i>Adicionar formação</button>
+          </div>
+
+          <div class="mc-card">
+            <h2 class="mc-card-title"><i class="bi bi-bar-chart"></i>Critérios e pontuação</h2>
+            <div class="mc-chip-toggle-grid">
+              <div class="mc-chip-toggle"><span class="label">Projetos/pesquisa (anos)</span><input class="mc-count-input" type="text" value="4"></div>
+              <div class="mc-chip-toggle"><span class="label">Participação em congressos</span><label class="switch"><input type="checkbox"><span class="track"></span></label></div>
+              <div class="mc-chip-toggle"><span class="label">Resumo em anais</span><label class="switch"><input type="checkbox"><span class="track"></span></label></div>
+              <div class="mc-chip-toggle"><span class="label">Artigo completo em anais</span><label class="switch"><input type="checkbox" checked><span class="track"></span></label></div>
+              <div class="mc-chip-toggle"><span class="label">Artigo científico nacional</span><label class="switch"><input type="checkbox"><span class="track"></span></label></div>
+              <div class="mc-chip-toggle"><span class="label">Artigo científico internacional</span><label class="switch"><input type="checkbox" checked><span class="track"></span></label></div>
+              <div class="mc-chip-toggle"><span class="label">Livro/patente</span><label class="switch"><input type="checkbox" checked><span class="track"></span></label></div>
+              <div class="mc-chip-toggle"><span class="label">Minicurso</span><label class="switch"><input type="checkbox"><span class="track"></span></label></div>
+              <div class="mc-chip-toggle"><span class="label">Treinamento</span><label class="switch"><input type="checkbox"><span class="track"></span></label></div>
+            </div>
+          </div>
+
+          <div class="mc-card">
+            <h2 class="mc-card-title"><i class="bi bi-briefcase"></i>Experiência profissional</h2>
+            <div class="mc-grid">
+              <div class="mc-field"><label>Área de atuação<span class="req">*</span></label><input type="text" value="TI"></div>
+              <div class="mc-field"><label>Anos de experiência<span class="req">*</span></label><input type="text" value="4"></div>
+              <div class="mc-field"><label>Comprovante</label><input type="text" placeholder="Nenhum arquivo selecionado" disabled></div>
+            </div>
+          </div>
+
+          <div class="mc-card">
+            <h2 class="mc-card-title"><i class="bi bi-paperclip"></i>Anexos comprobatórios</h2>
+            <div class="mc-upload-zone">
+              <i class="bi bi-cloud-upload"></i>
+              <span class="mc-upload-title">Arraste arquivos aqui ou clique para selecionar</span>
+              <span class="mc-upload-sub">PDF, JPG ou PNG até 10 MB</span>
+            </div>
+            <div class="mc-footer-bar">
+              <button type="button" class="mc-btn mc-btn-ghost"><i class="bi bi-x-lg"></i>Cancelar</button>
+              <button type="button" class="mc-btn mc-btn-primary"><i class="bi bi-floppy"></i>Salvar alterações</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </main>
+  </div>
+</div>
+
+<template id="tpl-formacao">
+  <div class="mc-acad-block">
+    <button type="button" class="mc-remove-btn" onclick="this.closest('.mc-acad-block').remove()" title="Remover"><i class="bi bi-trash"></i></button>
+    <div class="mc-subsection-title">Nova formação</div>
+    <div class="mc-grid">
+      <div class="mc-field"><label>Instituição<span class="req">*</span></label><input type="text" value=""></div>
+      <div class="mc-field"><label>Área<span class="req">*</span></label><input type="text" value=""></div>
+      <div class="mc-field"><label>Curso<span class="req">*</span></label><input type="text" value=""></div>
+      <div class="mc-field"><label>Ano de conclusão<span class="req">*</span></label><input type="text" value=""></div>
+      <div class="mc-field"><label>Situação</label><select><option>Concluída</option><option>Em andamento</option></select></div>
+    </div>
+  </div>
+</template>
+
+<script>
+// Sidebar: recolhida por padrão; hover expande (CSS); ">" fixa aberta.
+(function () {
+  function $(id) { return document.getElementById(id); }
+  function isPinned() { var sb = $('sidebar'); return sb && sb.classList.contains('pinned'); }
+  function syncIcon() {
+    var icon = $('btn-toggle-icon'); if (!icon) return;
+    if (isPinned()) { icon.classList.remove('bi-chevron-right'); icon.classList.add('bi-chevron-left'); }
+    else { icon.classList.remove('bi-chevron-left'); icon.classList.add('bi-chevron-right'); }
+  }
+  function apply(pinned) {
+    $('sidebar').classList.toggle('pinned', pinned);
+    $('content-wrapper').classList.toggle('pinned', pinned);
+    syncIcon();
+  }
+  document.addEventListener('DOMContentLoaded', function () {
+    var saved = null;
+    try { saved = localStorage.getItem('sb_pinned'); } catch (e) {}
+    apply(saved === '1');
+    function toggle() {
+      var next = !isPinned(); apply(next);
+      try { localStorage.setItem('sb_pinned', next ? '1' : '0'); } catch (e) {}
+    }
+    $('btn-toggle').addEventListener('click', toggle);
+    $('sidebar-toggle').addEventListener('click', toggle);
+  });
+})();
+// Formação: adicionar/remover blocos (no projeto, via formsets + selects OUTRA).
+function addFormacao() {
+  var tpl = document.getElementById('tpl-formacao');
+  document.getElementById('formacoes-container').appendChild(tpl.content.cloneNode(true));
+}
+</script>
+</body>
+</html>

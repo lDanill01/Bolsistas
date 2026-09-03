@@ -1,83 +1,83 @@
-<div id="formacao-section" class="mb-4">
-    {% for fa in formacoes %}
-    <div class="card mb-2 border-start border-4 border-primary">
-        <div class="card-body py-2 px-3 d-flex justify-content-between align-items-center">
-            <div>
-                <span class="fw-semibold">{{ fa.get_tipo_display }}</span>
-                {% if fa.status_display %}
-                <span class="badge bg-info text-dark ms-2">{{ fa.status_display }}</span>
+<div id="formacao-section">
+    {% if formacoes %}
+    <div class="mc-timeline">
+        {% for fa in formacoes %}
+        <div class="mc-tl-item">
+            <div class="mc-tl-dot"><i class="bi bi-check-lg"></i></div>
+            <div class="mc-tl-head">
+                <span class="mc-tl-stage">{{ fa.get_tipo_display }}</span>
+                {% if fa.status_display %}<span class="mc-tl-status">{{ fa.status_display }}</span>{% endif %}
+                {% if can_edit %}
+                <form method="post" action="{% url 'formacao_remove' cadastro.pk fa.pk %}" class="d-inline ms-auto"
+                      hx-post="{% url 'formacao_remove' cadastro.pk fa.pk %}"
+                      hx-target="#formacao-section" hx-swap="outerHTML" style="margin-left:auto;">
+                    {% csrf_token %}
+                    <button type="submit" class="mc-remove-btn" title="Remover" style="position:static;">
+                        <i class="bi bi-trash"></i>
+                    </button>
+                </form>
                 {% endif %}
-                {% if fa.instituicao %}<small class="text-muted d-block">{{ fa.instituicao }}</small>{% endif %}
-                {% if fa.area %}<span class="text-muted ms-2">- {{ fa.area }}</span>{% endif %}
-                {% if fa.curso %}<small class="text-muted d-block">{{ fa.curso }}</small>{% endif %}
-                {% if fa.ano_conclusao %}<small class="text-muted">Conclusão: {{ fa.ano_conclusao }}</small>{% endif %}
             </div>
-            {% if can_edit %}
-            <form method="post" action="{% url 'formacao_remove' cadastro.pk fa.pk %}" class="d-inline"
-                  hx-post="{% url 'formacao_remove' cadastro.pk fa.pk %}"
-                  hx-target="#formacao-section" hx-swap="outerHTML">
-                {% csrf_token %}
-                <button type="submit" class="btn btn-outline-danger btn-sm">
-                    <i class="bi bi-x-lg"></i>
-                </button>
-            </form>
-            {% endif %}
+            {% if fa.instituicao or fa.area %}<div class="mc-tl-inst">{{ fa.instituicao }}{% if fa.instituicao and fa.area %} — {% endif %}{{ fa.area }}</div>{% endif %}
+            {% if fa.curso %}<div class="mc-tl-meta">{{ fa.curso }}</div>{% endif %}
+            {% if fa.ano_conclusao %}<div class="mc-tl-year">Conclusão em {{ fa.ano_conclusao }}</div>{% endif %}
         </div>
+        {% endfor %}
     </div>
-    {% empty %}
-    <p class="text-muted small">Nenhuma formação acadêmica adicionada.</p>
-    {% endfor %}
+    {% else %}
+    <div class="mc-empty"><i class="bi bi-mortarboard"></i>Nenhuma formação acadêmica adicionada.</div>
+    {% endif %}
 
     {% if can_edit %}
     <div class="mt-2">
         {% if formacao_form %}
         <form method="post" action="{% url 'formacao_add' cadastro.pk %}"
               hx-post="{% url 'formacao_add' cadastro.pk %}"
-              hx-target="#formacao-section" hx-swap="outerHTML" class="card p-3 bg-light">
+              hx-target="#formacao-section" hx-swap="outerHTML" class="mc-acad-block">
             {% csrf_token %}
-            <div class="row g-2 align-items-end">
-                <div class="col-md-2">
-                    <label class="form-label small">Formação</label>
-                    <div class="input-group input-group-sm">
-                        <span class="input-group-text"><i class="bi bi-mortarboard"></i></span>
-                        {{ formacao_form.tipo }}
-                    </div>
+            <div class="mc-subsection-head">
+                <div class="mc-subsection-title">Nova formação</div>
+            </div>
+            <div class="mc-grid">
+                <div class="mc-field">
+                    <label class="mc-edit-label">Formação<span class="req">*</span></label>
+                    {{ formacao_form.tipo }}
                 </div>
-                <div class="col-md-1">
-                    <label class="form-label small">Status</label>
+                <div class="mc-field">
+                    <label class="mc-edit-label">Situação</label>
                     {{ formacao_form.status }}
                 </div>
-                <div class="col-md-3">
-                    <label class="form-label small">Instituição</label>
+                <div class="mc-field">
+                    <label class="mc-edit-label">Ano de conclusão<span class="req">*</span></label>
+                    {{ formacao_form.ano_conclusao }}
+                </div>
+                <div class="mc-field">
+                    <label class="mc-edit-label">Instituição<span class="req">*</span></label>
                     {{ formacao_form.instituicao }}
-                    <select class="form-select form-select-sm instituicao-select" onchange="formSectionOutraSelect(this, 'instituicao')">
+                    <select class="form-select form-select-sm instituicao-select mt-1" onchange="formSectionOutraSelect(this, 'instituicao')">
                     </select>
                     <input type="text" class="form-control form-control-sm outra-input d-none mt-1" placeholder="Digite o nome da instituição..." oninput="formSectionOutraInput(this, 'instituicao')">
                 </div>
-                <div class="col-md-2">
-                    <label class="form-label small">Área</label>
+                <div class="mc-field">
+                    <label class="mc-edit-label">Área<span class="req">*</span></label>
                     {{ formacao_form.area }}
-                    <select class="form-select form-select-sm area-select" onchange="formSectionOutraSelect(this, 'area')">
+                    <select class="form-select form-select-sm area-select mt-1" onchange="formSectionOutraSelect(this, 'area')">
                     </select>
                     <input type="text" class="form-control form-control-sm outra-input d-none mt-1" placeholder="Digite a área..." oninput="formSectionOutraInput(this, 'area')">
                 </div>
-                <div class="col-md-2">
-                    <label class="form-label small">Curso</label>
+                <div class="mc-field">
+                    <label class="mc-edit-label">Curso<span class="req">*</span></label>
                     {{ formacao_form.curso }}
-                    <select class="form-select form-select-sm curso-select" onchange="formSectionOutraSelect(this, 'curso')">
+                    <select class="form-select form-select-sm curso-select mt-1" onchange="formSectionOutraSelect(this, 'curso')">
                     </select>
                     <input type="text" class="form-control form-control-sm outra-input d-none mt-1" placeholder="Digite o curso..." oninput="formSectionOutraInput(this, 'curso')">
                 </div>
-                <div class="col-md-2">
-                    <label class="form-label small">Ano de Conclusão</label>
-                    {{ formacao_form.ano_conclusao }}
-                </div>
             </div>
-            <div class="mt-2 d-flex gap-2">
-                <button type="submit" class="btn btn-primary btn-sm">
-                    <i class="bi bi-plus-lg me-1"></i>Adicionar
+            <div class="mt-3 d-flex gap-2">
+                <button type="submit" class="mc-btn mc-btn-primary">
+                    <i class="bi bi-plus-lg"></i>Adicionar
                 </button>
-                <button type="button" class="btn btn-outline-secondary btn-sm"
+                <button type="button" class="mc-btn mc-btn-ghost"
                         hx-get="{% url 'formacao_add' cadastro.pk %}?cancel=1"
                         hx-target="#formacao-section" hx-swap="outerHTML">
                     Cancelar
@@ -85,10 +85,10 @@
             </div>
         </form>
         {% else %}
-        <button class="btn btn-outline-primary btn-sm"
+        <button class="mc-add-block"
                 hx-get="{% url 'formacao_add' cadastro.pk %}"
                 hx-target="#formacao-section" hx-swap="outerHTML">
-            <i class="bi bi-plus-lg me-1"></i>Adicionar Formação
+            <i class="bi bi-plus-lg"></i>Adicionar formação
         </button>
         {% endif %}
     </div>
