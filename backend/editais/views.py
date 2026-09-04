@@ -2,12 +2,12 @@ from django.views.generic import ListView, DetailView, CreateView, UpdateView, D
 from django.urls import reverse_lazy, reverse
 from django.contrib import messages
 from django.shortcuts import get_object_or_404, redirect, render
-from django.http import HttpResponse, JsonResponse
+from django.http import Http404, HttpResponse, JsonResponse
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.template.loader import render_to_string
 from django.views.decorators.http import require_POST
 from django.core.cache import cache
-from django.db.models import Count, Q, Prefetch
+from django.db.models import Case, Count, DecimalField, F, Q, Value, When
 from django.core.paginator import Paginator
 from django.utils.http import url_has_allowed_host_and_scheme
 from django.utils import timezone
@@ -525,59 +525,109 @@ class AvaliacaoListView(ManagerOrExecuteRequiredMixin, ContextMixin, TemplateVie
 
 
 class ResultadosListView(LoginRequiredMixin, ListView):
-    model = EditalProvisorio
+    model = AplicacaoEdital
     template_name = 'editais/resultados.html'
-    context_object_name = 'editais'
-    paginate_by = 10
+    context_object_name = 'aplicacoes'
+    paginate_by = 20
 
-    def get_queryset(self):
-        qs = EditalProvisorio.objects.filter(status__in=['aberto', 'encerrado']).order_by('-created_at')
-        qs = qs.filter(
-            Q(aplicacoes__nota__isnull=False) | Q(aplicacoes__nota_entrevista__isnull=False)
-        ).distinct()
+    VIEWS_VALIDAS = {'todas', 'prova', 'entrevista', 'final'}
+
+    def _is_gestor(self):
         user = self.request.user
-        is_gestor = user.is_superuser or user.groups.filter(
+        return user.is_superuser or user.groups.filter(
             name__in=[GROUP_MANAGER, GROUP_EXECUTE_USER]
         ).exists()
 
-        if not is_gestor:
-            if hasattr(user, 'cadastro'):
-                qs = qs.filter(aplicacoes__bolsista=user.cadastro).distinct()
-                qs = qs.prefetch_related(
-                    Prefetch(
-                        'aplicacoes',
-                        queryset=AplicacaoEdital.objects.filter(
-                            bolsista=user.cadastro
-                        ).select_related('bolsista', 'bolsista__user'),
-                    )
-                )
-            else:
+    def _get_editais_disponiveis(self):
+        if hasattr(self, '_editais_disponiveis'):
+            return self._editais_disponiveis
+
+        qs = EditalProvisorio.objects.filter(
+            status__in=['aberto', 'encerrado']
+        ).filter(
+            Q(aplicacoes__nota__isnull=False) | Q(aplicacoes__nota_entrevista__isnull=False)
+        )
+        if not self._is_gestor():
+            if not hasattr(self.request.user, 'cadastro'):
                 qs = qs.none()
-        else:
-            qs = qs.prefetch_related(
-                Prefetch(
-                    'aplicacoes',
-                    queryset=AplicacaoEdital.objects.select_related(
-                        'bolsista', 'bolsista__user'
-                    ),
-                )
-            )
-        return qs
+            else:
+                qs = qs.filter(aplicacoes__bolsista=self.request.user.cadastro)
+
+        self._editais_disponiveis = qs.distinct().order_by('-created_at')
+        return self._editais_disponiveis
+
+    def get_queryset(self):
+        qs = AplicacaoEdital.objects.filter(
+            edital__in=self._get_editais_disponiveis()
+        ).filter(
+            Q(nota__isnull=False) | Q(nota_entrevista__isnull=False)
+        ).select_related('bolsista', 'bolsista__user', 'edital').prefetch_related(
+            'edital__cronograma'
+        )
+
+        self.edital_selecionado = None
+        edital_id = self.request.GET.get('edital', '')
+        if edital_id:
+            try:
+                self.edital_selecionado = self._get_editais_disponiveis().filter(
+                    pk=int(edital_id)
+                ).first()
+            except (TypeError, ValueError):
+                return qs.none()
+            if not self.edital_selecionado:
+                return qs.none()
+            qs = qs.filter(edital=self.edital_selecionado)
+
+        nota_ordenacao = Case(
+            When(
+                nota__isnull=False,
+                nota_entrevista__isnull=False,
+                then=(F('nota') + F('nota_entrevista')) / Value(2),
+            ),
+            When(nota__isnull=False, then=F('nota')),
+            default=F('nota_entrevista'),
+            output_field=DecimalField(max_digits=5, decimal_places=2),
+        )
+        return qs.annotate(nota_ordenacao=nota_ordenacao).order_by(
+            F('nota_ordenacao').desc(nulls_last=True),
+            'bolsista__user__nome_completo',
+        )
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['view_atual'] = self.request.GET.get('view', 'todas')
-        user = self.request.user
-        context['is_gestor'] = user.is_superuser or user.groups.filter(
-            name__in=[GROUP_MANAGER, GROUP_EXECUTE_USER]
-        ).exists()
+        view_atual = self.request.GET.get('view', 'todas')
+        if view_atual not in self.VIEWS_VALIDAS:
+            view_atual = 'todas'
+        context['view_atual'] = view_atual
+        context['editais'] = self._get_editais_disponiveis()
+        context['edital_selecionado'] = getattr(self, 'edital_selecionado', None)
+        context['total_resultados'] = self.get_queryset().count()
+        context['is_gestor'] = self._is_gestor()
+        parametros = [f'view={view_atual}']
+        if context['edital_selecionado']:
+            parametros.append(f'edital={context["edital_selecionado"].pk}')
+        context['pagination_param'] = '&'.join(parametros)
         return context
 
 
 class ResultadosDownloadView(LoginRequiredMixin, View):
     def get(self, request, edital_pk):
         edital = get_object_or_404(EditalProvisorio, pk=edital_pk)
-        aplicacoes = edital.aplicacoes.select_related('bolsista__user')
+        is_gestor = request.user.is_superuser or request.user.groups.filter(
+            name__in=[GROUP_MANAGER, GROUP_EXECUTE_USER]
+        ).exists()
+        if not is_gestor:
+            if not hasattr(request.user, 'cadastro'):
+                raise Http404
+            edital = get_object_or_404(
+                EditalProvisorio,
+                pk=edital_pk,
+                aplicacoes__bolsista=request.user.cadastro,
+            )
+            aplicacoes = edital.aplicacoes.filter(bolsista=request.user.cadastro)
+        else:
+            aplicacoes = edital.aplicacoes.all()
+        aplicacoes = aplicacoes.select_related('bolsista__user')
 
         aplicacoes = sorted(
             aplicacoes,

@@ -2,138 +2,140 @@
 {% load br_filters %}
 {% block title %}Resultados - Bolsas SENAI - MS{% endblock %}
 
+{% block extra_css %}
+<style>
+    .resultados-table-wrap { max-height: 68vh; }
+    .resultados-table thead th { position: sticky; top: 0; z-index: 1; white-space: nowrap; }
+    .resultados-table td, .resultados-table th { vertical-align: middle; }
+    .resultado-edital { min-width: 15rem; }
+    .resultado-nota { min-width: 8.5rem; }
+</style>
+{% endblock %}
+
 {% block content %}
 <div class="container-fluid py-3">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2 class="fw-bold text-primary mb-0">
-            <i class="ri-trophy-line me-2"></i>Resultados
-        </h2>
-    </div>
-
-    <div class="mb-4">
-        <div class="btn-group" role="group" aria-label="Filtro de visualização">
-            <a href="?view=todas" class="btn btn-outline-primary {% if view_atual == 'todas' %}active{% endif %}">
-                <i class="ri-grid-line me-1"></i>Todas
-            </a>
-            <a href="?view=prova" class="btn btn-outline-primary {% if view_atual == 'prova' %}active{% endif %}">
-                <i class="ri-edit-2-line me-1"></i>Nota da Prova
-            </a>
-            <a href="?view=entrevista" class="btn btn-outline-primary {% if view_atual == 'entrevista' %}active{% endif %}">
-                <i class="ri-chat-3-line me-1"></i>Nota da Entrevista
-            </a>
-            <a href="?view=final" class="btn btn-outline-primary {% if view_atual == 'final' %}active{% endif %}">
-                <i class="ri-bar-chart-line me-1"></i>Nota Final
-            </a>
+    <div class="d-flex flex-wrap justify-content-between align-items-start gap-3 mb-3">
+        <div>
+            <h2 class="fw-bold text-primary mb-1">
+                <i class="ri-trophy-line me-2"></i>Resultados
+            </h2>
+            <p class="text-muted mb-0">
+                {{ total_resultados }} resultado{{ total_resultados|pluralize }} encontrado{{ total_resultados|pluralize }}
+            </p>
         </div>
+        {% if edital_selecionado %}
+        <a href="{% url 'resultados_download' edital_selecionado.pk %}" class="btn btn-outline-secondary" title="Baixar resultados do edital selecionado">
+            <i class="ri-download-2-line me-1"></i>Baixar CSV
+        </a>
+        {% endif %}
     </div>
 
-    {% for edital in editais %}
-    <div class="card p-4 mb-4">
-        <div class="row g-3 mb-4">
-            <div class="col-md-8">
-                <h5 class="fw-semibold mb-1">
-                    {{ edital.nome_edital }}
-                    <a href="{% url 'resultados_download' edital.pk %}" class="btn btn-sm btn-outline-secondary ms-2" title="Baixar resultados">
-                        <i class="ri-download-2-line me-1"></i>Baixar CSV
-                    </a>
-                </h5>
-                <p class="text-muted small mb-1">
-                    <i class="ri-building-line me-1"></i>{{ edital.get_nome_instituto_display }}
-                    <span class="mx-2">|</span>
-                    <i class="ri-hashtag me-1"></i>Edital Nº {{ edital.numero_serie }}
-                </p>
-                {% if edital.detalhes_edital %}
-                <p class="text-muted small mb-0">{{ edital.detalhes_edital|truncatechars:250 }}</p>
-                {% endif %}
-            </div>
-            <div class="col-md-4 text-md-end">
-                <div class="d-flex flex-column gap-1">
-                    <div>
-                        <span class="text-muted small">Vagas:</span>
-                        <span class="fw-medium">{{ edital.numero_vagas }}</span>
-                    </div>
-                    <div>
-                        <span class="text-muted small">Valor da Bolsa:</span>
-                        <span class="fw-semibold text-primary">{{ edital.valor_bolsa|br_money }}</span>
-                    </div>
-                    <div>
-                        <span class="badge bg-secondary">{{ edital.get_status_display }}</span>
-                    </div>
+    <div class="d-flex flex-wrap align-items-center gap-2 mb-3">
+        <div class="dropdown">
+            <button class="btn btn-outline-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="ri-filter-3-line me-1"></i>Filtrar edital
+            </button>
+            <form method="get" class="dropdown-menu p-3 shadow" style="min-width: min(22rem, calc(100vw - 2rem));">
+                <input type="hidden" name="view" value="{{ view_atual }}">
+                <label for="filtro-edital" class="form-label small fw-semibold">Edital</label>
+                <select name="edital" id="filtro-edital" class="form-select mb-3">
+                    <option value="">Todos os editais</option>
+                    {% for edital in editais %}
+                    <option value="{{ edital.pk }}" {% if edital_selecionado.pk == edital.pk %}selected{% endif %}>
+                        Nº {{ edital.numero_serie }} — {{ edital.nome_edital }}
+                    </option>
+                    {% endfor %}
+                </select>
+                <div class="d-flex justify-content-between gap-2">
+                    <a href="?view={{ view_atual }}" class="btn btn-link text-decoration-none px-0">Limpar</a>
+                    <button type="submit" class="btn btn-primary">Aplicar</button>
                 </div>
-            </div>
+            </form>
         </div>
+        {% if edital_selecionado %}
+        <span class="badge bg-primary-subtle text-primary-emphasis border border-primary-subtle py-2 px-3">
+            Edital ativo: Nº {{ edital_selecionado.numero_serie }} — {{ edital_selecionado.nome_edital }}
+        </span>
+        {% endif %}
+    </div>
 
-        <div class="table-responsive">
-            <table class="table table-hover align-middle mb-0">
+    <div class="btn-group mb-4" role="group" aria-label="Filtro de visualização">
+        <a href="?view=todas{% if edital_selecionado %}&edital={{ edital_selecionado.pk }}{% endif %}" class="btn btn-outline-primary {% if view_atual == 'todas' %}active{% endif %}">
+            <i class="ri-grid-line me-1"></i>Todas
+        </a>
+        <a href="?view=prova{% if edital_selecionado %}&edital={{ edital_selecionado.pk }}{% endif %}" class="btn btn-outline-primary {% if view_atual == 'prova' %}active{% endif %}">
+            <i class="ri-edit-2-line me-1"></i>Nota da Prova
+        </a>
+        <a href="?view=entrevista{% if edital_selecionado %}&edital={{ edital_selecionado.pk }}{% endif %}" class="btn btn-outline-primary {% if view_atual == 'entrevista' %}active{% endif %}">
+            <i class="ri-chat-3-line me-1"></i>Nota da Entrevista
+        </a>
+        <a href="?view=final{% if edital_selecionado %}&edital={{ edital_selecionado.pk }}{% endif %}" class="btn btn-outline-primary {% if view_atual == 'final' %}active{% endif %}">
+            <i class="ri-bar-chart-line me-1"></i>Nota Final
+        </a>
+    </div>
+
+    <div class="card border-0 shadow-sm overflow-hidden">
+        <div class="table-responsive resultados-table-wrap">
+            <table class="table table-hover align-middle mb-0 resultados-table">
                 <thead class="table-light">
                     <tr>
                         <th>Nome</th>
+                        <th class="resultado-edital">Edital</th>
                         <th>Nº Inscrição</th>
-                        {% if edital.prova_liberada %}
                         {% if view_atual == 'todas' or view_atual == 'prova' %}
-                        <th>Nota da Prova</th>
+                        <th class="resultado-nota">Nota da Prova</th>
                         {% endif %}
-                        {% endif %}
-                        {% if edital.entrevista_liberada %}
                         {% if view_atual == 'todas' or view_atual == 'entrevista' %}
-                        <th>Nota da Entrevista</th>
+                        <th class="resultado-nota">Nota da Entrevista</th>
                         {% endif %}
-                        {% endif %}
-                        {% if edital.resultado_liberado %}
                         {% if view_atual == 'todas' or view_atual == 'final' %}
-                        <th>Nota Final</th>
-                        {% endif %}
+                        <th class="resultado-nota">Nota Final</th>
                         {% endif %}
                         <th>Status</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {% for a in edital.aplicacoes.all %}
+                    {% for aplicacao in aplicacoes %}
                     <tr>
-                        <td class="fw-medium">{{ a.bolsista.user.nome_completo }}</td>
-                        <td><span class="badge bg-dark">{{ a.numero_inscricao|default:'—' }}</span></td>
-                        {% if edital.prova_liberada %}
+                        <td class="fw-medium">{{ aplicacao.bolsista.user.nome_completo }}</td>
+                        <td class="resultado-edital">
+                            <span class="badge bg-dark">Nº {{ aplicacao.edital.numero_serie }}</span>
+                            <span class="d-block small text-muted mt-1">{{ aplicacao.edital.nome_edital }}</span>
+                        </td>
+                        <td><span class="badge bg-light text-dark border">{{ aplicacao.numero_inscricao|default:'—' }}</span></td>
                         {% if view_atual == 'todas' or view_atual == 'prova' %}
-                        <td>
-                            <div class="form-control bg-light">{% if a.nota is not None %}{{ a.nota|floatformat:2 }}{% else %}—{% endif %}</div>
+                        <td class="resultado-nota">
+                            {% if aplicacao.edital.prova_liberada %}
+                                {% if aplicacao.nota is not None %}{{ aplicacao.nota|floatformat:2 }}{% else %}—{% endif %}
+                            {% else %}<span class="text-muted small">Não divulgada</span>{% endif %}
                         </td>
                         {% endif %}
-                        {% endif %}
-                        {% if edital.entrevista_liberada %}
                         {% if view_atual == 'todas' or view_atual == 'entrevista' %}
-                        <td>
-                            <div class="form-control bg-light">{% if a.nota_entrevista is not None %}{{ a.nota_entrevista|floatformat:2 }}{% else %}—{% endif %}</div>
+                        <td class="resultado-nota">
+                            {% if aplicacao.edital.entrevista_liberada %}
+                                {% if aplicacao.nota_entrevista is not None %}{{ aplicacao.nota_entrevista|floatformat:2 }}{% else %}—{% endif %}
+                            {% else %}<span class="text-muted small">Não divulgada</span>{% endif %}
                         </td>
                         {% endif %}
-                        {% endif %}
-                        {% if edital.resultado_liberado %}
                         {% if view_atual == 'todas' or view_atual == 'final' %}
-                        <td>
-                            <div class="form-control bg-light">{{ a.nota_final_display }}</div>
+                        <td class="resultado-nota">
+                            {% if aplicacao.edital.resultado_liberado %}{{ aplicacao.nota_final_display }}{% else %}<span class="text-muted small">Não divulgada</span>{% endif %}
                         </td>
                         {% endif %}
-                        {% endif %}
-                        <td>
-                            <span class="badge {{ a.status_resultado_class }}">
-                                {{ a.status_resultado_display }}
-                            </span>
-                        </td>
+                        <td><span class="badge {{ aplicacao.status_resultado_class }}">{{ aplicacao.status_resultado_display }}</span></td>
                     </tr>
                     {% empty %}
                     <tr>
-                        <td colspan="6" class="text-center text-muted py-3">Nenhum candidato neste edital.</td>
+                        <td colspan="7" class="text-center text-muted py-5">
+                            <i class="ri-search-eye-line fs-3 d-block mb-2"></i>
+                            Nenhum resultado encontrado para os filtros selecionados.
+                        </td>
                     </tr>
                     {% endfor %}
                 </tbody>
             </table>
         </div>
     </div>
-    {% empty %}
-    <div class="card p-5 text-center">
-        <i class="ri-trophy-line fs-1 text-muted mb-3"></i>
-        <p class="text-muted mb-0">Nenhum resultado disponível no momento.</p>
-    </div>
-    {% endfor %}
 
     {% if page_obj.paginator.num_pages > 1 %}
     {% include 'components/pagination.html' %}
