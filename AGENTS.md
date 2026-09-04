@@ -80,3 +80,4 @@ Bolsistas/
 - Azure DevOps target: `infrastructure/azure-pipelines.yml` — CI (tests + Docker build/push to ACR), CD deploys `bolsas-web`/`bolsas-celery`/`bolsas-beat` to Azure Container Apps and runs a `bolsas-migrate` migration job before the apps.
 - Legacy prod (current fallback): Docker Swarm via `docker-compose.prod.yml` + `infrastructure/deploy.sh` / `infrastructure/deploy/`.
 - Secrets: settings `read_secret()` prefers `NAME_FILE` env (Docker Secrets / ACA `secretref`) over plain env.
+- Before modifying AKS/Kubernetes manifests, Azure Blob authentication, Key Vault integration, or storage settings, read `documentation/docs/arquitetura-aks-storage.md`. AKS is an optional future target and must not replace the current Azure Container Apps pipeline without explicit user approval.
